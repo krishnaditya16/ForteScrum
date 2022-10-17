@@ -13,7 +13,9 @@ if(Auth::user()->ownsTeam($current_team)) {
                 [
                     "section_text" => "User",
                     "section_list" => [
-                        ["href" => "user.index", "text" => "User Data"],
+                        ["href" => "user.index", "text" => "All Users"],
+                        ["href" => "client.index", "text" => "Clients Data"],
+                        ["href" => "client.index", "text" => "Client Users"],
                     ]
                 ]
             ],

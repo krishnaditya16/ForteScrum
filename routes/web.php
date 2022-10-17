@@ -28,6 +28,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     
     Route::group(['middleware' => 'role:project-manager'], function() {
         Route::resource('/user', 'App\Http\Controllers\UserController');
+        Route::resource('/client', 'App\Http\Controllers\ClientController');
         Route::resource('/project', 'App\Http\Controllers\ProjectController');
         Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
         Route::resource('/sprint', 'App\Http\Controllers\SprintController');
