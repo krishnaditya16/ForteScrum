@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Create Project') }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
             <a href="{{ route('project.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
@@ -56,6 +57,11 @@
                                     <option value="{{ $team->id }}">{{ $team->name }}</option>
                                     @endforeach
                                 </select>
+                                <small class="form-text text-muted">
+                                    Rules:
+                                    1. Different team must be used if selected team already have projects with different client.
+                                    2. Same team can work on multiple project with the same client.
+                                </small>
                                 @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>

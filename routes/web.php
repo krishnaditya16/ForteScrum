@@ -37,6 +37,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::resource('/task', 'App\Http\Controllers\TaskController');
 
         Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
+        Route::get('/client-user/{id}/update-password', 'App\Http\Controllers\ClientUserController@changePassword')->name('change.password');
+        Route::put('/client-user/{id}/update-pass', 'App\Http\Controllers\ClientUserController@editPassword')->name('user.password');
     });
 
     Route::group(['middleware' => 'role:product-owner'], function() {
@@ -44,6 +46,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
         Route::resource('/sprint', 'App\Http\Controllers\SprintController');
         Route::resource('/task', 'App\Http\Controllers\TaskController');
+
+        Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
+        Route::get('/project/{id}/status', 'App\Http\Controllers\ProjectController@approve')->name('project.status');
+        Route::put('/project/{id}/approval', 'App\Http\Controllers\ProjectController@approveProject')->name('project.approval');
     });
 });
 

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Team Settings') }}</x-slot>
     <x-slot name="header_content">
         <h1>Team Settings</h1>
         <div class="section-header-breadcrumb">

@@ -8,6 +8,7 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Jetstream\Jetstream;
 
@@ -52,7 +53,7 @@ class ProjectController extends Controller
             'platform' => 'required',
             'proposal' => 'required|mimes:pdf,docx|max:2048',
             'team_id' => 'required',
-            'client_id' => 'required'
+            'client_id' => 'required',
         ]);
 
         $input = $request->all();
@@ -178,5 +179,27 @@ class ProjectController extends Controller
         $data = $project->where('id', $id)->first();
         $file = public_path("uploads/proposal/".$data->proposal);
         return response()->download($file);
+    }
+
+    public function approve($id)
+    {
+        $project = Project::find($id);
+        return view('pages.project.approval', compact('project'));
+    }
+
+    public function approveProject(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $user = Project::find($id);
+        $user->update([
+            'status' => $request->status,
+        ]);
+
+        Alert::success('Success!', 'Status has been succesfully updated.');
+
+        return redirect('/project');
     }
 }

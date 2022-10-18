@@ -35,11 +35,9 @@ class ProjectTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Client", "client.name")
-                ->collapseOnTablet()
                 ->searchable()
                 ->sortable(),
             Column::make("Team", "team.name")
-                ->collapseOnTablet()
                 ->searchable()
                 ->sortable(),
             Column::make("Due date", "end_date")
@@ -47,7 +45,6 @@ class ProjectTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Progress", "progress")
-                ->collapseOnTablet()
                 ->searchable()
                 ->format(
                     fn ($value, $row, Column $column) => view('pages.project.table.progress')->withValue($row)

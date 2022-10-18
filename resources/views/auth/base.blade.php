@@ -11,6 +11,7 @@
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="auth/css/style.css">
+  <link rel="stylesheet" href="auth/css/custom.css">
   <link rel="stylesheet" href="auth/css/components.css">
 </head>
 

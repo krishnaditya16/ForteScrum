@@ -89,4 +89,26 @@ class ClientUserController extends Controller
         return view('pages.user.edit', compact('user', 'data'));
     }
 
+    public function changePassword($id)
+    {
+        $user = User::find($id);
+        return view('pages.client.change-password', compact('user'));
+    }
+
+    public function editPassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'confirmed|min:8',
+        ]);
+
+        $user = User::find($id);
+        $user->update([
+            'password' => Hash::make($request['password']),
+        ]);
+
+        Alert::success('Success!', 'Password has been succesfully updated.');
+
+        return redirect('/client-user');
+    }
+
 }

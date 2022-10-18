@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('User Profile') }}</x-slot>
     <x-slot name="header_content">
         <h1>User Profile</h1>
         <div class="section-header-breadcrumb">

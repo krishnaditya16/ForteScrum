@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Create Team') }}</x-slot>
     <x-slot name="header_content">
         <h1>Create Team</h1>
         <div class="section-header-breadcrumb">

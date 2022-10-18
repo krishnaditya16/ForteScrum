@@ -5,4 +5,13 @@
  * 
  */
 
+ @media only screen and (max-width: 480px) {  
+    .hidden-mobile-auth  {  
+      display: none  
+    }  
+    .logo-mobile {
+      text-align: center;
+    }
+}  
+
 /*# sourceMappingURL=custom.css.map */

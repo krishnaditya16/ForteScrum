@@ -27,7 +27,7 @@ $current_team = Auth::user()->currentTeam;
     <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>
     <div class="dropdown-menu">
         <a href="/project/{{ $project->id }}/" class="dropdown-item has-icon"><i class="fas fa-external-link-alt"></i> View</a>
-        <a href="#" class="dropdown-item has-icon"><i class="fas fa-vote-yea"></i> Approve Project</a>
+        <a href="/project/{{ $project->id }}/status" class="dropdown-item has-icon"><i class="fas fa-vote-yea"></i> Project Approval</a>
     </div>
 </div>
 @endif

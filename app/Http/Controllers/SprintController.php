@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
+use App\Models\Sprint;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SprintController extends Controller
 {
@@ -23,7 +28,8 @@ class SprintController extends Controller
      */
     public function create()
     {
-        //
+        $projects = Project::all();
+        return view('pages.sprint.create', compact('projects'));
     }
 
     /**
@@ -34,7 +40,22 @@ class SprintController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'numeric', 'min:1',Rule::unique('sprints')->where(function ($query) use ($request) {
+                return $query->where('project_id', $request->project_id);
+            })],
+            'project_id' => 'required',
+        ],[
+            'name.unique' => 'Sprint iteration already exist for selected project.',
+            'name.required' => 'The sprint iteration field is required.',
+            'project_id.required' => 'The project field is required.',
+        ]);
+
+        Sprint::create($request->all());
+
+        Alert::success('Success!', 'Data has been succesfully created.');
+
+        return redirect('/sprint');
     }
 
     /**
@@ -54,9 +75,10 @@ class SprintController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Sprint $sprint)
     {
-        //
+        $projects = Project::all();
+        return view('pages.sprint.edit', compact('projects', 'sprint'));
     }
 
     /**
@@ -66,9 +88,24 @@ class SprintController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Sprint $sprint)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'numeric', 'min:1', Rule::unique('sprints')->ignore($sprint->id)->where(function ($query) use ($request) {
+                return $query->where('project_id', $request->project_id);
+            })],
+            'project_id' => 'required',
+        ],[
+            'name.unique' => 'Sprint iteration already exist for selected project.',
+            'name.required' => 'The sprint iteration field is required.',
+            'project_id.required' => 'The project field is required.',
+        ]);
+
+        $sprint->update($request->all());
+
+        Alert::success('Success!', 'Data has been succesfully updated.');
+
+        return redirect('/sprint');
     }
 
     /**

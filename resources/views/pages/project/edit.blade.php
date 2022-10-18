@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Edit Project') }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
             <a href="{{ route('project.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
@@ -36,10 +37,10 @@
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Progress</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Progress : <output name="progress" id="progressOutputId">{{ $project->progress }}</output>%</label>
                             <div class="col-sm-12 col-md-7">
                             <input type="range" class="form-control" name="progress" id="progressInputId" value="{{ $project->progress }}" min="0" max="100" oninput="progressOutputId.value = progressInputId.value">
-                            <output name="progress" id="progressOutputId">{{ $project->progress }}</output>%
+                            
                                 @error('progress') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>

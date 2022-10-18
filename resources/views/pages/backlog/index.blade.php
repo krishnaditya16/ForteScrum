@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Backlog Data') }}</x-slot>
     <x-slot name="header_content">
         <h1>{{ __('Backlog Data') }}</h1>
 

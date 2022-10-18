@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Sprint Data') }}</x-slot>
     <x-slot name="header_content">
         <h1>{{ __('Sprint Data') }}</h1>
 
@@ -7,5 +8,5 @@
             <div class="breadcrumb-item">Sprint</div>
         </div>
     </x-slot>
-    
+    <livewire:sprint.sprints>
 </x-app-layout>

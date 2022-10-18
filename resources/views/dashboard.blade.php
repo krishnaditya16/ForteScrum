@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Dashboard') }}</x-slot>
     <x-slot name="header_content">
         <h1>Dashboard</h1>
         <div class="section-header-breadcrumb">

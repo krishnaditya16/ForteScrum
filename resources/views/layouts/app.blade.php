@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $title }} - {{ config('app.name', 'Laravel') }}</title>
 
     @isset($meta)
         {{ $meta }}
@@ -14,12 +14,11 @@
 
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Nunito:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/components.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/notyf/notyf.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
@@ -76,17 +75,17 @@
 
     <!-- General JS Scripts -->
     <script src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
-    <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
-    <script src="{{ asset('stisla/js/modules/bootstrap.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/jquery.nicescroll.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/moment.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/marked.min.js') }}"></script>
-    <script defer src="{{ asset('vendor/notyf/notyf.min.js') }}"></script>
     <script defer src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
-    <!-- <script defer src="{{ asset('stisla/js/modules/chart.min.js') }}"></script>
-    <script defer src="{{ asset('vendor/select2/select2.min.js') }}"></script> -->
+    <script defer src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/popper.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/tooltip.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/moment.min.js') }}"></script>
+
+    <script defer src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- JS Libraies -->
     <script defer src="{{ asset('stisla/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>

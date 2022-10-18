@@ -34,7 +34,6 @@ class ProjectOwnerTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Client", "client.name")
-                ->collapseOnTablet()
                 ->searchable()
                 ->sortable(),
             Column::make("Team", "team.name")
@@ -46,7 +45,6 @@ class ProjectOwnerTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Progress", "progress")
-                ->collapseOnTablet()
                 ->searchable()
                 ->format(
                     fn ($value, $row, Column $column) => view('pages.project.table.progress')->withValue($row)

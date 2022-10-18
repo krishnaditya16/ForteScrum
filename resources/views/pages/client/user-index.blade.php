@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Client Users') }}</x-slot>
     <x-slot name="header_content">
         <h1>{{ __('Client\'s Account Data') }}</h1>
 

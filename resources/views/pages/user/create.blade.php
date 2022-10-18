@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Create User') }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
             <a href="{{ route('user.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
