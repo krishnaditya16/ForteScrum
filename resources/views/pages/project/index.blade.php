@@ -7,5 +7,5 @@
             <div class="breadcrumb-item">Project</div>
         </div>
     </x-slot>
-    
+    <livewire:project.projects>
 </x-app-layout>

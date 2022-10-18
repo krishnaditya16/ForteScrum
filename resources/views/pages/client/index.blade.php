@@ -7,5 +7,5 @@
             <div class="breadcrumb-item">Client</div>
         </div>
     </x-slot>
-    
+    <livewire:client.clients>
 </x-app-layout>

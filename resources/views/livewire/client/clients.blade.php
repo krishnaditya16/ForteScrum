@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <livewire:user.user-table />
+                <livewire:client.client-table />
             </div>
         </div>
     </div>

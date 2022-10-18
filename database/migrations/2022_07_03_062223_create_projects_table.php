@@ -17,9 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->date('due_date');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->string('category');
+            $table->bigInteger('progress')->default(0);;
+            $table->string('platform');
             $table->smallInteger('status')->default(0);
             $table->foreignId('team_id')->constrained('teams');
+            $table->foreignId('client_id')->constrained('clients');
             $table->timestamps();
         });
     }

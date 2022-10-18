@@ -13,7 +13,7 @@
 
     <h2 class="section-title">Edit User </h2>
     <p class="section-lead mb-3">
-        On this page you can edit existing user & information.
+        On this page you can edit existing user information.
     </p>
 
     <div class="row">
@@ -55,6 +55,10 @@
                                 @error('current_team_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
+
+                        @foreach ($data as $team)
+                        <input type="hidden" name="team_id" value="{{ $team->id }}">
+                        @endforeach
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>

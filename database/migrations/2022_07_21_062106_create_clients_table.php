@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone_number');
             $table->smallInteger('status')->default(0);
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

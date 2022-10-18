@@ -13,7 +13,7 @@
 
     <h2 class="section-title">Create New </h2>
     <p class="section-lead mb-3">
-        On this page you can create a new post and fill in all fields.
+        On this page you can create a new user and fill in all fields.
     </p>
 
     <div class="row">

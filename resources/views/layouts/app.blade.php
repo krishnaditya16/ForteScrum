@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/css/custom.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/components.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/notyf/notyf.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -27,6 +28,10 @@
 
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('stisla/modules/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/modules/summernote/summernote-bs4.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap-daterangepicker/daterangepicker.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
 
     <style>
         [x-cloak] {
@@ -80,13 +85,17 @@
     <script defer src="{{ asset('stisla/js/modules/marked.min.js') }}"></script>
     <script defer src="{{ asset('vendor/notyf/notyf.min.js') }}"></script>
     <script defer src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/chart.min.js') }}"></script>
-    <script defer src="{{ asset('vendor/select2/select2.min.js') }}"></script>
+    <!-- <script defer src="{{ asset('stisla/js/modules/chart.min.js') }}"></script>
+    <script defer src="{{ asset('vendor/select2/select2.min.js') }}"></script> -->
 
     <!-- JS Libraies -->
     <script defer src="{{ asset('stisla/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
     <script defer src="{{ asset('stisla/modules/jquery-ui/jquery-ui.min.js') }}"></script>
     <script defer src="{{ asset('stisla/modules/select2/dist/js/select2.full.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/modules/summernote/summernote-bs4.js') }}"></script>
+    <script defer src="{{ asset('stisla/modules/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script defer src="{{ asset('stisla/modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
 
     <script src="{{ asset('stisla/js/stisla.js') }}"></script>
     <script src="{{ asset('stisla/js/scripts.js') }}"></script>

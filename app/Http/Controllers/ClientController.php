@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ClientController extends Controller
 {
@@ -23,7 +27,8 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        $data = User::all();
+        return view('pages.client.create', compact('data'));
     }
 
     /**
@@ -34,7 +39,21 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:3|max:30',
+            'email' => 'required|email|unique:users',
+            'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'address' => 'required',
+            'user_id' => 'required'
+        ]);
+
+        $client = Client::create($request->all());
+
+        DB::table('users')->where('id', $request['user_id'])->update(['client_id' => $client->id]);
+
+        Alert::success('Success!', 'Data has been succesfully created.');
+
+        return redirect('/client');
     }
 
     /**
@@ -54,9 +73,10 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Client $client)
     {
-        //
+        $data = User::all();
+        return view('pages.client.edit', compact('client', 'data'));
     }
 
     /**
@@ -66,19 +86,20 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Client $client)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required|min:3|max:30',
+            'email' => 'required|email|unique:users',
+            'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'address' => 'required'
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $client->update($request->all());
+
+        Alert::success('Success!', 'Data has been succesfully updated.');
+
+        return redirect('/client');
     }
+    
 }

@@ -5,4 +5,15 @@
  * 
  */
 
+ /* For summernote override unordered and order list */
+.note-editable ul{
+    list-style: disc !important;
+    list-style-position: inside !important;
+  }
+  
+  .note-editable ol {
+    list-style: decimal !important;
+    list-style-position: inside !important;
+  }
+
 /*# sourceMappingURL=custom.css.map */

@@ -15,7 +15,7 @@ if(Auth::user()->ownsTeam($current_team)) {
                     "section_list" => [
                         ["href" => "user.index", "text" => "All Users"],
                         ["href" => "client.index", "text" => "Clients Data"],
-                        ["href" => "client.index", "text" => "Client Users"],
+                        ["href" => "client-user.index", "text" => "Client Users"],
                     ]
                 ]
             ],
@@ -28,8 +28,8 @@ if(Auth::user()->ownsTeam($current_team)) {
                     "section_text" => "Project",
                     "section_list" => [
                         ["href" => "project.index", "text" => "Project List"],
-                        ["href" => "backlog.index", "text" => "Backlog"],
                         ["href" => "sprint.index", "text" => "Sprint"],
+                        ["href" => "backlog.index", "text" => "Backlog"],
                         ["href" => "task.index", "text" => "Task"],
                     ]
                 ]
@@ -63,6 +63,21 @@ if(Auth::user()->ownsTeam($current_team)) {
             "href" => "dashboard",
             "text" => "Dashboard",
             "is_multi" => false,
+        ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Project",
+                    "section_list" => [
+                        ["href" => "project.index", "text" => "Project List"],
+                        ["href" => "sprint.index", "text" => "Sprint"],
+                        ["href" => "backlog.index", "text" => "Backlog"],
+                        ["href" => "task.index", "text" => "Task"],
+                    ]
+                ]
+            ],
+            "text" => "Project",
+            "is_multi" => true,
         ],
     ];
     $navigation_links = array_to_object($links);
