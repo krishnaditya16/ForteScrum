@@ -34,13 +34,11 @@ class SprintTable extends DataTableComponent
             Column::make("Sprint Iteration", "name")
                 ->searchable(),
             Column::make("Total Story point", "story_point")
-                ->searchable()
-            // Column::make('Description', 'description')
-            //     ->format(
-            //         fn ($value, $row, Column $column) => view('pages.sprint.table.description')->withValue($value)
-            //     ),
-            // Column::make("Description")
-            //     ->label(fn ($row, Column $column) => view('pages.sprint.table.description')->with(['sprint' => $row])),
+                ->searchable(),
+            Column::make('Description', 'description')
+                ->format(
+                    fn ($value, $row, Column $column) => view('pages.sprint.table.description')->withValue($value)
+                ),
         ];
     }
 

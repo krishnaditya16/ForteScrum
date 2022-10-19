@@ -2,7 +2,7 @@
     <x-slot name="title">{{ __('Create Sprint') }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
-            <a href="{{ route('sprint.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ url()->previous() }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
         </div>
         <h1>{{ __('Add Sprint') }}</h1>
         <div class="section-header-breadcrumb">

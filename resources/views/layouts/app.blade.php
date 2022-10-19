@@ -75,17 +75,13 @@
 
     <!-- General JS Scripts -->
     <script src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
-
     <script defer src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/popper.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/tooltip.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/bootstrap/js/bootstrap.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/moment.min.js') }}"></script>
-
-    <script defer src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- JS Libraies -->
     <script defer src="{{ asset('stisla/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
@@ -97,6 +93,7 @@
     <script defer src="{{ asset('stisla/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
 
     <script src="{{ asset('stisla/js/stisla.js') }}"></script>
+    <script src="{{ asset('stisla/js/custom.js') }}"></script>
     <script src="{{ asset('stisla/js/scripts.js') }}"></script>
 
     <!-- Livewire Sweetaler2 -->

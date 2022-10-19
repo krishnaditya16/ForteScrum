@@ -138,7 +138,7 @@
 
                 @php $current_team = Auth::user()->currentTeam; @endphp
                 @if(Auth::user()->hasTeamRole($current_team, 'project-manager'))
-                <a href="{{ route('project.edit', $project->id) }}" class="btn btn-icon icon-left btn-primary mt-2" type="button"><i class="fas fa-edit"></i>Update Progress</a>
+                    <a href="{{ route('project.edit', $project->id) }}" class="btn btn-icon icon-left btn-primary mt-2" type="button" @if($project->status == 0) onclick="alert()->warning('Warning!','Project need to be approved by product owner first!');" @endif><i class="fas fa-edit"></i>Update Progress</a>
                 @endif
                 <hr class="mb-4 mt-4">
 
@@ -157,13 +157,13 @@
                             <input type="radio" @if($project->platform == "0") checked="checked" @endif class="selectgroup-input" disabled>
                             <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-laptop-code"></i></span>
                         </label>
-                        <label class="selectgroup-item" data-toggle="tooltip" title="Mobile">
-                            <input type="radio" @if($project->platform == "1") checked="checked" @endif class="selectgroup-input" disabled>
-                            <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-mobile"></i></span>
-                        </label>
                         <label class="selectgroup-item" data-toggle="tooltip" title="Web">
-                            <input type="radio" @if($project->platform == "2") checked="checked" @endif class="selectgroup-input" disabled>
+                            <input type="radio" @if($project->platform == "1") checked="checked" @endif class="selectgroup-input" disabled>
                             <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-globe"></i></span>
+                        </label>
+                        <label class="selectgroup-item" data-toggle="tooltip" title="Mobile">
+                            <input type="radio" @if($project->platform == "2") checked="checked" @endif class="selectgroup-input" disabled>
+                            <span class="selectgroup-button selectgroup-button-icon"><i class="fas fa-mobile"></i></span>
                         </label>
                         <label class="selectgroup-item" data-toggle="tooltip" title="Other">
                             <input type="radio" @if($project->platform == "3") checked="checked" @endif class="selectgroup-input" disabled>

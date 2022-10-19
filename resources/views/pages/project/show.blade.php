@@ -22,10 +22,10 @@
                     <a class="nav-link" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Detail</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="backlog-tab" data-toggle="tab" href="#backlog" role="tab" aria-controls="backlog" aria-selected="false">Backlog</a>
+                    <a class="nav-link" id="sprint-tab" data-toggle="tab" href="#sprint" role="tab" aria-controls="sprint" aria-selected="false">Sprint</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="sprint-tab" data-toggle="tab" href="#sprint" role="tab" aria-controls="sprint" aria-selected="false">Sprint</a>
+                    <a class="nav-link" id="backlog-tab" data-toggle="tab" href="#backlog" role="tab" aria-controls="backlog" aria-selected="false">Backlog</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="task-tab" data-toggle="tab" href="#task" role="tab" aria-controls="task" aria-selected="false">Task</a>
@@ -41,12 +41,12 @@
                     @include('pages.project.show.detail') 
                 </div>
 
-                <div class="tab-pane fade" id="backlog" role="tabpanel" aria-labelledby="backlog-tab">
-                    @include('pages.project.show.backlog') 
-                </div>
-
                 <div class="tab-pane fade" id="sprint" role="tabpanel" aria-labelledby="task-tab">
                     @include('pages.project.show.sprint') 
+                </div>
+
+                <div class="tab-pane fade" id="backlog" role="tabpanel" aria-labelledby="backlog-tab">
+                    @include('pages.project.show.backlog') 
                 </div>
 
                 <div class="tab-pane fade" id="task" role="tabpanel" aria-labelledby="task-tab">
@@ -56,6 +56,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function warnProgress() {              
+            myWindow=window.open('lead_data.php?leadid=1','myWin','width=400,height=650')
+        }
+    </script>
 
 </x-app-layout>
 
@@ -70,7 +76,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <iframe src="{{ URL::asset('/uploads/proposal/'.$project->proposal) }}" class="col-12" height="400px"></iframe>
+            <iframe src="{{ url('/uploads/proposal/'.$project->proposal) }}" class="col-12" height="400px">Your browser isn't compatible</iframe>
         </div>
         <div class="modal-footer bg-whitesmoke">
             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>

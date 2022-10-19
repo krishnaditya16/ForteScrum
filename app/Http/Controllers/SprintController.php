@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Sprint;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -77,8 +78,16 @@ class SprintController extends Controller
      */
     public function edit(Sprint $sprint)
     {
+        $data = Sprint::join('projects', 'sprints.project_id', 'projects.id')->select('team_id')->first();
+        $current_team = Auth::user()->currentTeam;
         $projects = Project::all();
-        return view('pages.sprint.edit', compact('projects', 'sprint'));
+        
+        if (empty($data) || $current_team->id != $data->team_id) {
+            abort(403);
+        }
+        else {
+            return view('pages.sprint.edit', compact('projects', 'sprint'));
+        }
     }
 
     /**
@@ -101,7 +110,17 @@ class SprintController extends Controller
             'project_id.required' => 'The project field is required.',
         ]);
 
-        $sprint->update($request->all());
+        $desc = $request->description;
+
+        if($desc == "<p><br></p>"){
+            $sprint->update([
+                'name' => $request['name'],
+                'description' => "",
+                'project_id' => $request['project_id']
+            ]);
+        } else {
+            $sprint->update($request->all());
+        }
 
         Alert::success('Success!', 'Data has been succesfully updated.');
 

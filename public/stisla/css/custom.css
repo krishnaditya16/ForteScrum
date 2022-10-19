@@ -5,15 +5,39 @@
  * 
  */
 
- /* For summernote override unordered and order list */
-.note-editable ul{
+/* For summernote override unordered and order list */
+.note-editable ul {
     list-style: disc !important;
     list-style-position: inside !important;
-  }
-  
-  .note-editable ol {
+}
+
+.note-editable ol {
     list-style: decimal !important;
     list-style-position: inside !important;
-  }
+}
+
+.dropdown-nav-user {
+    margin-left: -10px;
+}
+
+.align-mid-table {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.bg-footer-table {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: #666;
+}
+
+@media only screen and (max-width: 480px) {
+    .hidden-mobile-auth {
+        display: none;
+    }
+    .logo-mobile {
+        text-align: center;
+    }
+}
 
 /*# sourceMappingURL=custom.css.map */

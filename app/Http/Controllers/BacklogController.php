@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Backlog;
+use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BacklogController extends Controller
 {
@@ -23,7 +27,8 @@ class BacklogController extends Controller
      */
     public function create()
     {
-        //
+        $projects = Project::all();
+        return view('pages.backlog.create', compact('projects'));
     }
 
     /**
@@ -34,7 +39,16 @@ class BacklogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'project_id' => 'required',
+        ]);
+
+        Backlog::create($request->all());
+
+        Alert::success('Success!', 'Data has been succesfully created.');
+
+        return redirect('/backlog');
     }
 
     /**
@@ -54,9 +68,18 @@ class BacklogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Backlog $backlog)
     {
-        //
+        $data = Backlog::join('projects', 'backlogs.project_id', 'projects.id')->select('team_id')->first();
+        $current_team = Auth::user()->currentTeam;
+        $projects = Project::all();
+        
+        if (empty($data) || $current_team->id != $data->team_id) {
+            abort(403);
+        }
+        else {
+            return view('pages.backlog.edit', compact('projects', 'backlog'));
+        }
     }
 
     /**
@@ -66,9 +89,29 @@ class BacklogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Backlog $backlog)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'max:5000',
+            'project_id' => 'required',
+        ]);
+
+        $desc = $request->description;
+
+        if($desc == "<p><br></p>"){
+            $backlog->update([
+                'name' => $request['name'],
+                'description' => "",
+                'project_id' => $request['project_id']
+            ]);
+        } else {
+            $backlog->update($request->all());
+        }
+
+        Alert::success('Success!', 'Data has been succesfully updated.');
+
+        return redirect('/backlog');
     }
 
     /**

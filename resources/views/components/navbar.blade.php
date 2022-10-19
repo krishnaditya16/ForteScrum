@@ -11,14 +11,38 @@
         </div>
     </form>
     <ul class="navbar-nav navbar-right">
-        <img class="rounded-circle mr-1" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" width="31px">
-        <li class="dropdown">
+        <li class="dropdown dropdown-list-toggle pr-3">
+            <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg @if (Auth::user()->name == 'test') beep @else @endif"><i class="far fa-bell"></i></a>
+            <div class="dropdown-menu dropdown-list dropdown-menu-right">
+                <div class="dropdown-header">Notifications
+                    <div class="float-right">
+                        <a href="#">Mark All As Read</a>
+                    </div>
+                </div>
+                <div class="dropdown-list-content dropdown-list-icons">
+                    <a href="#" class="dropdown-item dropdown-item-unread">
+                        <div class="dropdown-item-icon bg-primary text-white">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="dropdown-item-desc">
+                            Template update is available now!
+                            <div class="time text-primary">2 Min Ago</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="dropdown-footer text-center">
+                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </li>
+        <img class="rounded-circle mr-1" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" width="32px">
+        <li class="dropdown dropdown-nav-user">
             <a href="#" data-turbolinks="false" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-            @if (!is_null(Auth::user()))
+                @if (!is_null(Auth::user()))
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->name }}</div>
             </a>
             @else
-                <div class="d-sm-none d-lg-inline-block">Hi, Welcome</div></a>
+            <div class="d-sm-none d-lg-inline-block">Hi, Welcome</div></a>
             @endif
             <div class="dropdown-menu dropdown-menu-right">
                 <!-- User & Team Management -->

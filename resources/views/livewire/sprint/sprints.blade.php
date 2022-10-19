@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <livewire:sprint.sprint-table />
+                <livewire:sprint.sprint-table/>
             </div>
         </div>
     </div>

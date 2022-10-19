@@ -39,7 +39,7 @@
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Client</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="client_id">
-                                    <option selected disabled> Select Team </option>
+                                    <option selected disabled> Select Client </option>
                                     @foreach ($clients as $client)
                                     <option value="{{ $client->id }}">{{ $client->name }}</option>
                                     @endforeach
@@ -57,10 +57,10 @@
                                     <option value="{{ $team->id }}">{{ $team->name }}</option>
                                     @endforeach
                                 </select>
-                                <small class="form-text text-muted">
-                                    Rules:
-                                    1. Different team must be used if selected team already have projects with different client.
-                                    2. Same team can work on multiple project with the same client.
+                                <small class="form-text text-muted mt-3">
+                                    <b>Rules:</b> <br>
+                                    1. Same team can work on multiple project with the same client. <br>
+                                    2. Different team must be used if selected team already have projects with different client. <br>
                                 </small>
                                 @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
@@ -75,7 +75,7 @@
                                     <small class="form-text text-muted mt-3">
                                         File format are PDF or Word, and file size must be below 2 Mb.
                                     </small>
-                                    @error('title') <span class="text-red-500">{{ $message }}</span>@enderror
+                                    @error('proposal') <span class="text-red-500">{{ $message }}</span>@enderror
                                 </div>
                             </div>
                         </div>
@@ -84,23 +84,22 @@
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Details</label>
                             <div class="col-sm-12 col-md-7">
                                 <textarea class="summernote" name="description">{{ old('description') }}</textarea>
-                                @error('description') <span class="text-red-500">{{ $message }}</span>@enderror
+                                @error('description') <div class="mb-3"><span class="text-red-500">{{ $message }}</span></div>@enderror
                             </div>
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start Date</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start - End Date</label>
                             <div class="col-sm-12 col-md-7">
-                                <input type="text" class="form-control datepicker" name="start_date" value="{{ old('start_date') }}">
-                                @error('start_date') <span class="text-red-500">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">End Date</label>
-                            <div class="col-sm-12 col-md-7">
-                                <input type="text" class="form-control datepicker" name="end_date" value="{{ old('end_date') }}">
-                                @error('end_date') <span class="text-red-500">{{ $message }}</span>@enderror
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control daterange" name="project_date" value="{{ old('project_date') }}">
+                                </div>
+                                @error('project_date') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
@@ -115,8 +114,8 @@
                                     <option value="3">Content Marketing</option>
                                     <option value="4">Other</option>
                                 </select>
+                                @error('category') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
-                            @error('category') <span class="text-red-500">{{ $message }}</span>@enderror
                         </div>
 
                         <div class="form-group row mb-4">
@@ -128,8 +127,8 @@
                                     <option value="2">Mobile</option>
                                     <option value="3">Other</option>
                                 </select>
+                                @error('platform') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
-                            @error('platform') <span class="text-red-500">{{ $message }}</span>@enderror
                         </div>
 
                         <div class="form-group row mb-4">

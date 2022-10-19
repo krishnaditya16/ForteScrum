@@ -11,7 +11,7 @@
                     <div class="logo-mobile">
                         <img src="{{ asset('auth/img/stisla-fill.svg') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
                     </div>
-                    
+
                     <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">PM App</span></h4>
                     <p class="text-muted">Before accessing the app, please login first or register if you didn't have an account.</p>
                     <form method="POST" action="{{ route('login') }}">
@@ -42,12 +42,9 @@
 
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                <label class="form-check-label" for="remember">
-                                    {{ __('Remember Me') }}
-                                </label>
-                            </div>
+                                <input type="checkbox" name="remember" class="custom-control-input" tabindex="3" id="remember-me" {{ old('remember') ? 'checked' : '' }}>
+                                <label class="custom-control-label" for="remember-me">Remember Me</label>
+                            </div>                            
                         </div>
 
                         <div class="form-group text-right">
@@ -67,7 +64,8 @@
                         </div>
                     </form>
 
-                    <div class="mt-5 text-center"><hr>
+                    <div class="mt-5 text-center">
+                        <hr>
                         Copyright &copy; <script>
                             document.write(new Date().getFullYear());
                         </script>

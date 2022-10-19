@@ -8,5 +8,5 @@
             <div class="breadcrumb-item">Backlog</div>
         </div>
     </x-slot>
-    
+    <livewire:backlog.backlogs>
 </x-app-layout>

@@ -40,7 +40,7 @@
                         </div>
                     </form>
 
-                    <div class="mt-5 text-center"> <hr> </div>
+                    <div class="mt-5 pt-5 text-center"> <hr> </div>
 
                     <div class="mt-5 text-center">
                         Copyright &copy; <script>

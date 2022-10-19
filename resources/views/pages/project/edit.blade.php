@@ -2,7 +2,7 @@
     <x-slot name="title">{{ __('Edit Project') }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
-            <a href="{{ route('project.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ url()->previous() }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
         </div>
         <h1>{{ __('Edit Project') }}</h1>
         <div class="section-header-breadcrumb">
@@ -36,6 +36,14 @@
                             </div>
                         </div>
 
+                        @if($project->status == "0" || $project->status == "1")
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Progress</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control text-red-500" style="background-color:#fdfdff" readonly value="You cannot edit progress of project that still did not get approval/rejected."></input>
+                            </div>
+                        </div>
+                        @else
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Progress : <output name="progress" id="progressOutputId">{{ $project->progress }}</output>%</label>
                             <div class="col-sm-12 col-md-7">
@@ -44,6 +52,7 @@
                                 @error('progress') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
+                        @endif
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Proposal</label>
@@ -94,18 +103,17 @@
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start Date</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start - End Date</label>
                             <div class="col-sm-12 col-md-7">
-                                <input type="text" class="form-control datepicker" name="start_date" value="{{ $project->start_date }}">
-                                @error('start_date') <span class="text-red-500">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">End Date</label>
-                            <div class="col-sm-12 col-md-7">
-                                <input type="text" class="form-control datepicker" name="end_date" value="{{ $project->end_date }}">
-                                @error('end_date') <span class="text-red-500">{{ $message }}</span>@enderror
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control daterange" name="project_date" value="{{ $dates }}">
+                                </div>
+                                @error('project_date') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
@@ -113,12 +121,12 @@
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Category</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="category">
-                                    <option selected disabled> Select Category </option>
-                                    <option value="0" @if($client->status=="0") selected="selected" @endif>Web Development</option>
-                                    <option value="1" @if($client->status=="1") selected="selected" @endif>Mobile App Development</option>
-                                    <option value="2" @if($client->status=="2") selected="selected" @endif>Graphic Design</option>
-                                    <option value="3" @if($client->status=="3") selected="selected" @endif>Content Marketing</option>
-                                    <option value="4" @if($client->status=="4") selected="selected" @endif>Other</option>
+                                    <option disabled> Select Category </option>
+                                    <option value="0" @if($project->category=="0") selected="selected" @endif>Web Development</option>
+                                    <option value="1" @if($project->category=="1") selected="selected" @endif>Mobile App Development</option>
+                                    <option value="2" @if($project->category=="2") selected="selected" @endif>Graphic Design</option>
+                                    <option value="3" @if($project->category=="3") selected="selected" @endif>Content Marketing</option>
+                                    <option value="4" @if($project->category=="4") selected="selected" @endif>Other</option>
                                 </select>
                             </div>
                             @error('category') <span class="text-red-500">{{ $message }}</span>@enderror
@@ -128,10 +136,10 @@
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Platform</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="platform">
-                                    <option value="0" @if($client->status=="0") selected="selected" @endif>Default</option>
-                                    <option value="1" @if($client->status=="1") selected="selected" @endif>Web</option>
-                                    <option value="2" @if($client->status=="2") selected="selected" @endif>Mobile</option>
-                                    <option value="3" @if($client->status=="3") selected="selected" @endif>Other</option>
+                                    <option value="0" @if($project->platform=="0") selected="selected" @endif>Default</option>
+                                    <option value="1" @if($project->platform=="1") selected="selected" @endif>Web</option>
+                                    <option value="2" @if($project->platform=="2") selected="selected" @endif>Mobile</option>
+                                    <option value="3" @if($project->platform=="3") selected="selected" @endif>Other</option>
                                 </select>
                             </div>
                             @error('platform') <span class="text-red-500">{{ $message }}</span>@enderror

@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Http\Livewire\User;
+namespace App\Http\Livewire\Backlog;
 
+use App\Exports\BacklogExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\User;
-use App\Exports\UserExport;
+use App\Models\Backlog;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
-class UserTable extends DataTableComponent
+class BacklogTable extends DataTableComponent
 {
     use LivewireAlert;
 
-    protected $model = User::class;
-    
+    protected $model = Backlog::class;
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -26,31 +25,18 @@ class UserTable extends DataTableComponent
     {
         return [
             Column::make("Actions")
-                ->label(fn ($row, Column $column) => view('pages.user.table.actions')->with(['user' => $row])),
+                ->label(fn ($row, Column $column) => view('pages.backlog.table.actions')->with(['backlog' => $row])),
             Column::make("Id", "id")
-                ->collapseOnTablet()
                 ->sortable(),
-            Column::make('Profile Photo', 'profile_photo_path')
-                ->format(
-                    fn ($value, $row, Column $column) => view('pages.user.table.photo')->withValue($row)
-                ),
             Column::make("Name", "name")
-                ->collapseOnTablet()
                 ->searchable()
                 ->sortable(),
-            Column::make("Email", "email")
-                ->collapseOnTablet()
+            Column::make("Project", "projects.title")
                 ->searchable()
                 ->sortable(),
-            BooleanColumn::make('Verified', 'email_verified_at')
-                ->sortable()
-                ->collapseOnTablet(),
-            BooleanColumn::make('2FA', 'two_factor_secret')
-                ->sortable()
-                ->collapseOnTablet(),
-            Column::make('Current Team', 'current_team_id')
+            Column::make('Description', 'description')
                 ->format(
-                    fn ($value, $row, Column $column) => view('pages.user.table.current_team')->withValue($value)
+                    fn ($value, $row, Column $column) => view('pages.backlog.table.description')->withValue($value)
                 ),
         ];
     }
@@ -65,30 +51,30 @@ class UserTable extends DataTableComponent
 
     public function exportXLS()
     {
-        $users = $this->getSelected();
-        $total = count($users);
+        $backlogs = $this->getSelected();
+        $total = count($backlogs);
 
         if ($total > 0) {
             $this->clearSelected();
             $currentDate = Carbon::now()->format('d-F-Y');
-            return Excel::download(new UserExport($users), 'Users Data_' . $currentDate . '.xlsx');
+            return Excel::download(new BacklogExport($backlogs), 'Backlogs Data_' . $currentDate . '.xlsx');
         }
 
-        $this->alert('warning', 'You did not select any users to export.', ['timerProgressBar' => true,]);
+        $this->alert('warning', 'You did not select any backlogs to export.', ['timerProgressBar' => true,]);
     }
 
     public function exportCSV()
     {
-        $users = $this->getSelected();
-        $total = count($users);
+        $backlogs = $this->getSelected();
+        $total = count($backlogs);
 
         if ($total > 0) {
             $this->clearSelected();
             $currentDate = Carbon::now()->format('d-F-Y');
-            return Excel::download(new UserExport($users), 'Users Data_' . $currentDate . '.CSV', \Maatwebsite\Excel\Excel::CSV);
+            return Excel::download(new BacklogExport($backlogs), 'Backlogs Data_' . $currentDate . '.CSV', \Maatwebsite\Excel\Excel::CSV);
         }
         
-        $this->alert('warning', 'You did not select any users to export.', ['timerProgressBar' => true,]);
+        $this->alert('warning', 'You did not select any backlogs to export.', ['timerProgressBar' => true,]);
     }
 
     public function deleteConfirm($id)
@@ -117,7 +103,7 @@ class UserTable extends DataTableComponent
 
     public function delete()
     {
-        User::find($this->deleteId)->delete();
+        Backlog::find($this->deleteId)->delete();
         return $this->alert('success', 'Data has been deleted succesfully!', ['timerProgressBar' => true,]);
     }
 }
