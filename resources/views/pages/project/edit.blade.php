@@ -54,6 +54,29 @@
                         </div>
                         @endif
 
+                        @if($project->status == "0" || $project->status == "1")
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Status</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control text-red-500" style="background-color:#fdfdff" readonly value="You cannot edit status of project that still did not get approval/rejected."></input>
+                            </div>
+                        </div>
+                        @else
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Status</label>
+                            <div class="col-sm-12 col-md-7">
+                                <select class="form-control select2" name="status">
+                                    <option disabled> Select Status </option>
+                                    <option value="2" @if($project->status=="2") selected="selected" @endif>In Progress</option>
+                                    <option value="3" @if($project->status=="3") selected="selected" @endif>Completed</option>
+                                    <option value="4" @if($project->status=="4") selected="selected" @endif>On Hold</option>
+                                    <option value="5" @if($project->status=="5") selected="selected" @endif>Cancelled</option>
+                                </select>
+                            </div>
+                            @error('status') <span class="text-red-500">{{ $message }}</span>@enderror
+                        </div>
+                        @endif
+
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Proposal</label>
                             <div class="col-sm-12 col-md-7">

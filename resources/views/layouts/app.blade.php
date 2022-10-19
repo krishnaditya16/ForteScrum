@@ -21,9 +21,11 @@
     <link rel="stylesheet" href="{{ asset('stisla/css/components.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
+    <!-- <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-shims.min.css" media="all">
     <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free-v4-font-face.min.css" media="all">
-    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all">
+    <link rel="stylesheet" href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all"> -->
+
+    <link rel="stylesheet" href="{{ asset('stisla/modules/fontawesome/css/all.min.css') }}">
 
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('stisla/modules/select2/dist/css/select2.min.css') }}">
@@ -41,6 +43,7 @@
     @livewireStyles
 
     <!-- Scripts -->
+    <script src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
     <script defer src="{{ asset('vendor/alpine.js') }}"></script>
 </head>
 
@@ -74,14 +77,13 @@
     @stack('modals')
 
     <!-- General JS Scripts -->
-    <script src="{{ asset('stisla/js/modules/jquery.min.js') }}"></script>
     <script defer src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/popper.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/tooltip.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/bootstrap/js/bootstrap.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
     <script defer src="{{ asset('stisla/js/modules/moment.min.js') }}"></script>
-    <script src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
+    <script defer src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- JS Libraies -->
     <script defer src="{{ asset('stisla/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>

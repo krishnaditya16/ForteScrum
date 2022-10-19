@@ -124,7 +124,7 @@ if(Auth::user()->ownsTeam($current_team)) {
                         @if($section->section_text == 'User')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Project')
-                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-tasks"></i> <span>{{ $section->section_text }}</span></a>
+                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-briefcase"></i> <span>{{ $section->section_text }}</span></a>
                         @endif
                         <ul class="dropdown-menu">
                             @foreach ($section->section_list as $child)

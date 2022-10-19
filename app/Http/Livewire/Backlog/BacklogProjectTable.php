@@ -33,8 +33,7 @@ class BacklogProjectTable extends DataTableComponent
                 ),
             Column::make("Name", "name")
                 ->searchable()
-                ->sortable()
-                ->collapseOnTablet(),
+                ->sortable(),
             Column::make('Description', 'description')
                 ->searchable()
                 ->format(

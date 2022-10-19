@@ -2,7 +2,7 @@
     <x-slot name="title">{{ $project->title }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
-            <a href="{{ route('project.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ url()->previous() }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
         </div>
         <h1>{{ __($project->title) }}</h1>
         <div class="section-header-breadcrumb">
@@ -27,9 +27,6 @@
                 <li class="nav-item">
                     <a class="nav-link" id="backlog-tab" data-toggle="tab" href="#backlog" role="tab" aria-controls="backlog" aria-selected="false">Backlog</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="task-tab" data-toggle="tab" href="#task" role="tab" aria-controls="task" aria-selected="false">Task</a>
-                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
 
@@ -47,10 +44,6 @@
 
                 <div class="tab-pane fade" id="backlog" role="tabpanel" aria-labelledby="backlog-tab">
                     @include('pages.project.show.backlog') 
-                </div>
-
-                <div class="tab-pane fade" id="task" role="tabpanel" aria-labelledby="task-tab">
-                    @include('pages.project.show.task') 
                 </div>
 
             </div>

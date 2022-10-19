@@ -31,12 +31,61 @@
     color: #666;
 }
 
+.header-kanban {
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.kanban {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.kanban-title {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.kanban-list {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: #666;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.kanban-content {
+    margin-top: 0px;
+}
+
+.empty-kanban {
+    background-color: #fff;
+    color: #191d21;
+}
+
+.link-dropdown-kanban {
+    font-size: 13px;
+}
+
+.btn-dropdown-kanban {
+    font-size: 13px;
+    padding: 10px 20px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
 @media only screen and (max-width: 480px) {
     .hidden-mobile-auth {
         display: none;
     }
     .logo-mobile {
         text-align: center;
+    }
+    .kanban {
+        max-height: 300px;
+        overflow: auto;
     }
 }
 

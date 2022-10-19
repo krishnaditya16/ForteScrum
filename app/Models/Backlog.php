@@ -15,4 +15,9 @@ class Backlog extends Model
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
+
+    public function tasks()
+    {
+        return $this->hasOne(Task::class, 'backlog_id');
+    }
 }

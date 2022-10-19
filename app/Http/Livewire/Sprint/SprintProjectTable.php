@@ -33,12 +33,10 @@ class SprintProjectTable extends DataTableComponent
                 ),
             Column::make("Sprint Iteration", "name")
                 ->sortable()
-                ->searchable()
-                ->collapseOnTablet(),
+                ->searchable(),
             Column::make("Total Story point", "story_point")
                 ->sortable()
-                ->searchable()
-                ->collapseOnTablet(),
+                ->searchable(),
             Column::make('Description', 'description')
                 ->searchable()
                 ->format(

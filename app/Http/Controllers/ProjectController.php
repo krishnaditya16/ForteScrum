@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\Sprint;
+use App\Models\Task;
 use App\Models\Team;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -230,6 +233,7 @@ class ProjectController extends Controller
                 'progress' => $request['progress'],
                 'start_date' => $start_date,
                 'end_date' => $end_date,
+                'status' => $request->status,
                 'category' => $request->category,
                 'platform' => $request->platform,
                 'proposal' => $proposal,
@@ -260,6 +264,7 @@ class ProjectController extends Controller
                 'progress' => $request['progress'],
                 'start_date' => $start_date,
                 'end_date' => $end_date,
+                'status' => $request->status,
                 'category' => $request['category'],
                 'platform' => $request['platform'],
                 'proposal' => $proposalName,

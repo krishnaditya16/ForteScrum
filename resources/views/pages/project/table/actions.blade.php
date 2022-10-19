@@ -8,6 +8,7 @@ $current_team = Auth::user()->currentTeam;
     <div class="dropdown-menu">
         <a href="/project/{{ $project->id }}/" class="dropdown-item has-icon"><i class="fas fa-external-link-alt"></i> View</a>
         <a href="/project/{{ $project->id }}/edit" class="dropdown-item has-icon"><i class="far fa-edit"></i> Edit</a>
+        <a href="/project/{{ $project->id }}/tasks" class="dropdown-item has-icon"><i class="fas fa-tasks"></i> Task List </a>
         <div class="dropdown-divider"></div>
         <a role="button" wire:click="deleteConfirm({{ $project->id }})" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i> Delete</a>
     </div>

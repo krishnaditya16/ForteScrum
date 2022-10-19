@@ -20,7 +20,7 @@
                                 <figure class="avatar mr-2 mb-4 mt-2" data-initial="{{$name}}" data-toggle="tooltip" title="{{ $user->name }}"></figure>
                                 @else
                                 <figure class="avatar mr-2 mb-4 mt-2">
-                                    <img src="{{ $user->profile_photo_path }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
+                                    <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
                                 </figure>
                                 @endif
                             @endforeach
@@ -43,7 +43,7 @@
                                 <figure class="avatar mr-2 mb-4 mt-2" data-initial="{{$name}}" data-toggle="tooltip" title="{{ $user->name }}"></figure>
                                 @else
                                 <figure class="avatar mr-2 mb-4 mt-2">
-                                    <img src="{{ $user->profile_photo_path }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
+                                    <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
                                 </figure>
                                 @endif
                         @endforeach
@@ -64,7 +64,7 @@
                                 <figure class="avatar mr-2 mb-4 mt-2" data-initial="{{$name}}" data-toggle="tooltip" title="{{ $user->name }}"></figure>
                                 @else
                                 <figure class="avatar mr-2 mb-4 mt-2">
-                                    <img src="{{ $user->profile_photo_path }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
+                                    <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
                                 </figure>
                                 @endif
                             @endforeach
