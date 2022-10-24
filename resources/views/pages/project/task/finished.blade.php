@@ -28,7 +28,7 @@
                             <a class="nav-link" href="{{ route('project.task', $data->id) }}"><i class="fas fa-chalkboard"></i> Kanban View</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-table"></i> Table View</a>
+                            <a class="nav-link" href="{{ route('project.task.table', $data->id) }}"><i class="fas fa-table"></i> Table View</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('project.board.create', $data->id) }}"><i class="fas fa-plus"></i> New Board</a>
@@ -63,7 +63,7 @@
                             </button>
                         </form>
                         @else
-                        <a class="dropdown-item" data-toggle="tooltip" data-placement="bottom" title="Action is disabled for this board."><i class="fas fa-trash"></i>&nbsp; Delete Board</a>
+                        <a class="dropdown-item" style="color:grey" data-toggle="tooltip" data-placement="bottom" title="Action is disabled for this board."><i class="fas fa-trash"></i>&nbsp; Delete Board</a>
                         @endif
                     </div>
                 </div>

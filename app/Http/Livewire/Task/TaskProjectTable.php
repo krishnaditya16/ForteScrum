@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Livewire\Backlog;
+namespace App\Http\Livewire\Task;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
-use App\Models\Backlog;
+use App\Models\Task;
 
-class BacklogProjectTable extends DataTableComponent
+class TaskProjectTable extends DataTableComponent
 {
     use LivewireAlert;
-
-    protected $model = Backlog::class;
 
     public function mount($project)
     {
         $this->project = $project;
     }
+
+    protected $model = Task::class;
 
     public function configure(): void
     {
@@ -28,29 +28,44 @@ class BacklogProjectTable extends DataTableComponent
     {
         return [
             Column::make('Actions', 'id')
-                ->format(
-                    fn ($value, $row, Column $column) => view('pages.project.table.actions-backlog')->withValue($value)
-                ),
-            Column::make("Name", "name")
-                ->searchable()
+            ->format(
+                fn ($value, $row, Column $column) => view('pages.project.table.actions-task')->withValue($value)
+            ),
+            Column::make("Title", "title")
+                ->searchable(),
+            Column::make("Start date", "start_date")
                 ->sortable(),
-            Column::make("Story Point", "story_point")
-                ->searchable()
+            Column::make("End date", "end_date")
                 ->sortable(),
-            Column::make("Sprint Iteration", "sprint_name")
-                ->searchable()
-                ->sortable(),
-            Column::make('Description', 'description')
+            Column::make("Assignee", "assignee")
                 ->searchable()
                 ->format(
-                    fn ($value, $row, Column $column) => view('pages.backlog.table.description')->withValue($value)
+                    fn ($value, $row, Column $column) => view('pages.project.table.task-assignee')->withValue($value)
                 ),
+            Column::make("Priority", "priority")
+                ->searchable()
+                ->format(
+                    fn ($value, $row, Column $column) => view('pages.project.table.task-priority')->withValue($value)
+                ),
+            Column::make("Status", "status")
+                ->searchable()
+                ->format(
+                    fn ($value, $row, Column $column) => view('pages.project.table.task-status')->withValue($value)
+                ),
+            Column::make("Board", "boards.title")
+                ->sortable(),
+            Column::make("Sprint", "sprints.name")
+                ->searchable()
+                ->sortable(),
+            Column::make("Backlog", "backlogs.name")
+                ->searchable()
+                ->sortable(),
         ];
     }
 
     public function builder(): Builder
     {
-        return Backlog::where('project_id', $this->project);
+        return Task::where('tasks.project_id', $this->project);
     }
 
     public function deleteConfirm($id)
@@ -79,7 +94,7 @@ class BacklogProjectTable extends DataTableComponent
 
     public function delete()
     {
-        Backlog::find($this->deleteId)->delete();
+        Task::find($this->deleteId)->delete();
         return $this->alert('success', 'Data has been deleted succesfully!', ['timerProgressBar' => true,]);
     }
 }

@@ -27,7 +27,7 @@
                             <a class="nav-link" href="/project/{{$projects->id}}/tasks"><i class="fas fa-chalkboard"></i> Kanban View</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-table"></i> Table View</a>
+                            <a class="nav-link" href="/project/{{$projects->id}}/table-view"><i class="fas fa-table"></i> Table View</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/project/{{$projects->id}}/create-board"><i class="fas fa-plus"></i> New Board</a>

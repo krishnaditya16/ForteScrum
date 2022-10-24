@@ -37,6 +37,18 @@ if(Auth::user()->ownsTeam($current_team)) {
             "text" => "Project",
             "is_multi" => true,
         ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Report",
+                    "section_list" => [
+                        ["href" => "report.index", "text" => "Project Report"],
+                    ]
+                ]
+            ],
+            "text" => "Report",
+            "is_multi" => true,
+        ],
     ];
     $navigation_links = array_to_object($links);
 } else if(Auth::user()->hasTeamRole($current_team, 'guest')){
@@ -125,6 +137,8 @@ if(Auth::user()->ownsTeam($current_team)) {
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Project')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-briefcase"></i> <span>{{ $section->section_text }}</span></a>
+                        @elseif($section->section_text == 'Report')
+                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-chart-bar"></i> <span>{{ $section->section_text }}</span></a>
                         @endif
                         <ul class="dropdown-menu">
                             @foreach ($section->section_list as $child)

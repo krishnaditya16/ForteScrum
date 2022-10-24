@@ -2,7 +2,7 @@
     <x-slot name="title">{{ $project->title }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
-            <a href="{{ url()->previous() }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ route('project.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
         </div>
         <h1>{{ __($project->title) }}</h1>
         <div class="section-header-breadcrumb">

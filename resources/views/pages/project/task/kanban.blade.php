@@ -28,7 +28,7 @@
                             <a class="nav-link active" href="#"><i class="fas fa-chalkboard"></i> Kanban View</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-table"></i> Table View</a>
+                            <a class="nav-link" href="/project/{{$data->id}}/table-view"><i class="fas fa-table"></i> Table View</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/project/{{$data->id}}/create-board"><i class="fas fa-plus"></i> New Board</a>
@@ -90,8 +90,8 @@
                             </figure>
                             @endif
                         @endforeach 
-                        <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" data-toggle="tooltip" title="Add more user" data-toggle="modal" data-target="#addUserModal" style="text-decoration: none;color:#6c757d;">
-                            <figure class="avatar mr-2 mb-4 mt-2"><i class="fas fa-plus mt-3 ml-3"></i></figure> 
+                        <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" style="text-decoration: none;color:#6c757d;">
+                            <figure class="avatar mr-2 mb-4 mt-2" data-toggle="tooltip" title="Add more user"><i class="fas fa-plus mt-3 ml-3"></i></figure> 
                         </a>
                         <hr class="mb-4">
                         <div class="row">

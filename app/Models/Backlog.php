@@ -9,7 +9,7 @@ class Backlog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'project_id'];
+    protected $fillable = ['name', 'sprint_name', 'description', 'story_point', 'project_id', 'sprint_id'];
 
     public function projects()
     {

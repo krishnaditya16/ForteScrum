@@ -34,7 +34,16 @@ class SprintProjectTable extends DataTableComponent
             Column::make("Sprint Iteration", "name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Total Story point", "story_point")
+            Column::make("Start Date", "start_date")
+                ->sortable()
+                ->searchable(),
+            Column::make("End Date", "end_date")
+                ->sortable()
+                ->searchable(),
+            Column::make("Focus Factor (%)", "focus_factor")
+                ->sortable()
+                ->searchable(),
+            Column::make("Total Story point", "total_sp")
                 ->sortable()
                 ->searchable(),
             Column::make('Description', 'description')

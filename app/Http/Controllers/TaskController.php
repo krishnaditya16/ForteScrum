@@ -127,6 +127,12 @@ class TaskController extends Controller
         return view('pages.project.task.kanban', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints'));
     }
 
+    public function tableView($id) 
+    {
+        $data = Project::find($id);
+        return view('pages.project.task.table', compact('data'));
+    }
+
     public function taskFinished($id)
     {
         $data = Project::find($id);

@@ -16,6 +16,11 @@ class Task extends Model
         return $this->belongsTo(Project::class, 'project_id');
     }
 
+    public function sprints()
+    {
+        return $this->belongsTo(Sprint::class, 'sprint_id');
+    }
+
     public function backlogs()
     {
         return $this->belongsTo(Backlog::class, 'backlog_id');

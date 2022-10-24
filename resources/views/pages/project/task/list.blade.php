@@ -1,3 +1,7 @@
+@php
+$current_team = Auth::user()->currentTeam;
+@endphp
+
 <div class="container-fluid kanban">
     <div class="row flex-row flex-nowrap">
         @forelse ($boards as $board)
@@ -49,6 +53,7 @@
                             <b>Due Date:</b> {{date('d-m-Y', strtotime($task->end_date));}}<br>
                         </div>
                 </a>
+                @if(Auth::user()->ownsTeam($current_team) || Auth::user()->hasTeamRole($current_team, 'project-manager') || Auth::user()->hasTeamRole($current_team, 'team-member'))
                 <div class="card-footer bg-whitesmoke">
                     <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;">
                         @csrf
@@ -83,7 +88,8 @@
                         </div>
                     </div>
                 </div>
-            </div>     
+            </div>
+            @endif     
 
         @empty
         <div class="alert empty-kanban alert-has-icon">

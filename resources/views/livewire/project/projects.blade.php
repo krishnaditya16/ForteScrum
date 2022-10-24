@@ -75,7 +75,6 @@ $current_team = Auth::user()->currentTeam;
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <!-- <h4>Tambahin tombol create!</h4> -->
                 <div class="card-header-action">
                     @if(Auth::user()->ownsTeam($current_team))
                     <a href="{{ route('project.create') }}" class="btn btn-icon icon-left btn-outline-dark"><i class="fas fa-plus"></i> Add Data</a>

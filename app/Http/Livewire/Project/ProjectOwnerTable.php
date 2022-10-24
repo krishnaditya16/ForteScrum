@@ -25,10 +25,6 @@ class ProjectOwnerTable extends DataTableComponent
         return [
             Column::make("Actions")
                 ->label(fn ($row, Column $column) => view('pages.project.table.actions')->with(['project' => $row])),
-            Column::make("Id", "id")
-                ->collapseOnTablet()
-                ->searchable()
-                ->sortable(),
             Column::make("Title", "title")
                 ->collapseOnTablet()
                 ->searchable()
