@@ -46,6 +46,12 @@ class SprintProjectTable extends DataTableComponent
             Column::make("Total Story point", "total_sp")
                 ->sortable()
                 ->searchable(),
+            Column::make("Status", "status")
+                ->collapseOnTablet()
+                ->searchable()
+                ->format(
+                    fn ($value, $row, Column $column) => view('pages.sprint.table.status')->withValue($value)
+                ),
             Column::make('Description', 'description')
                 ->searchable()
                 ->format(

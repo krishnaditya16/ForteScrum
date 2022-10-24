@@ -46,12 +46,16 @@
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint Iteration</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="sprint_id" required>
                                     <option selected disabled> Select Sprint Iteration</option>
                                     @foreach ($sprints as $sprint)
-                                    <option value="{{ $sprint->id }}">{{ $sprint->name }}</option>
+                                        @if($sprint->status == "1")
+                                        <option disabled value="{{ $sprint->id }}" style="color:red">Sprint - {{ $sprint->name }} [CLOSED]</option>
+                                        @else
+                                        <option value="{{ $sprint->id }}">Sprint - {{ $sprint->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('sprint_id') <span class="text-red-500">{{ $message }}</span>@enderror

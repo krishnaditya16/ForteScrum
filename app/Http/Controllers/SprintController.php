@@ -275,4 +275,26 @@ class SprintController extends Controller
 
         return redirect()->route('project.show', $project_id);
     }
+
+    public function sprintStatus(Request $request)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $id = $request->sprint_id;
+
+        $sprint = Sprint::find($id);
+        $sprint->update([
+            'status' => $request->status,
+        ]);
+
+        if($request->status == "1"){
+            Alert::success('Success!', 'Sprint has been closed.');
+            return back();
+        } else {
+            Alert::success('Success!', 'Sprint has been opened again.');
+            return back();
+        }
+    }
 }

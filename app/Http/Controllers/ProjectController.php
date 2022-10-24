@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Board;
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\Sprint;
-use App\Models\Task;
 use App\Models\Team;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -145,11 +141,15 @@ class ProjectController extends Controller
         $data = Project::find($project->id);
         $current_team = Auth::user()->currentTeam;
 
+        $date_now = Carbon::now();
+        $due_date = date('Y-m-d', strtotime($project->end_date));
+        $date_diff = ($date_now->diffInDays($due_date))+1;
+
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
         }
         else {
-            return view('pages.project.show', compact('project', 'client', 'po', 'pm', 'tm'));
+            return view('pages.project.show', compact('project', 'client', 'po', 'pm', 'tm', 'date_now', 'due_date', 'date_diff'));
         }
     }
 

@@ -39,7 +39,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::resource('/sprint', 'App\Http\Controllers\SprintController');
         Route::resource('/task', 'App\Http\Controllers\TaskController');
         Route::resource('/task/board', 'App\Http\Controllers\BoardController');
-        Route::resource('/report', 'App\Http\Controllers\ReportController');
 
         //Update User Password and Proposal Download
         Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
@@ -70,12 +69,21 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/project/store-sprint', 'App\Http\Controllers\SprintController@storeProjectSprint')->name('project.sprint.store');
         Route::get('/project/{id}/sprint/{sprint}/edit', 'App\Http\Controllers\SprintController@editProjectSprint')->name('project.sprint.edit');
         Route::put('/project/{id}/sprint/{sprint}/update-sprint', 'App\Http\Controllers\SprintController@updateProjectSprint')->name('project.sprint.update');
+        Route::put('/project/{id}/sprint/{sprint}/sprint-status', 'App\Http\Controllers\SprintController@sprintStatus')->name('project.sprint.status');
 
         //Project Backlog
         Route::get('project/{id}/create-backlog', 'App\Http\Controllers\BacklogController@createProjectBacklog')->name('project.backlog.create');
         Route::post('/project/store-backlog', 'App\Http\Controllers\BacklogController@storeProjectBacklog')->name('project.backlog.store');
         Route::get('/project/{id}/backlog/{backlog}/edit', 'App\Http\Controllers\BacklogController@editProjectBacklog')->name('project.backlog.edit');
         Route::put('/project/{id}/backlog/{backlog}/update-backlog', 'App\Http\Controllers\BacklogController@updateProjectBacklog')->name('project.backlog.update');
+    
+        //Project Report
+        Route::get('/report', 'App\Http\Controllers\ReportController@index')->name('report.index');
+        Route::get('/project/{id}/reports', 'App\Http\Controllers\ReportController@show')->name('project.report');
+
+        //Project Timesheet
+        Route::get('/project/{id}/tasks/{tasks}/record', 'App\Http\Controllers\TimesheetController@createTimesheet')->name('project.timesheet.create');
+        Route::post('/project/store-timesheet', 'App\Http\Controllers\TimesheetController@storeTimesheet')->name('project.timesheet.store');
     });
 
     Route::group(['middleware' => 'role:product-owner'], function() {

@@ -32,21 +32,21 @@ if(Auth::user()->ownsTeam($current_team)) {
                         ["href" => "backlog.index", "text" => "Backlog"],
                         ["href" => "task.index", "text" => "Task"],
                     ]
-                ]
-            ],
-            "text" => "Project",
-            "is_multi" => true,
-        ],
-        [
-            "href" => [
+                ],
                 [
                     "section_text" => "Report",
                     "section_list" => [
                         ["href" => "report.index", "text" => "Project Report"],
                     ]
+                ],
+                [
+                    "section_text" => "Meeting",
+                    "section_list" => [
+                        ["href" => "dashboard", "text" => "Project Meeting"],
+                    ]
                 ]
             ],
-            "text" => "Report",
+            "text" => "Project",
             "is_multi" => true,
         ],
     ];
@@ -139,6 +139,8 @@ if(Auth::user()->ownsTeam($current_team)) {
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-briefcase"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Report')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-chart-bar"></i> <span>{{ $section->section_text }}</span></a>
+                        @elseif($section->section_text == 'Meeting')
+                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-calendar"></i> <span>{{ $section->section_text }}</span></a>
                         @endif
                         <ul class="dropdown-menu">
                             @foreach ($section->section_list as $child)

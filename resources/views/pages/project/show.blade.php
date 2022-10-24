@@ -12,7 +12,7 @@
         </div>
     </x-slot>
 
-    <div class="row">
+    <div class="row"> 
         <div class="col-12">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">

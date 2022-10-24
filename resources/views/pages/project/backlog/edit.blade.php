@@ -8,7 +8,7 @@
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
             <div class="breadcrumb-item active"><a href="{{ route('project.index') }}">Project</a></div>
-            <div class="breadcrumb-item active"><a href="../{{ $projects->id }}">#{{ $projects->id }}</a></div>
+            <div class="breadcrumb-item active"><a href="{{ route('project.show', $projects->id) }}">#{{ $projects->id }}</a></div>
             <div class="breadcrumb-item">Edit Backlog</div>
         </div>
     </x-slot>
@@ -48,12 +48,12 @@
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint Iteration</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="sprint_id" required>
                                     <option selected disabled> Select Sprint Iteration</option>
                                     @foreach ($sprints as $sprint)
-                                    <option value="{{ $sprint->id }}" @if($backlog->sprint_id == "$sprint->id") selected="selected" @endif>{{ $sprint->name }}</option>
+                                    <option value="{{ $sprint->id }}" @if($backlog->sprint_id == "$sprint->id") selected="selected" @endif>Sprint - {{ $sprint->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('sprint_id') <span class="text-red-500">{{ $message }}</span>@enderror

@@ -4,16 +4,16 @@
         <div class="section-header-back">
             <a href="{{ route('project.show', $projects->id) }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
         </div>
-        <h1>{{ __('Add Sprint') }}</h1>
+        <h1>{{ __('Edit Sprint') }}</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
             <div class="breadcrumb-item active"><a href="{{ route('project.index') }}">Project</a></div>
-            <div class="breadcrumb-item active"><a href="../{{ $projects->id }}">#{{ $projects->id }}</a></div>
+            <div class="breadcrumb-item active"><a href="{{ route('project.show', $projects->id) }}">#{{ $projects->id }}</a></div>
             <div class="breadcrumb-item">Edit Sprint</div>
         </div>
     </x-slot>
 
-    <h2 class="section-title">Edit New </h2>
+    <h2 class="section-title">Edit Sprint </h2>
     <p class="section-lead mb-3">
         On this page you can edit existing sprint data.
     </p>

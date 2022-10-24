@@ -12,5 +12,3 @@
 <div class="badge badge-danger">Cancelled</div>
 @endif
 
-
-

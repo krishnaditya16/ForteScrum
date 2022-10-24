@@ -56,7 +56,20 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="taskModalLabel">{{$task->title}}</h5>
+                <h5 class="modal-title" id="taskModalLabel">
+                    {{$task->title}}
+                    @php
+                        $due_date = date('Y-m-d', strtotime($task->end_date));
+                        $date_diff = ($date_now->diffInDays($due_date))+1;
+                    @endphp
+                    @if($task->status == "0")
+                        @if($date_now < $due_date) 
+                        <span class="badge badge-info ml-2">{{$date_diff}} days left</span>
+                        @else
+                        <span class="badge badge-danger ml-2">{{$date_diff}} days late</span>
+                        @endif
+                    @endif   
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -143,7 +156,7 @@
                             </div>
                             <div class="col-12 col-md-6 col-lg-6 mb-4">
                                 <h4><i class="fas fa-calendar-times"></i>&nbsp; Due Date</h4>
-                                <p>{{ $task->start_date }}</p>
+                                <p>{{ $task->end_date }}</p>
                             </div>
                         </div>
                     </div>

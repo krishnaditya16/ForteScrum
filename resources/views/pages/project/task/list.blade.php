@@ -6,7 +6,7 @@ $current_team = Auth::user()->currentTeam;
     <div class="row flex-row flex-nowrap">
         @forelse ($boards as $board)
         <div class="col-12 col-lg-3 kanban-list card card-primary">
-            <div class="kanban-title dropleft"> {{ $board->title }} 
+            <div class="kanban-title dropleft"> {{ $board->title }} <span class="badge badge-primary ml-1">{{ count($board->tasks->where('status', 0)) }}</span>
                 <button class="btn float-right" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <i class="fas fa-ellipsis-v"></i></button>
                 <div class="dropdown-menu dropleft">
@@ -53,7 +53,7 @@ $current_team = Auth::user()->currentTeam;
                             <b>Due Date:</b> {{date('d-m-Y', strtotime($task->end_date));}}<br>
                         </div>
                 </a>
-                @if(Auth::user()->ownsTeam($current_team) || Auth::user()->hasTeamRole($current_team, 'project-manager') || Auth::user()->hasTeamRole($current_team, 'team-member'))
+                @if(Auth::user()->ownsTeam($current_team) || Auth::user()->hasTeamRole($current_team, 'project-manager'))
                 <div class="card-footer bg-whitesmoke">
                     <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;">
                         @csrf
@@ -73,6 +73,44 @@ $current_team = Auth::user()->currentTeam;
                                     <i class="fas fa-check"></i> Mark as Done 
                                 </a>
                             </form>
+                            <a href="/project/{{$data->id}}/tasks/{{$task->id}}/record" class="dropdown-item has-icon"><i class="fas fa-user-clock"></i> Record Timesheet</a>
+                            <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a>
+                            <div class="dropdown-divider"></div>
+                            @foreach($options as $option)
+                            <form action="{{ route('project.task.move', $task->id) }}" method="post" id="moveTask">
+                                @csrf
+                                @method('PUT')
+                                @if($option->id != $board->id)
+                                <input type="hidden" value="{{ $option->id }}" name="board_id">
+                                <a href="javascript:void(0)" class="dropdown-item has-icon link-dropdown-kanban"><i class="fas fa-arrows-alt"></i> Move to {{ $option->title }}</a>
+                                @endif
+                            </form>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(Auth::user()->hasTeamRole($current_team, 'team-member'))
+            <div class="card-footer bg-whitesmoke">
+                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;">
+                        @csrf
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-outline-danger has-icon" onclick="return confirm('Are you sure you want to delete this task?')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                    <div class="dropdown float-right">
+                        <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <form action="{{ route('project.task.status', $task->id) }}" method="post" id="doneTask">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" value="1" name="status">
+                                <a href="javascript:void(0)" class="dropdown-item has-icon btn-outline-success link-dropdown-kanban" onclick="return confirm('Are you sure you want to mark this task as done?')">
+                                    <i class="fas fa-check"></i> Mark as Done 
+                                </a>
+                            </form>
+                            <a href="/project/{{$data->id}}/tasks/{{$task->id}}/record" class="dropdown-item has-icon"><i class="fas fa-user-clock"></i> Record Timesheet</a>
                             <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a>
                             <div class="dropdown-divider"></div>
                             @foreach($options as $option)
@@ -102,8 +140,7 @@ $current_team = Auth::user()->currentTeam;
         @endforelse
     </div>
     @empty
-    <div class="col-12">
-        <div class="card">
+        <div class="card col-12">
             <div class="card-header">
                 <h4>Empty Board</h4>
             </div>
@@ -120,7 +157,5 @@ $current_team = Auth::user()->currentTeam;
                 </div>
             </div>
         </div>
-    </div>
     @endforelse
-</div>
 </div>

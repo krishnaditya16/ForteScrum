@@ -49,7 +49,7 @@
         <div class="row flex-row flex-nowrap">
             @forelse ($boards as $board)
             <div class="col-12 col-lg-3 kanban-list card card-primary">
-                <div class="kanban-title dropleft"> {{ $board->title }}
+                <div class="kanban-title dropleft"> {{ $board->title }} <span class="badge badge-primary ml-1">{{ count($board->tasks->where('status', 1)) }}</span>
                     <button class="btn float-right" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <i class="fas fa-ellipsis-v"></i></button>
                     <div class="dropdown-menu dropleft">
@@ -128,8 +128,7 @@
             @endforelse
         </div>
         @empty
-        <div class="col-12">
-            <div class="card">
+            <div class="card col-12">
                 <div class="card-header">
                     <h4>Empty Board</h4>
                 </div>
@@ -146,9 +145,7 @@
                     </div>
                 </div>
             </div>
-        </div>
         @endforelse
-    </div>
     </div>
 
 </x-app-layout>

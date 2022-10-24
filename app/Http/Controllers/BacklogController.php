@@ -230,7 +230,7 @@ class BacklogController extends Controller
                 ]);
             }
     
-            Alert::success('Success!', 'Backlog has been succesfully created.');
+            Alert::success('Success!', 'Backlog has been succesfully updated.');
 
             $project_id = $request->project_id;
             return redirect()->route('project.show', $project_id);

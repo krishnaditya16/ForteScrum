@@ -126,8 +126,16 @@
     <div class="col-12 col-md-6 col-lg-6">
         <div class="card">
             <div class="card-header">
-                <h4>Title : {{ $project->title }}
-                    <h4>
+                <h4>
+                    Title : {{ $project->title }}
+                    @if($project->status == "2")
+                        @if($date_now < $due_date) 
+                        <span class="badge badge-info ml-2">{{$date_diff}} days left</span>
+                        @else
+                        <span class="badge badge-danger ml-2">{{$date_diff}} days late</span>
+                        @endif
+                    @endif   
+                <h4>
             </div>
             <div class="card-body">
                 <h4 class="mb-2">Progress</h4>

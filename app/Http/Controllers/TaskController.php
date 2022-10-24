@@ -10,6 +10,7 @@ use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Jetstream;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -112,6 +113,7 @@ class TaskController extends Controller
 
         $backlogs = Backlog::where('project_id', $data->id)->get();
         $sprints = Sprint::where('project_id', $data->id)->get();
+        $date_now = Carbon::now();
 
         $team = Jetstream::newTeamModel()->findOrFail($data->team_id);
         $project = [];
@@ -124,7 +126,7 @@ class TaskController extends Controller
             ->whereIn('user_id', $project)->where('role', 'product-owner')
             ->get();
         
-        return view('pages.project.task.kanban', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints'));
+        return view('pages.project.task.kanban', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints', 'date_now'));
     }
 
     public function tableView($id) 
@@ -181,42 +183,44 @@ class TaskController extends Controller
 
     public function storeTask(Request $request)
     {
-        $data = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'task_date' => 'required',
-            'priority' => 'required',
-            'board_id' => 'required',
-            'sprint_id' => 'required',
-            'project_id' => 'required',
-            'backlog_id' => 'required',
-            'assignee' => 'required'
+        // $data = $request->validate([
+        //     'title' => 'required',
+        //     'description' => 'required',
+        //     'task_date' => 'required',
+        //     'priority' => 'required',
+        //     'board_id' => 'required',
+        //     'sprint_id' => 'required',
+        //     'project_id' => 'required',
+        //     'backlog_id' => 'required',
+        //     'assignee' => 'required'
 
-        ]);
+        // ]);
 
-        $data['assignee'] = implode(',', $request->assignee);
+        // $data['assignee'] = implode(',', $request->assignee);
 
-        $dates = explode(' - ', $request->task_date);
-        $start_date = Carbon::parse($dates[0]);
-        $end_date = Carbon::parse($dates[1]);
+        // $dates = explode(' - ', $request->task_date);
+        // $start_date = Carbon::parse($dates[0]);
+        // $end_date = Carbon::parse($dates[1]);
 
-        Task::create([
-            'title' => $request['title'],
-            'description' => $request['description'],
-            'start_date' => $start_date,
-            'end_date' => $end_date,
-            'priority' => $request['priority'],
-            'board_id' => $request['board_id'],
-            'sprint_id' => $request['sprint_id'],
-            'project_id' => $request['project_id'],
-            'backlog_id' => $request['backlog_id'],
-            'assignee' => $data['assignee'],
-        ]);
+        // Task::create([
+        //     'title' => $request['title'],
+        //     'description' => $request['description'],
+        //     'start_date' => $start_date,
+        //     'end_date' => $end_date,
+        //     'priority' => $request['priority'],
+        //     'board_id' => $request['board_id'],
+        //     'sprint_id' => $request['sprint_id'],
+        //     'project_id' => $request['project_id'],
+        //     'backlog_id' => $request['backlog_id'],
+        //     'assignee' => $data['assignee'],
+        // ]);
 
-        Alert::success('Success!', 'Task has been succesfully created.');
+        // Alert::success('Success!', 'Task has been succesfully created.');
 
-        $project_id = $request->project_id;
-        return redirect()->route('project.task', $project_id);
+        // $project_id = $request->project_id;
+        // return redirect()->route('project.task', $project_id);
+        $user = User::whereIn('id', $request->assignee)->get();
+        return dd($user);
     }
 
     public function moveTask(Request $request, $id) 
@@ -282,9 +286,15 @@ class TaskController extends Controller
             ->whereIn('user_id', $data)->where('role', 'team-member')
             ->get();
 
-        // return dd($assignee);
+        $current_team = Auth::user()->currentTeam;
 
-        return view('pages.project.task.edit-task', compact('task', 'projects', 'users', 'boards', 'sprints', 'backlogs', 'dates', 'assignee'));
+        if (empty($projects) || $current_team->id != $projects->team_id) {
+            abort(403);
+        } else if ($task->project_id != $id){
+            abort(404);
+        } else {
+            return view('pages.project.task.edit-task', compact('task', 'projects', 'users', 'boards', 'sprints', 'backlogs', 'dates', 'assignee'));
+        }  
     }
 
     public function updateTask(Request $request)
