@@ -236,6 +236,10 @@
                             <div class="badge badge-success mt-1">Done</div><br>
                             @endif
                         </div>
+                        <div class="mb-4">
+                            <h4><i class="fas fa-calendar-check"></i> Done at</h4>
+                            <p>{{ $task->updated_at }}</p>
+                        </div>
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-6 mb-4">
                                 <h4><i class="fas fa-calendar-plus"></i>&nbsp; Start Date</h4>

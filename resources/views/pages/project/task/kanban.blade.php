@@ -60,7 +60,7 @@
                     {{$task->title}}
                     @php
                         $due_date = date('Y-m-d', strtotime($task->end_date));
-                        $date_diff = ($date_now->diffInDays($due_date))+1;
+                        $date_diff = $date_now->diffInDays($due_date);
                     @endphp
                     @if($task->status == "0")
                         @if($date_now < $due_date) 

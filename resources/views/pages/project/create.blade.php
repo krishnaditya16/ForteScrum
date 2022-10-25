@@ -38,12 +38,8 @@
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Client</label>
                             <div class="col-sm-12 col-md-7">
-                                <select class="form-control select2" name="client_id">
-                                    <option selected disabled> Select Client </option>
-                                    @foreach ($clients as $client)
-                                    <option value="{{ $client->id }}">{{ $client->name }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" value="{{ $clients->name }}" readonly>
+                                <input type="hidden" class="form-control" value="{{ $clients->id }}" name="client_id">
                                 @error('client_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -51,17 +47,8 @@
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
                             <div class="col-sm-12 col-md-7">
-                                <select class="form-control select2" name="team_id">
-                                    <option selected disabled> Select Team </option>
-                                    @foreach ($teams as $team)
-                                    <option value="{{ $team->id }}">{{ $team->name }}</option>
-                                    @endforeach
-                                </select>
-                                <small class="form-text text-muted mt-3">
-                                    <b>Rules:</b> <br>
-                                    1. Same team can work on multiple project with the same client. <br>
-                                    2. Different team must be used if selected team already have projects with different client. <br>
-                                </small>
+                                <input type="text" class="form-control" value="{{ $teams->name }}" readonly>
+                                <input type="hidden" class="form-control" value="{{ $teams->id }}" name="team_id">
                                 @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>

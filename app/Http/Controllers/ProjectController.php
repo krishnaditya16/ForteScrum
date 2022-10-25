@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Jetstream\Jetstream;
 
@@ -31,8 +32,20 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $teams = Team::all();
-        $clients = Client::all();
+        $teams = Auth::user()->currentTeam;
+
+        $data = [];
+        foreach ($teams->users as $user) {
+            $data[] = $user->id;
+        }
+
+        $clients = DB::table('team_user')
+            ->join('users', 'team_user.user_id', 'users.id')
+            ->join('clients', 'users.client_id', 'clients.id')
+            ->whereIn('team_user.user_id', $data)->where('role', 'product-owner')
+            ->select('clients.id', 'clients.name')
+            ->first();
+
         return view('pages.project.create', compact('teams', 'clients'));
     }
 
@@ -51,8 +64,8 @@ class ProjectController extends Controller
             'category' => 'required',
             'platform' => 'required',
             'proposal' => 'required|mimes:pdf,docx|max:2048',
-            'team_id' => 'required',
-            'client_id' => 'required',
+            'team_id' =>  'required',
+            'client_id' => 'required'
         ]);
 
         $dates = explode(' - ', $request->project_date);
@@ -60,7 +73,7 @@ class ProjectController extends Controller
         $end_date = Carbon::parse($dates[1]);
 
         $file = $request->file('proposal');
-  
+
         if ($proposalFile = $request->file('proposal')) {
             $destinationPath = 'uploads/proposal';
             $proposalName1 = $proposalFile->getClientOriginalName();
@@ -70,37 +83,23 @@ class ProjectController extends Controller
             $file = "$proposalName";
         } else {
             unset($file);
-        } 
-
-        $check_data = Project::where('client_id', $request->client_id)->where('team_id', $request->team_id)->first();
-
-        if(empty($check_data)){
-            $proposalFile = $request->file('proposal');
-            $proposalName1 = $proposalFile->getClientOriginalName();
-            $proposalName2 = explode('.', $proposalName1)[0]; // Filename 'filename'
-            $proposalName = $proposalName2 . "_" . date('YmdHis') . "." . $proposalFile->getClientOriginalExtension();
-            if($oldFile = $proposalName) {
-                unlink(public_path('uploads/proposal/') . $oldFile);
-            }
-            Alert::error('Error!', 'Team already working for a different client!');
-            return back();
-        } else {
-            Project::create([
-                'name' => $request['name'],
-                'email' => $request['email'],
-                'title' => $request['title'],
-                'description' => $request['description'],
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'category' => $request['category'],
-                'platform' => $request['platform'],
-                'proposal' => $proposalName,
-                'team_id' => $request['team_id'],
-                'client_id' => $request['client_id'],
-            ]);
-            Alert::success('Success!', 'Data has been succesfully updated.');
-            return redirect('/project');
         }
+
+        Project::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'title' => $request['title'],
+            'description' => $request['description'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'category' => $request['category'],
+            'platform' => $request['platform'],
+            'proposal' => $proposalName,
+            'team_id' => $request['team_id'],
+            'client_id' => $request['client_id'],
+        ]);
+        Alert::success('Success!', 'Data has been succesfully updated.');
+        return redirect('/project');
     }
 
     /**
@@ -125,17 +124,17 @@ class ProjectController extends Controller
             ->join('users', 'team_user.user_id', 'users.id')
             ->whereIn('user_id', $data)->where('role', 'product-owner')
             ->get();
-        
+
         $pm = DB::table('team_user')
             ->join('users', 'team_user.user_id', 'users.id')
             ->whereIn('user_id', $data)->where('role', 'project-manager')
             ->get();
-        
+
         $tm = DB::table('team_user')
             ->join('users', 'team_user.user_id', 'users.id')
             ->whereIn('user_id', $data)->where('role', 'team-member')
             ->get();
-        
+
         $client = Client::where('id', $project->client_id)->first();
 
         $data = Project::find($project->id);
@@ -143,12 +142,11 @@ class ProjectController extends Controller
 
         $date_now = Carbon::now();
         $due_date = date('Y-m-d', strtotime($project->end_date));
-        $date_diff = ($date_now->diffInDays($due_date))+1;
+        $date_diff = ($date_now->diffInDays($due_date)) + 1;
 
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
-        }
-        else {
+        } else {
             return view('pages.project.show', compact('project', 'client', 'po', 'pm', 'tm', 'date_now', 'due_date', 'date_diff'));
         }
     }
@@ -170,14 +168,12 @@ class ProjectController extends Controller
         $end_date = $project->end_date;
         $arr = array($start_date, $end_date);
         $dates = implode(' - ', $arr);
-        
+
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
+        } else {
+            return view('pages.project.edit', compact('project', 'teams', 'clients', 'dates'));
         }
-        else {
-            return view('pages.project.edit', compact('project', 'teams', 'clients', 'dates')); 
-        }
-        
     }
 
     /**
@@ -206,10 +202,10 @@ class ProjectController extends Controller
 
         $file = $request->file('proposal');
         $proposal = $project->proposal;
-  
+
         if ($proposalFile = $request->file('proposal')) {
 
-            if($oldFile = $project->proposal) {
+            if ($oldFile = $project->proposal) {
                 unlink(public_path('uploads/proposal/') . $oldFile);
             }
 
@@ -222,9 +218,9 @@ class ProjectController extends Controller
             $file = "$proposalName";
         } else {
             unset($file);
-        } 
+        }
 
-        if(empty($file)){
+        if (empty($file)) {
             $project->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
@@ -240,7 +236,7 @@ class ProjectController extends Controller
                 'team_id' => $request['team_id'],
                 'client_id' => $request['client_id'],
             ]);
-        } else if($project->status == 0){
+        } else if ($project->status == 0) {
             $project->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
@@ -272,15 +268,16 @@ class ProjectController extends Controller
                 'client_id' => $request['client_id'],
             ]);
         }
-        
+
         Alert::success('Success!', 'Data has been succesfully updated.');
 
         return redirect('/project');
     }
 
-    public function downloadProposal(Project $project, $id) {
+    public function downloadProposal(Project $project, $id)
+    {
         $data = $project->where('id', $id)->first();
-        $file = public_path("uploads/proposal/".$data->proposal);
+        $file = public_path("uploads/proposal/" . $data->proposal);
         return response()->download($file);
     }
 

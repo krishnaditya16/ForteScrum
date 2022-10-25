@@ -2,11 +2,14 @@
 
 namespace App\Http\Livewire\Task;
 
+use App\Exports\TaskProjectExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\Task;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TaskProjectTable extends DataTableComponent
 {
@@ -66,6 +69,42 @@ class TaskProjectTable extends DataTableComponent
     public function builder(): Builder
     {
         return Task::where('tasks.project_id', $this->project);
+    }
+
+    public function bulkActions(): array
+    {
+        return [
+            'exportXLS' => 'Export Excel',
+            'exportCSV' => 'Export CSV',
+        ];
+    }
+
+    public function exportXLS()
+    {
+        $tasks = $this->getSelected();
+        $total = count($tasks);
+
+        if ($total > 0) {
+            $this->clearSelected();
+            $currentDate = Carbon::now()->format('d-F-Y');
+            return Excel::download(new TaskProjectExport($tasks), 'Tasks Data_' . $currentDate . '.xlsx');
+        }
+
+        $this->alert('warning', 'You did not select any tasks to export.', ['timerProgressBar' => true,]);
+    }
+
+    public function exportCSV()
+    {
+        $tasks = $this->getSelected();
+        $total = count($tasks);
+
+        if ($total > 0) {
+            $this->clearSelected();
+            $currentDate = Carbon::now()->format('d-F-Y');
+            return Excel::download(new TaskProjectExport($tasks), 'Tasks Data_' . $currentDate . '.CSV', \Maatwebsite\Excel\Excel::CSV);
+        }
+        
+        $this->alert('warning', 'You did not select any tasks to export.', ['timerProgressBar' => true,]);
     }
 
     public function deleteConfirm($id)

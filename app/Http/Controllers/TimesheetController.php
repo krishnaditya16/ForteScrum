@@ -68,6 +68,7 @@ class TimesheetController extends Controller
             'project_id' => $request->project_id,
             'task_id' => $request->task_id,
             'user_id' => $request->user_id,
+            'team_id' => $request->team_id,
         ]);
 
         Alert::success('Success!', 'Your timesheet for this task has been succesfully recorded.');

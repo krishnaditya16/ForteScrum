@@ -4,7 +4,7 @@ $current_team = Auth::user()->currentTeam;
 
 <h2 class="section-title">Project Reports</h2>
 <p class="section-lead mb-3">
-    You can manage project reports here.
+    Select either one of the project data avalaible below to view report.
 </p>
 
 <div class="row">

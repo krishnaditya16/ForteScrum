@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TaskMail;
 use App\Models\Backlog;
 use App\Models\Board;
 use App\Models\Project;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Jetstream\Jetstream;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -183,44 +185,62 @@ class TaskController extends Controller
 
     public function storeTask(Request $request)
     {
-        // $data = $request->validate([
-        //     'title' => 'required',
-        //     'description' => 'required',
-        //     'task_date' => 'required',
-        //     'priority' => 'required',
-        //     'board_id' => 'required',
-        //     'sprint_id' => 'required',
-        //     'project_id' => 'required',
-        //     'backlog_id' => 'required',
-        //     'assignee' => 'required'
+        $data = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'task_date' => 'required',
+            'priority' => 'required',
+            'board_id' => 'required',
+            'sprint_id' => 'required',
+            'project_id' => 'required',
+            'backlog_id' => 'required',
+            'assignee' => 'required'
 
-        // ]);
+        ]);
 
-        // $data['assignee'] = implode(',', $request->assignee);
+        $data['assignee'] = implode(',', $request->assignee);
 
-        // $dates = explode(' - ', $request->task_date);
-        // $start_date = Carbon::parse($dates[0]);
-        // $end_date = Carbon::parse($dates[1]);
+        $dates = explode(' - ', $request->task_date);
+        $start_date = Carbon::parse($dates[0]);
+        $end_date = Carbon::parse($dates[1]);
 
-        // Task::create([
-        //     'title' => $request['title'],
-        //     'description' => $request['description'],
-        //     'start_date' => $start_date,
-        //     'end_date' => $end_date,
-        //     'priority' => $request['priority'],
-        //     'board_id' => $request['board_id'],
-        //     'sprint_id' => $request['sprint_id'],
-        //     'project_id' => $request['project_id'],
-        //     'backlog_id' => $request['backlog_id'],
-        //     'assignee' => $data['assignee'],
-        // ]);
+        Task::create([
+            'title' => $request['title'],
+            'description' => $request['description'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'priority' => $request['priority'],
+            'board_id' => $request['board_id'],
+            'sprint_id' => $request['sprint_id'],
+            'project_id' => $request['project_id'],
+            'backlog_id' => $request['backlog_id'],
+            'assignee' => $data['assignee'],
+        ]);
 
-        // Alert::success('Success!', 'Task has been succesfully created.');
+        $users = User::whereIn('id', $request->assignee)->get();
+        $project = Project::where('id', $request->project_id)->first();
+        $sprint = Sprint::where('id', $request->sprint_id)->first();
+        $backlog = Backlog::where('id', $request->backlog_id)->first();
 
-        // $project_id = $request->project_id;
-        // return redirect()->route('project.task', $project_id);
-        $user = User::whereIn('id', $request->assignee)->get();
-        return dd($user);
+        $details = [
+            'title' => 'New Task Has Been Assigned to You',
+            'url' => 'http://127.0.0.1:8000/project/'.$request->project_id.'/tasks',
+            'project' => $project->title,
+            'task' => $request->title,
+            'sprint' => $sprint->name,
+            'backlog' => $backlog->name,
+            'from_mail' => $request->from_mail,
+            'mail_sender' => $request->mail_sender,
+        ];
+        
+        foreach($users as $user){
+            Mail::to($user->email)->send(new TaskMail($details));
+        }
+
+        Alert::success('Success!', 'Task has been succesfully created.');
+
+        $project_id = $request->project_id;
+        return redirect()->route('project.task', $project_id);
     }
 
     public function moveTask(Request $request, $id) 

@@ -5,8 +5,10 @@ namespace App\Http\Livewire\Project;
 use App\Exports\ProjectExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Project;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -78,6 +80,12 @@ class ProjectTable extends DataTableComponent
         }
 
         $this->alert('warning', 'You did not select any projects to export.', ['timerProgressBar' => true,]);
+    }
+
+    public function builder(): Builder
+    {
+        $team = Auth::user()->currentTeam;
+        return Project::where('team_id', $team->id);
     }
 
     public function exportCSV()

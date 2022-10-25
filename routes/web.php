@@ -77,9 +77,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/project/{id}/backlog/{backlog}/edit', 'App\Http\Controllers\BacklogController@editProjectBacklog')->name('project.backlog.edit');
         Route::put('/project/{id}/backlog/{backlog}/update-backlog', 'App\Http\Controllers\BacklogController@updateProjectBacklog')->name('project.backlog.update');
     
-        //Project Report
+        //Project Sprint Report
         Route::get('/report', 'App\Http\Controllers\ReportController@index')->name('report.index');
-        Route::get('/project/{id}/reports', 'App\Http\Controllers\ReportController@show')->name('project.report');
+        Route::get('/project/{id}/sprint-reports', 'App\Http\Controllers\ReportController@sprintReport')->name('project.report.sprint');
+        Route::get('/project/{id}/timesheet-reports', 'App\Http\Controllers\ReportController@timesheetReport')->name('project.report.timesheet');
 
         //Project Timesheet
         Route::get('/project/{id}/tasks/{tasks}/record', 'App\Http\Controllers\TimesheetController@createTimesheet')->name('project.timesheet.create');

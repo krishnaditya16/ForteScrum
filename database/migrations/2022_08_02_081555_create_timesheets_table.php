@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->bigInteger('project_id');
             $table->bigInteger('task_id');
+            $table->bigInteger('team_id');
             $table->timestamps();
         });
     }

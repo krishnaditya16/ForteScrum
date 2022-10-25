@@ -4,7 +4,9 @@ namespace App\Http\Livewire\Report;
 
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectReportTable extends DataTableComponent
 {
@@ -39,5 +41,11 @@ class ProjectReportTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
         ];
+    }
+
+    public function builder(): Builder
+    {
+        $team = Auth::user()->currentTeam;
+        return Project::where('team_id', $team->id);
     }
 }
