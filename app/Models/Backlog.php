@@ -15,6 +15,11 @@ class Backlog extends Model
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
+    
+    public function sprints()
+    {
+        return $this->belongsTo(Sprint::class, 'sprint_id');
+    }
 
     public function tasks()
     {

@@ -53,7 +53,11 @@
                                 <select class="form-control select2" name="sprint_id" required>
                                     <option selected disabled> Select Sprint Iteration</option>
                                     @foreach ($sprints as $sprint)
-                                    <option value="{{ $sprint->id }}" @if($backlog->sprint_id == "$sprint->id") selected="selected" @endif>Sprint - {{ $sprint->name }}</option>
+                                    @if($sprint->status == "1")
+                                        <option disabled value="{{ $sprint->id }}" @if($backlog->sprint_id == "$sprint->id") selected="selected" @endif style="color:red">Sprint - {{ $sprint->name }} [CLOSED]</option>
+                                    @else
+                                        <option value="{{ $sprint->id }}" @if($backlog->sprint_id == "$sprint->id") selected="selected" @endif>Sprint - {{ $sprint->name }}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                                 @error('sprint_id') <span class="text-red-500">{{ $message }}</span>@enderror

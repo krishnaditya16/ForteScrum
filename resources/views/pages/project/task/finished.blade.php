@@ -19,11 +19,16 @@
         You can manage & view tasks data using the kanban board below.
     </p>
 
+    @php
+        $team = Auth::user()->currentTeam;
+    @endphp
+
     <div class="row mb-4 mt-2">
         <div class="col-12">
             <div class="card mb-0">
                 <div class="card-body">
                     <ul class="nav nav-pills">
+                        @if(Auth::user()->hasTeamPermission($team, 'create:task-board'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('project.task', $data->id) }}"><i class="fas fa-chalkboard"></i> Kanban View</a>
                         </li>
@@ -39,6 +44,17 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ route('project.task.finished', $data->id) }}"><i class="fas fa-clipboard-check"></i> Finished Task</a>
                         </li>
+                        @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('project.task', $data->id) }}"><i class="fas fa-chalkboard"></i> Kanban View</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('project.task.table', $data->id) }}"><i class="fas fa-table"></i> Table View</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('project.task.finished', $data->id) }}"><i class="fas fa-clipboard-check"></i> Finished Task</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -55,10 +71,10 @@
                     <div class="dropdown-menu dropleft">
                         <a class="dropdown-item" href="/project/{{$data->id}}/tasks/edit-board/{{$board->id}}"><i class="fas fa-edit"></i>&nbsp; Edit Board</a>
                         @if(empty($board->tasks->first()))
-                        <form action="{{ route('project.board.destroy', $board->id) }}" method="POST">
+                        <form action="{{ route('project.board.destroy', $board->id) }}" method="POST" id="deleteBoard">
                             @csrf
                             <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="dropdown-item has-icon btn-outline-danger btn-dropdown-kanban" onclick="return confirm('Are you sure you want to delete this board?')">
+                            <button type="submit" class="dropdown-item has-icon btn-outline-danger btn-dropdown-kanban" data-confirm="Are You Sure?|This board will be deleted. Do you want to continue?" data-confirm-yes="document.getElementById('deleteBoard').submit();">
                                 <i class="fas fa-trash"></i> Delete Board
                             </button>
                         </form>
@@ -98,20 +114,20 @@
                         </div>
                 </a>
                 <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;">
+                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger has-icon" onclick="return confirm('Are you sure you want to delete this task?')">
+                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
-                    <form action="{{ route('project.task.status', $task->id) }}" method="POST" style="display: inline-block;">
+                    <form action="{{ route('project.task.status', $task->id) }}" method="POST" style="display: inline-block;" id="moveTask">
                         @csrf
                         @method('PUT')
                         <input type="hidden" value="0" name="status">
-                        <button type="submit" class="btn btn-outline-primary has-icon" onclick="return confirm('Are you sure you want to move this task back to in progress kanban?')">
+                        <a href="#" class="btn btn-outline-primary has-icon" data-confirm="Are You Sure?|This task will be moved back to in progress kanban. Do you want to continue?" data-confirm-yes="document.getElementById('moveTask').submit();">
                             <i class="fas fa-angle-double-right"></i> Move Back
-                        </button>
+                        </a>
                     </form>
                     
                 </div>
@@ -194,7 +210,7 @@
                         <hr class="mb-4">
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-6 mb-4">
-                                <h4><i class="fas fa-briefcase"></i>&nbsp; Project</h4>
+                                <h4><i class="fas fa-folder"></i>&nbsp; Project</h4>
                                 <a href="/project/{{$data->id}}">
                                     <p>{{ $data->title }}</p>
                                 </a>
@@ -238,7 +254,7 @@
                         </div>
                         <div class="mb-4">
                             <h4><i class="fas fa-calendar-check"></i> Done at</h4>
-                            <p>{{ $task->updated_at }}</p>
+                            <p>{{ date("D, d M Y h:i A", strtotime($task->updated_at)) }}</p>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-6 mb-4">

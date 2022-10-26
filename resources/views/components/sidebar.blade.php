@@ -42,7 +42,7 @@ if(Auth::user()->ownsTeam($current_team)) {
                 [
                     "section_text" => "Meeting",
                     "section_list" => [
-                        ["href" => "dashboard", "text" => "Project Meeting"],
+                        ["href" => "meeting.index", "text" => "Project Meeting"],
                     ]
                 ]
             ],
@@ -100,6 +100,30 @@ if(Auth::user()->ownsTeam($current_team)) {
             "text" => "Dashboard",
             "is_multi" => false,
         ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Project",
+                    "section_list" => [
+                        ["href" => "project.index", "text" => "Project List"],
+                    ]
+                ],
+                [
+                    "section_text" => "Report",
+                    "section_list" => [
+                        ["href" => "report.index", "text" => "Project Report"],
+                    ]
+                ],
+                [
+                    "section_text" => "Meeting",
+                    "section_list" => [
+                        ["href" => "meeting.index", "text" => "Project Meeting"],
+                    ]
+                ]
+            ],
+            "text" => "Project",
+            "is_multi" => true,
+        ],
     ];
     $navigation_links = array_to_object($links);
 } 
@@ -108,11 +132,11 @@ if(Auth::user()->ownsTeam($current_team)) {
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <a href="{{ route('dashboard') }}">ForteSCRUM</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ route('dashboard') }}">
-                DB<!-- <img class="d-inline-block" width="32px" height="30.61px" src="" alt=""> -->
+                FS<!-- <img class="d-inline-block" width="32px" height="30.61px" src="" alt=""> -->
             </a>
         </div>
         @foreach ($navigation_links as $link)
@@ -136,7 +160,7 @@ if(Auth::user()->ownsTeam($current_team)) {
                         @if($section->section_text == 'User')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Project')
-                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-briefcase"></i> <span>{{ $section->section_text }}</span></a>
+                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-folder"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Report')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-chart-bar"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Meeting')

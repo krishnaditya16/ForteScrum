@@ -12,10 +12,10 @@ $current_team = Auth::user()->currentTeam;
                 <div class="dropdown-menu dropleft">
                     <a class="dropdown-item" href="/project/{{$data->id}}/tasks/edit-board/{{$board->id}}"><i class="fas fa-edit"></i>&nbsp; Edit Board</a>
                     @if(empty($board->tasks->first()))
-                    <form action="{{ route('project.board.destroy', $board->id) }}" method="POST">
+                    <form action="{{ route('project.board.destroy', $board->id) }}" method="POST" id="deleteBoard">
                             @csrf
                             <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="dropdown-item has-icon btn-outline-danger btn-dropdown-kanban" onclick="return confirm('Are you sure you want to delete this board?')">
+                            <button type="submit" class="dropdown-item has-icon btn-outline-danger btn-dropdown-kanban" data-confirm="Are You Sure?|This board will be deleted. Do you want to continue?" data-confirm-yes="document.getElementById('deleteBoard').submit();">
                                 <i class="fas fa-trash"></i> Delete Board
                             </button>
                         </form>
@@ -55,10 +55,10 @@ $current_team = Auth::user()->currentTeam;
                 </a>
                 @if(Auth::user()->ownsTeam($current_team) || Auth::user()->hasTeamRole($current_team, 'project-manager'))
                 <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;">
+                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger has-icon" onclick="return confirm('Are you sure you want to delete this task?')">
+                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
@@ -69,11 +69,18 @@ $current_team = Auth::user()->currentTeam;
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" value="1" name="status">
-                                <a href="javascript:void(0)" class="dropdown-item has-icon btn-outline-success link-dropdown-kanban" onclick="return confirm('Are you sure you want to mark this task as done?')">
+                                <a href="#" class="dropdown-item has-icon btn-outline-success" data-confirm="Are You Sure?|This task will be marked as done. Do you want to continue?" data-confirm-yes="document.getElementById('doneTask').submit();">
                                     <i class="fas fa-check"></i> Mark as Done 
                                 </a>
                             </form>
                             <a href="/project/{{$data->id}}/tasks/{{$task->id}}/record" class="dropdown-item has-icon"><i class="fas fa-user-clock"></i> Record Timesheet</a>
+                            <form action="{{ route('project.task.reminder') }}" method="post" id="remindTask">
+                                @csrf
+                                <input type="hidden" value="{{$task->id}}" name="task_id">
+                                <a href="#" class="dropdown-item has-icon" data-confirm="Are You Sure?|You will send a task reminder email to all task assignee. Do you want to continue?" data-confirm-yes="document.getElementById('remindTask').submit();">
+                                    <i class="fas fa-bell"></i> Task Reminder</a>
+                                </a>
+                            </form>
                             <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a>
                             <div class="dropdown-divider"></div>
                             @foreach($options as $option)
@@ -92,10 +99,10 @@ $current_team = Auth::user()->currentTeam;
             </div>
             @elseif(Auth::user()->hasTeamRole($current_team, 'team-member'))
             <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;">
+                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger has-icon" onclick="return confirm('Are you sure you want to delete this task?')">
+                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
@@ -106,7 +113,7 @@ $current_team = Auth::user()->currentTeam;
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" value="1" name="status">
-                                <a href="javascript:void(0)" class="dropdown-item has-icon btn-outline-success link-dropdown-kanban" onclick="return confirm('Are you sure you want to mark this task as done?')">
+                                <a href="#" class="dropdown-item has-icon btn-outline-success link-dropdown-kanban" data-confirm="Are You Sure?|This task will be marked as done. Do you want to continue?" data-confirm-yes="document.getElementById('doneTask').submit();">
                                     <i class="fas fa-check"></i> Mark as Done 
                                 </a>
                             </form>

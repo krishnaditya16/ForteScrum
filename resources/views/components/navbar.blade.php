@@ -4,37 +4,14 @@
         <ul class="navbar-nav mr-3">
             <li><a href="#" data-turbolinks="false" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
         </ul>
-        <!-- <h1 class="font-weight-bold text-2xl text-white">{{ config('app.name', 'Laravel') }}</h1> -->
-        <div class="search-element">
+        <h1 class="font-weight-bold text-2xl text-white">{{ config('app.name', 'Laravel') }}</h1>
+        {{-- <div class="search-element">
             <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
             <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-        </div>
+        </div> --}}
     </form>
     <ul class="navbar-nav navbar-right">
-        <li class="dropdown dropdown-list-toggle pr-3">
-            <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg @if (Auth::user()->name == 'test') beep @else @endif"><i class="far fa-bell"></i></a>
-            <div class="dropdown-menu dropdown-list dropdown-menu-right">
-                <div class="dropdown-header">Notifications
-                    <div class="float-right">
-                        <a href="#">Mark All As Read</a>
-                    </div>
-                </div>
-                <div class="dropdown-list-content dropdown-list-icons">
-                    <a href="#" class="dropdown-item dropdown-item-unread">
-                        <div class="dropdown-item-icon bg-primary text-white">
-                            <i class="fas fa-code"></i>
-                        </div>
-                        <div class="dropdown-item-desc">
-                            Template update is available now!
-                            <div class="time text-primary">2 Min Ago</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="dropdown-footer text-center">
-                    <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-                </div>
-            </div>
-        </li>
+        @include('notification.index')
         <img class="rounded-circle mr-1" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" width="32px">
         <li class="dropdown dropdown-nav-user">
             <a href="#" data-turbolinks="false" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
@@ -54,9 +31,14 @@
                     <i class="fas fa-user"></i> User Profile
                 </a>
                 <!-- Team Settings -->
+                @php
+                    $team = Auth::user()->currentTeam;
+                @endphp
+                @if(Auth::user()->hasTeamRole($team, 'project-manager') || Auth::user()->hasTeamRole($team, 'product-owner') || Auth::user()->ownsTeam($team))
                 <a href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" class="dropdown-item has-icon">
                     <i class="fas fa-users-cog"></i> Team Settings
                 </a>
+                @endif
                 @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                 <a href="{{ route('teams.create') }}" class="dropdown-item has-icon">
                     <i class="fas fa-user-plus"></i> Create New Team

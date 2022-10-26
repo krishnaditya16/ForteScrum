@@ -32,7 +32,7 @@ $('[data-confirm]').each(function() {
     buttons: [
       {
         text: me.data('confirm-text-yes') || 'Yes',
-        class: 'btn btn-danger btn-shadow',
+        class: 'btn btn-primary btn-shadow',
         handler: function() {
           eval(me.data('confirm-yes'));
         }

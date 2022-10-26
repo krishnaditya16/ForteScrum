@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -27,7 +29,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        $data = User::all();
+        $data = User::where('current_team_id', Auth::user()->currentTeam->id)->get();
         return view('pages.client.create', compact('data'));
     }
 
@@ -44,7 +46,12 @@ class ClientController extends Controller
             'email' => 'required|email|unique:users',
             'phone_number' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'address' => 'required',
-            'user_id' => 'required'
+            'user_id' => ['required',Rule::unique('clients')->where(function ($query) use ($request) {
+                return $query->where('user_id', $request->user_id);
+            })],
+        ],[
+            'user_id.unique' => 'Selected user already exist as owner of other client\'s account.',
+            'user_id.required' => 'The client\'s user field is required.',
         ]);
 
         $client = Client::create($request->all());

@@ -115,7 +115,6 @@
         </div>
     @endif
 
-
         @if ($team->users->isNotEmpty())
             <x-jet-section-border />
 

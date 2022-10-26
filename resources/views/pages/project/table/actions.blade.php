@@ -30,6 +30,14 @@ $task = DB::table('tasks')->where('project_id', $project->id)->get();
         <a role="button" wire:click="deleteConfirm({{ $project->id }})" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i> Delete</a>
     </div>
 </div>
+@elseif(Auth::user()->hasTeamRole($current_team, 'team-member'))
+<div class="dropdown">
+    <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>
+    <div class="dropdown-menu">
+        <a href="/project/{{ $project->id }}/" class="dropdown-item has-icon"><i class="fas fa-external-link-alt"></i> View</a>
+        <a href="/project/{{ $project->id }}/tasks" class="dropdown-item has-icon"><i class="fas fa-tasks"></i> Task List </a>
+    </div>
+</div>
 @elseif(Auth::user()->hasTeamRole($current_team, 'product-owner'))
 <div class="dropdown">
     <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>

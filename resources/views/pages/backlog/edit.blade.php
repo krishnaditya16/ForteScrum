@@ -28,24 +28,54 @@
                     <form action="{{ route('backlog.update', $backlog->id) }}" method="post">
                         @csrf
                         @method('PUT')
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Project</label>
+                            <div class="col-sm-12 col-md-7">
+                                @php
+                                    foreach($projects as $project){
+                                        if($project->id == $backlog->project_id){
+                                            $project_name = $project->title;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                <input type="hidden" name="project_id" value="{{ $backlog->project_id }}">
+                                <input type="text" class="form-control" value="{{ $project_name }}" readonly>
+                                @error('project_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint Iteration</label>
+                            <div class="col-sm-12 col-md-7">
+                                @php
+                                    foreach($sprints as $sprint){
+                                        if($sprint->id == $backlog->sprint_id){
+                                            $sprint_name = $sprint->name;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                <input type="hidden" name="sprint_id" value="{{ $backlog->sprint_id }}">
+                                <input type="number" class="form-control" value="{{ $sprint_name }}" readonly>
+                                @error('sprint_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Story Point</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="number" class="form-control" name="story_point" value="{{ $backlog->story_point }}" min="1">
+                                @error('story_point') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Backlog Name</label>
                             <div class="col-sm-12 col-md-7">
                                 <input type="text" class="form-control" name="name" value="{{ $backlog->name }}">
                                 @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Project</label>
-                            <div class="col-sm-12 col-md-7">
-                                <select class="form-control select2" name="project_id">
-                                    <option selected disabled> Select Project </option>
-                                    @foreach ($projects as $project)
-                                    <option value="{{ $project->id }}" @if($backlog->project_id == "$project->id") selected="selected" @endif>{{ $project->title }}</option>
-                                    @endforeach
-                                </select>
-                                @error('project_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
 

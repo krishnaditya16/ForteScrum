@@ -15,6 +15,7 @@
     <div class="row"> 
         <div class="col-12">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
+                @if(Auth::user()->hasTeamPermission($team, 'view:sprint-backlog'))
                 <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Overview</a>
                 </li>
@@ -27,6 +28,14 @@
                 <li class="nav-item">
                     <a class="nav-link" id="backlog-tab" data-toggle="tab" href="#backlog" role="tab" aria-controls="backlog" aria-selected="false">Backlog</a>
                 </li>
+                @else
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Overview</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Detail</a>
+                </li>
+                @endif
             </ul>
             <div class="tab-content" id="myTabContent">
 

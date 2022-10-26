@@ -2,75 +2,44 @@
     <div class="col-12 col-md-6 col-lg-6">
         <div class="card">
             <div class="card-header">
-                <h4>Client : {{ $client->name }}
+                <h4>Team - {{$team->name}}
                     <h4>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
                         <h4>Product Owner</h4>
-                        @if($po->isNotEmpty())
-                            @foreach ($po as $user)
-                                @if(is_null($user->profile_photo_path))
-                                    @php
-                                        $name = trim(collect(explode(' ', $user->name))->map(function ($segment) {
-                                        return mb_substr($segment, 0, 1);
-                                        })->join(''));
-                                    @endphp
-                                <figure class="avatar mr-2 mb-4 mt-2" data-initial="{{$name}}" data-toggle="tooltip" title="{{ $user->name }}"></figure>
-                                @else
-                                <figure class="avatar mr-2 mb-4 mt-2">
-                                    <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
-                                </figure>
-                                @endif
-                            @endforeach
-                        @else
-                        <p class="mb-4">Team has no product owner</p>
-                        @endif
+                        @forelse($po as $user)
+                            <figure class="avatar mr-2 mb-4 mt-2">
+                                <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
+                            </figure>
+                        @empty
+                            <p class="mb-4">Team has no product owner</p>
+                        @endforelse
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-6">
                         <h4>Project Manager</h4>
-                        @if($pm->isNotEmpty())
-                            @foreach ($pm as $user)
-                                @if(is_null($user->profile_photo_path))
-                                    @php
-                                        $name = trim(collect(explode(' ', $user->name))->map(function ($segment) {
-                                        return mb_substr($segment, 0, 1);
-                                        })->join(''));
-                                    @endphp
-                                <figure class="avatar mr-2 mb-4 mt-2" data-initial="{{$name}}" data-toggle="tooltip" title="{{ $user->name }}"></figure>
-                                @else
-                                <figure class="avatar mr-2 mb-4 mt-2">
-                                    <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
-                                </figure>
-                                @endif
-                        @endforeach
-                        @else
-                        <p class="mb-4">Team has no project manager</p>
-                        @endif
+                        @forelse($pm as $user)
+                            @if($user->hasTeamRole($team, 'project-manager') || $user->ownsTeam($team))
+                            <figure class="avatar mr-2 mb-4 mt-2">
+                                <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
+                            </figure>
+                            @endif
+                        @empty
+                            <p class="mb-4">Team has no project manager</p>
+                        @endforelse
                     </div>
                     <div class="col-12 col-md-6 col-lg-6">
                         <h4>Assigned Team</h4>
-                        @if($tm->isNotEmpty())
-                            @foreach ($tm as $user)
-                                @if(is_null($user->profile_photo_path))
-                                    @php
-                                        $name = trim(collect(explode(' ', $user->name))->map(function ($segment) {
-                                        return mb_substr($segment, 0, 1);
-                                        })->join(''));
-                                    @endphp
-                                <figure class="avatar mr-2 mb-4 mt-2" data-initial="{{$name}}" data-toggle="tooltip" title="{{ $user->name }}"></figure>
-                                @else
-                                <figure class="avatar mr-2 mb-4 mt-2">
-                                    <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
-                                </figure>
-                                @endif
-                            @endforeach
-                        @else
+                        @forelse($tm as $user)
+                            <figure class="avatar mr-2 mb-4 mt-2">
+                                <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
+                            </figure>
+                        @empty
                         <p class="mb-4">Team has no member</p>
-                        @endif
+                        @endforelse
                     </div>
                 </div>
 
@@ -120,46 +89,11 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6 col-lg-6">
-        <div class="card">
-            <div class="card-header">
-                <h4>
-                    Title : {{ $project->title }}
-                    @if($project->status == "2")
-                        @if($date_now < $due_date) 
-                        <span class="badge badge-info ml-2">{{$date_diff}} days left</span>
-                        @else
-                        <span class="badge badge-danger ml-2">{{$date_diff}} days late</span>
-                        @endif
-                    @endif   
-                <h4>
-            </div>
-            <div class="card-body">
-                <h4 class="mb-2">Progress</h4>
-                <div class="progress" data-toggle="tooltip" title="{{ $project->progress }}%">
-                    <div class="progress-bar bg-success" role="progressbar" data-width="{{ $project->progress }}%" aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <p class="mt-2">Current progress of {{$project->title}} : {{$project->progress}}%</p>
-
-                @php $current_team = Auth::user()->currentTeam; @endphp
-                @if(Auth::user()->hasTeamRole($current_team, 'project-manager'))
-                    <a href="{{ route('project.edit', $project->id) }}" class="btn btn-icon icon-left btn-primary mt-2" type="button" @if($project->status == 0) onclick="alert()->warning('Warning!','Project need to be approved by product owner first!');" @endif><i class="fas fa-edit"></i>Update Progress</a>
-                @endif
-                <hr class="mb-4 mt-4">
-
-                <h4>Proposal</h4>
-                <p>{{ $project->proposal }}</p>
-                <a href="{{ route('project.proposal', $project->id) }}" class="btn btn-icon icon-left btn-primary mt-2" type="button"><i class="fas fa-download"></i>Download File</a>
-                <button class="btn btn-primary mt-2" data-toggle="modal" data-target="#proposalModal"><i class="fas fa-eye"></i> View File</button>
-
-                <hr class="mb-4 mt-4">
+                <hr class="mb-4">
 
                 <h4>Platform</h4>
 
-                <div class="form-group mt-2">
+                <div class="form-group mt-2 mb-0">
                     <div class="selectgroup w-100">
                         <label class="selectgroup-item" data-toggle="tooltip" title="Default">
                             <input type="radio" @if($project->platform == "0") checked="checked" @endif class="selectgroup-input" disabled>
@@ -179,6 +113,89 @@
                         </label>
                     </div>
                 </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    Progress
+                    @if($project->status == "2")
+                        @if($date_now < $due_date) <span class="badge badge-info ml-2">{{$date_diff}} days left</span>
+                        @else
+                        <span class="badge badge-danger ml-2">{{$date_diff}} days late</span>
+                        @endif
+                    @endif
+                <h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder pt-1 pb-2">
+                    <li class="media">
+                        <div class="media-body">
+                            <div class="media-title mb-0 pt-0 pb-0">{{$project->title}}</div>
+                            <div class="text-job text-muted">{{ $client->name }}</div>
+                        </div>
+                        <div class="media-progressbar">
+                            <div class="progress-text">{{$project->progress}}%</div>
+                            <div class="progress" data-height="6" style="height: 6px;" data-toggle="tooltip" title="{{ $project->progress }}%">
+                                <div class="progress-bar bg-primary" data-width="{{ $project->progress }}%" aria-valuenow="{{ $project->progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="media-cta">
+                            @php $current_team = Auth::user()->currentTeam; @endphp
+                            @if(Auth::user()->hasTeamRole($current_team, 'project-manager'))
+                            <a href="{{ route('project.edit', $project->id) }}" class="btn btn-icon icon-left btn-outline-primary mt-2" type="button" @if($project->status == 0) onclick="alert()->warning('Warning!','Project need to be approved by product owner first!');" @endif><i class="fas fa-edit"></i>Update Progress</a>
+                            @endif
+                        </div>
+                    </li>
+                </ul>
+                <hr class="mb-4 mt-4">
+
+                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder pt-1 pb-2">
+                    <li class="media">
+                        <div class="media-body">
+                            <div class="media-title mb-0 pt-0 pb-0">Total Task</div>
+                            <div class="text-muted">{{ count($task->where('status', 1)) }} / {{ count($task) }} Done</div>
+                        </div>
+                        <div class="media-cta">
+                            <a href="{{ route('project.task', $project->id) }}" class="btn btn-outline-primary mt-2"><i class="fas fa-tasks"></i> Task List</a>
+                        </div>
+                    </li>
+                </ul>
+                
+                <hr class="mb-4 mt-4">
+
+                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder pt-1 pb-2">
+                    <li class="media">
+                        <div class="media-body">
+                            <div class="media-title mb-0 pt-0 pb-0">Report</div>
+                            <div class="text-muted">Sprints & Timesheets Report</div>
+                        </div>
+                        <div class="media-cta">
+                            <a href="{{ route('project.report.sprint', $project->id) }}" class="btn btn-icon icon-left btn-outline-primary mt-2" type="button"><i class="fas fa-file-alt"></i>Sprints</a>
+                            <a href="{{ route('project.report.timesheet', $project->id) }}" class="btn btn-icon icon-left btn-outline-primary mt-2" type="button"><i class="fas fa-clock"></i>Timesheets</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <hr class="mb-4 mt-4">
+                
+                <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder pt-1 pb-2">
+                    <li class="media">
+                        <div class="media-body">
+                            <div class="media-title mb-0 pt-0 pb-0">Proposal</div>
+                            <div class="text-muted">{{ $project->proposal }}</div>
+                        </div>
+                        <div class="media-cta">
+                            <a href="{{ route('project.proposal', $project->id) }}" class="btn btn-icon icon-left btn-outline-primary mt-2" type="button"><i class="fas fa-download"></i>Download File</a>
+                            <button class="btn btn-outline-primary mt-2" data-toggle="modal" data-target="#proposalModal"><i class="fas fa-eye"></i> View File</button>
+                        </div>
+                    </li>
+                </ul>
+                
+                
             </div>
         </div>
     </div>

@@ -12,7 +12,7 @@
                         <img src="{{ asset('auth/img/stisla-fill.svg') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
                     </div>
 
-                    <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">PM App</span></h4>
+                    <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">{{ config('app.name', 'Laravel') }}</span></h4>
                     <p class="text-muted">Before accessing the app, please login first or register if you didn't have an account.</p>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf

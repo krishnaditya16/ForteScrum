@@ -28,8 +28,10 @@ class BacklogController extends Controller
      */
     public function create()
     {
-        $projects = Project::all();
-        return view('pages.backlog.create', compact('projects'));
+        $current_team = Auth::user()->currentTeam->id;
+        $projects = Project::where('team_id', $current_team)->get();
+        $sprints = Sprint::join('projects', 'sprints.project_id', 'projects.id')->where('projects.team_id', $current_team)->get();
+        return view('pages.backlog.create', compact('projects', 'sprints'));
     }
 
     /**
@@ -40,12 +42,29 @@ class BacklogController extends Controller
      */
     public function store(Request $request)
     {
+        $sprint_data = Sprint::where('id', $request->sprint_id)->select('total_sp', 'name')->first();
+        $sp = Backlog::where('sprint_id', $request->sprint_id)->select('story_point')->get();
+        $total_sp = $sprint_data['total_sp'];
+
+        foreach ($sp as $data) {
+            $total_sp = $total_sp - $data->story_point;
+        }
+
         $request->validate([
             'name' => 'required',
+            'story_point' => 'required|numeric|min:1|max:' . $total_sp,
+            'sprint_id' => 'required',
             'project_id' => 'required',
         ]);
 
-        Backlog::create($request->all());
+        Backlog::create([
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'story_point' => $request['story_point'],
+            'sprint_name' => $sprint_data['name'],
+            'sprint_id' => $request['sprint_id'],
+            'project_id' => $request['project_id'],
+        ]);
 
         Alert::success('Success!', 'Data has been succesfully created.');
 
@@ -73,13 +92,13 @@ class BacklogController extends Controller
     {
         $data = Backlog::join('projects', 'backlogs.project_id', 'projects.id')->select('team_id')->first();
         $current_team = Auth::user()->currentTeam;
-        $projects = Project::all();
-        
+        $projects = Project::where('team_id', Auth::user()->currentTeam->id)->get();
+        $sprints = Sprint::all();
+
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
-        }
-        else {
-            return view('pages.backlog.edit', compact('projects', 'backlog'));
+        } else {
+            return view('pages.backlog.edit', compact('backlog', 'projects', 'sprints'));
         }
     }
 
@@ -92,22 +111,43 @@ class BacklogController extends Controller
      */
     public function update(Request $request, Backlog $backlog)
     {
+        $sprint_data = Sprint::where('id', $request->sprint_id)->select('total_sp', 'name')->first();
+        $sp = Backlog::where('sprint_id', $request->sprint_id)->select('story_point')->get();
+        $total_sp = $sprint_data['total_sp'];
+
+        foreach ($sp as $data) {
+            $total_sp = $total_sp - $data->story_point;
+        }
+
+        $tsp = $total_sp + $backlog->story_point;
+
         $request->validate([
             'name' => 'required',
-            'description' => 'max:5000',
+            'story_point' => 'required|numeric|min:1|max:' . $tsp,
+            'sprint_id' => 'required',
             'project_id' => 'required',
         ]);
 
         $desc = $request->description;
 
-        if($desc == "<p><br></p>"){
+        if ($desc == "<p><br></p>") {
             $backlog->update([
                 'name' => $request['name'],
                 'description' => "",
-                'project_id' => $request['project_id']
+                'story_point' => $request['story_point'],
+                'sprint_name' => $sprint_data['name'],
+                'sprint_id' => $request['sprint_id'],
+                'project_id' => $request['project_id'],
             ]);
         } else {
-            $backlog->update($request->all());
+            $backlog->update([
+                'name' => $request['name'],
+                'description' => $request['description'],
+                'story_point' => $request['story_point'],
+                'sprint_name' => $sprint_data['name'],
+                'sprint_id' => $request['sprint_id'],
+                'project_id' => $request['project_id'],
+            ]);
         }
 
         Alert::success('Success!', 'Data has been succesfully updated.');
@@ -126,7 +166,7 @@ class BacklogController extends Controller
         //
     }
 
-    public function createProjectBacklog($id) 
+    public function createProjectBacklog($id)
     {
         $projects = Project::where('id', $id)->first();
         $sprints = Sprint::where('project_id', $projects->id)->get();
@@ -134,26 +174,26 @@ class BacklogController extends Controller
         return view('pages.project.backlog.create', compact('projects', 'sprints'));
     }
 
-    public function storeProjectBacklog(Request $request) 
+    public function storeProjectBacklog(Request $request)
     {
-        if(!empty($request->sprint_id)){
+        if (!empty($request->sprint_id)) {
             $sprint_data = Sprint::where('id', $request->sprint_id)->select('total_sp', 'name')->first();
             $sp = Backlog::where('sprint_id', $request->sprint_id)->select('story_point')->get();
             $total_sp = $sprint_data['total_sp'];
 
-            foreach($sp as $data){
+            foreach ($sp as $data) {
                 $total_sp = $total_sp - $data->story_point;
             }
 
             $request->validate([
                 'name' => 'required',
-                'story_point' => 'required|numeric|min:1|max:'.$total_sp,
+                'story_point' => 'required|numeric|min:1|max:' . $total_sp,
                 'sprint_id' => 'required',
                 'project_id' => 'required',
             ]);
-    
+
             $project_id = $request->project_id;
-    
+
             Backlog::create([
                 'name' => $request['name'],
                 'description' => $request['description'],
@@ -162,22 +202,21 @@ class BacklogController extends Controller
                 'sprint_id' => $request['sprint_id'],
                 'project_id' => $request['project_id'],
             ]);
-    
-            Alert::success('Success!', 'Backlog has been succesfully created.');
-    
-            return redirect()->route('project.show', $project_id);
 
-        }  else {
+            Alert::success('Success!', 'Backlog has been succesfully created.');
+
+            return redirect()->route('project.show', $project_id);
+        } else {
             $request->validate([
                 'name' => 'required',
                 'story_point' => 'required|numeric|min:1',
                 'sprint_id' => 'required',
                 'project_id' => 'required',
             ]);
-        }       
+        }
     }
 
-    public function editProjectBacklog($id, Backlog $backlog) 
+    public function editProjectBacklog($id, Backlog $backlog)
     {
         $projects = Project::where('id', $id)->first();
         $sprints = Sprint::where('project_id', $projects->id)->get();
@@ -185,14 +224,14 @@ class BacklogController extends Controller
         return view('pages.project.backlog.edit', compact('backlog', 'projects', 'sprints'));
     }
 
-    public function updateProjectBacklog(Request $request) 
+    public function updateProjectBacklog(Request $request)
     {
-        if(!empty($request->sprint_id)){
+        if (!empty($request->sprint_id)) {
             $sprint_data = Sprint::where('id', $request->sprint_id)->select('total_sp', 'name')->first();
             $sp = Backlog::where('sprint_id', $request->sprint_id)->select('story_point')->get();
             $total_sp = $sprint_data['total_sp'];
 
-            foreach($sp as $data){
+            foreach ($sp as $data) {
                 $total_sp = $total_sp - $data->story_point;
             }
 
@@ -203,14 +242,14 @@ class BacklogController extends Controller
 
             $request->validate([
                 'name' => 'required',
-                'story_point' => 'required|numeric|min:1|max:'.$tsp,
+                'story_point' => 'required|numeric|min:1|max:' . $tsp,
                 'sprint_id' => 'required',
                 'project_id' => 'required',
             ]);
-    
+
             $desc = $request->description;
-            
-            if($desc == "<p><br></p>"){
+
+            if ($desc == "<p><br></p>") {
                 $backlog->update([
                     'name' => $request['name'],
                     'description' => "",
@@ -229,19 +268,18 @@ class BacklogController extends Controller
                     'project_id' => $request['project_id'],
                 ]);
             }
-    
+
             Alert::success('Success!', 'Backlog has been succesfully updated.');
 
             $project_id = $request->project_id;
             return redirect()->route('project.show', $project_id);
-
-        }  else {
+        } else {
             $request->validate([
                 'name' => 'required',
                 'story_point' => 'required|numeric|min:1',
                 'sprint_id' => 'required',
                 'project_id' => 'required',
             ]);
-        }       
+        }
     }
 }

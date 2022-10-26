@@ -31,7 +31,7 @@ class SprintController extends Controller
      */
     public function create()
     {
-        $projects = Project::all();
+        $projects = Project::where('team_id', Auth::user()->currentTeam->id)->get();
         return view('pages.sprint.create', compact('projects'));
     }
 
@@ -48,13 +48,47 @@ class SprintController extends Controller
                 return $query->where('project_id', $request->project_id);
             })],
             'project_id' => 'required',
+            'sprint_date' => 'required',
+            'focus_factor' => 'required|min:1|max:100',
         ],[
             'name.unique' => 'Sprint iteration already exist for selected project.',
             'name.required' => 'The sprint iteration field is required.',
             'project_id.required' => 'The project field is required.',
         ]);
 
-        Sprint::create($request->all());
+        $dates = explode(' - ', $request->sprint_date);
+        $start_date = Carbon::parse($dates[0]);
+        $end_date = Carbon::parse($dates[1]);
+
+        $date_diff = ($start_date->diffInDays($end_date))+1;
+
+        $project_id = $request->project_id;
+        $projects = Project::where('id', $project_id)->first();
+        $team = Jetstream::newTeamModel()->findOrFail($projects->team_id);
+
+        $data = [];
+
+        foreach ($team->users as $user) {
+            $data[] = $user->id;
+        }
+
+        $users = DB::table('team_user')
+            ->join('users', 'team_user.user_id', 'users.id')
+            ->whereIn('user_id', $data)->where('role', 'team-member')
+            ->get();
+        
+        $total_member = count($users);
+        $man_days = $total_member*$date_diff;
+
+        Sprint::create([
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'total_sp' => ($man_days*$request->focus_factor)/100,
+            'focus_factor' => $request['focus_factor'],
+            'project_id' => $request['project_id'],
+        ]);
 
         Alert::success('Success!', 'Data has been succesfully created.');
 
@@ -82,13 +116,17 @@ class SprintController extends Controller
     {
         $data = Sprint::join('projects', 'sprints.project_id', 'projects.id')->select('team_id')->first();
         $current_team = Auth::user()->currentTeam;
-        $projects = Project::all();
+        $projects = Project::where('team_id', Auth::user()->currentTeam->id)->get();
+        $start_date = $sprint->start_date;
+        $end_date = $sprint->end_date;
+        $arr = array($start_date, $end_date);
+        $dates = implode(' - ', $arr);
         
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
         }
         else {
-            return view('pages.sprint.edit', compact('projects', 'sprint'));
+            return view('pages.sprint.edit', compact('sprint','projects','dates',));
         }
     }
 
@@ -106,38 +144,62 @@ class SprintController extends Controller
                 return $query->where('project_id', $request->project_id);
             })],
             'project_id' => 'required',
+            'sprint_date' => 'required',
+            'focus_factor' => 'required|min:1|max:100',
         ],[
             'name.unique' => 'Sprint iteration already exist for selected project.',
             'name.required' => 'The sprint iteration field is required.',
             'project_id.required' => 'The project field is required.',
         ]);
 
+        $dates = explode(' - ', $request->sprint_date);
+        $start_date = Carbon::parse($dates[0]);
+        $end_date = Carbon::parse($dates[1]);
+
+        $date_diff = ($start_date->diffInDays($end_date))+1;
+
+        $project_id = $request->project_id;
+        $projects = Project::where('id', $project_id)->first();
+        $team = Jetstream::newTeamModel()->findOrFail($projects->team_id);
+
+        $data = [];
+
+        foreach ($team->users as $user) {
+            $data[] = $user->id;
+        }
+
+        $users = DB::table('team_user')
+            ->join('users', 'team_user.user_id', 'users.id')
+            ->whereIn('user_id', $data)->where('role', 'team-member')
+            ->get();
+        
+        $total_member = count($users);
+        $man_days = $total_member*$date_diff;
         $desc = $request->description;
 
         if($desc == "<p><br></p>"){
             $sprint->update([
-                'name' => $request['name'],
                 'description' => "",
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'total_sp' => ($man_days*$request->focus_factor)/100,
+                'focus_factor' => $request['focus_factor'],
                 'project_id' => $request['project_id']
             ]);
         } else {
-            $sprint->update($request->all());
+            $sprint->update([
+                'description' => $request['description'],
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'total_sp' => ($man_days*$request->focus_factor)/100,
+                'focus_factor' => $request['focus_factor'],
+                'project_id' => $request['project_id'],
+            ]);
         }
 
-        Alert::success('Success!', 'Data has been succesfully updated.');
+        Alert::success('Success!', 'Sprint has been succesfully updated.');
 
         return redirect('/sprint');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     public function createProjectSprint($id) 
@@ -271,7 +333,7 @@ class SprintController extends Controller
             ]);
         }
 
-        Alert::success('Success!', 'Sprint has been succesfully created.');
+        Alert::success('Success!', 'Sprint has been succesfully updated.');
 
         return redirect()->route('project.show', $project_id);
     }

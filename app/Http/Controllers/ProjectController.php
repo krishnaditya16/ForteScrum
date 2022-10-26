@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\Team;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -114,26 +115,36 @@ class ProjectController extends Controller
         // $data = $team->users;
         $team = Jetstream::newTeamModel()->findOrFail($project->team_id);
 
+        $users = $team->allUsers();
+        $po = [];
+        $pm = [];
+        $tm = [];
         $data = [];
 
         foreach ($team->users as $user) {
             $data[] = $user->id;
         }
+        
+        foreach($users as $user){
+            if($user->hasTeamRole($team, 'product-owner') && !$user->ownsTeam($team)){
+                $po[] = $user;
+            }
+        }
 
-        $po = DB::table('team_user')
-            ->join('users', 'team_user.user_id', 'users.id')
-            ->whereIn('user_id', $data)->where('role', 'product-owner')
-            ->get();
+        foreach($users as $user){
+            if($user->hasTeamRole($team, 'project-manager')){
+                $pm[] = $user;
+            }
+        }
 
-        $pm = DB::table('team_user')
-            ->join('users', 'team_user.user_id', 'users.id')
-            ->whereIn('user_id', $data)->where('role', 'project-manager')
-            ->get();
+        foreach($users as $user){
+            if($user->hasTeamRole($team, 'team-member') && !$user->ownsTeam($team)){
+                $tm[] = $user;
+            }
+        }
 
-        $tm = DB::table('team_user')
-            ->join('users', 'team_user.user_id', 'users.id')
-            ->whereIn('user_id', $data)->where('role', 'team-member')
-            ->get();
+        $team_owner = DB::table('teams')
+            ->join('users', 'teams.user_id', 'users.id')->first();
 
         $client = Client::where('id', $project->client_id)->first();
 
@@ -143,11 +154,15 @@ class ProjectController extends Controller
         $date_now = Carbon::now();
         $due_date = date('Y-m-d', strtotime($project->end_date));
         $date_diff = ($date_now->diffInDays($due_date)) + 1;
+        $task = Task::where('project_id', $project->id)->get();
+        $team = Team::where('id', $project->team_id)->first();
 
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
         } else {
-            return view('pages.project.show', compact('project', 'client', 'po', 'pm', 'tm', 'date_now', 'due_date', 'date_diff'));
+            return view('pages.project.show', compact(
+                'project', 'client', 'po', 'pm', 'tm', 'team_owner','date_now', 'due_date', 'date_diff', 'task', 'team'
+            ));
         }
     }
 
@@ -172,7 +187,12 @@ class ProjectController extends Controller
         if (empty($data) || $current_team->id != $data->team_id) {
             abort(403);
         } else {
-            return view('pages.project.edit', compact('project', 'teams', 'clients', 'dates'));
+            if(Auth::user()->hasTeamPermission($current_team, 'edit:project')){
+                return view('pages.project.edit', compact('project', 'teams', 'clients', 'dates'));
+            } else {
+                abort(403);
+            }
+            
         }
     }
 

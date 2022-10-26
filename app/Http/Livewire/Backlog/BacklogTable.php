@@ -5,8 +5,10 @@ namespace App\Http\Livewire\Backlog;
 use App\Exports\BacklogExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Backlog;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
@@ -34,11 +36,22 @@ class BacklogTable extends DataTableComponent
             Column::make("Project", "projects.title")
                 ->searchable()
                 ->sortable(),
+            Column::make("Sprint Iteration", "sprints.name")
+                ->searchable()
+                ->sortable(),
+            Column::make("Story_point", "story_point")
+                ->searchable()
+                ->sortable(),
             Column::make('Description', 'description')
                 ->format(
                     fn ($value, $row, Column $column) => view('pages.backlog.table.description')->withValue($value)
                 ),
         ];
+    }
+
+    public function builder(): Builder
+    {
+        return Backlog::with('projects')->where('projects.team_id', Auth::user()->currentTeam->id);
     }
 
     public function bulkActions(): array

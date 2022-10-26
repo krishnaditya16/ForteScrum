@@ -27,6 +27,20 @@
 
                     <form action="{{ route('sprint.store') }}" method="post">
                         @csrf
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Project</label>
+                            <div class="col-sm-12 col-md-7">
+                                <select class="form-control select2" name="project_id">
+                                    <option selected disabled> Select Project </option>
+                                    @foreach ($projects as $project)
+                                    <option value="{{ $project->id }}">{{ $project->title }}</option>
+                                    @endforeach
+                                </select>
+                                @error('project_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint Iteration</label>
                             <div class="col-sm-12 col-md-7">
@@ -39,15 +53,33 @@
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Project</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Focus Factor</label>
                             <div class="col-sm-12 col-md-7">
-                                <select class="form-control select2" name="project_id">
-                                    <option selected disabled> Select Project </option>
-                                    @foreach ($projects as $project)
-                                    <option value="{{ $project->id }}">{{ $project->title }}</option>
-                                    @endforeach
-                                </select>
-                                @error('project_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control" name="focus_factor" value="{{ old('focus_factor') }}" min="1" max="100">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                @error('focus_factor') <span class="text-red-500">{{ $message }}</span>@enderror
+                                <small class="form-text text-muted">
+                                    Focus factor is ...
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start - End Date</label>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control daterange" name="sprint_date" value="{{ old('sprint_date') }}">
+                                </div>
+                                @error('sprint_date') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
 

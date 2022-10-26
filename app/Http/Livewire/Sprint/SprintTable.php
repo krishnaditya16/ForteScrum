@@ -5,8 +5,10 @@ namespace App\Http\Livewire\Sprint;
 use App\Exports\SprintExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Sprint;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -32,14 +34,30 @@ class SprintTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("Sprint Iteration", "name")
-                ->searchable(),
+                ->searchable()
+                ->sortable(),
+            Column::make("Start Date", "start_date")
+                ->searchable()
+                ->sortable(),
+            Column::make("End Date", "end_date")
+                ->searchable()
+                ->sortable(),
+            Column::make("Focus Factor (%)", "focus_factor")
+                ->searchable()
+                ->sortable(),
             Column::make("Total Story point", "total_sp")
-                ->searchable(),
-            Column::make('Description', 'description')
+                ->searchable()
+                ->sortable(),
+            Column::make('Status', 'status')
                 ->format(
-                    fn ($value, $row, Column $column) => view('pages.sprint.table.description')->withValue($value)
+                    fn ($value, $row, Column $column) => view('pages.sprint.table.status')->withValue($value)
                 ),
         ];
+    }
+
+    public function builder(): Builder
+    {
+        return Sprint::with('projects')->where('projects.team_id', Auth::user()->currentTeam->id);
     }
 
     public function bulkActions(): array

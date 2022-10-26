@@ -1,6 +1,6 @@
 <h2 class="section-title">Sprints Data</h2>
 <p class="section-lead mb-3">
-    You can manage sprints data here.
+    Overall sprints data from all project on your team are listed here.
 </p>
 <div class="row">
     <div class="col-12">

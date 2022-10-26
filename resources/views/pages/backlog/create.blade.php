@@ -27,14 +27,7 @@
 
                     <form action="{{ route('backlog.store') }}" method="post">
                         @csrf
-                        <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Backlog Name</label>
-                            <div class="col-sm-12 col-md-7">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
-                                @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-
+                        
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Project</label>
                             <div class="col-sm-12 col-md-7">
@@ -45,6 +38,42 @@
                                     @endforeach
                                 </select>
                                 @error('project_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Backlog Name</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                                @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint</label>
+                            <div class="col-sm-12 col-md-7">
+                                <select class="form-control select2" name="sprint_id" required>
+                                    <option selected disabled> Select Sprint Iteration</option>
+                                    @foreach ($sprints as $sprint)
+                                        @php 
+                                            $project_name = DB::table('projects')->where('id', $sprint->project_id)->first();
+                                        @endphp
+                                        @if($sprint->status == "1")
+                                        <option disabled value="{{ $sprint->id }}" style="color:red">Sprint - {{ $sprint->name }} ({{ $project_name->title }}) [CLOSED]</option>
+                                        @else
+                                        <option value="{{ $sprint->id }}">Sprint - {{ $sprint->name }} ({{ $project_name->title }})</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @error('sprint_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Story Point</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="number" class="form-control" name="story_point" value="{{ old('story_point') }}" min="1">
+                                @error('story_point') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
 

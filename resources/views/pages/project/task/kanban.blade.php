@@ -19,11 +19,16 @@
         You can manage & view tasks data using the kanban board below.
     </p>
 
+    @php
+        $team = Auth::user()->currentTeam;
+    @endphp
+
     <div class="row mb-4 mt-2">
         <div class="col-12">
             <div class="card mb-0">
                 <div class="card-body">
                     <ul class="nav nav-pills">
+                        @if(Auth::user()->hasTeamPermission($team, 'create:task-board'))
                         <li class="nav-item">
                             <a class="nav-link active" href="#"><i class="fas fa-chalkboard"></i> Kanban View</a>
                         </li>
@@ -39,6 +44,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('project.task.finished', $data->id) }}"><i class="fas fa-clipboard-check"></i> Finished Task</a>
                         </li>
+                        @else
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#"><i class="fas fa-chalkboard"></i> Kanban View</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/project/{{$data->id}}/table-view"><i class="fas fa-table"></i> Table View</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('project.task.finished', $data->id) }}"><i class="fas fa-clipboard-check"></i> Finished Task</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -109,7 +125,7 @@
                         <hr class="mb-4">
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-6 mb-4">
-                                <h4><i class="fas fa-briefcase"></i>&nbsp; Project</h4>
+                                <h4><i class="fas fa-folder"></i>&nbsp; Project</h4>
                                 <a href="/project/{{$data->id}}"><p>{{ $data->title }}</p></a>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6 mb-4">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\TaskMail;
+use App\Mail\TaskReminderMail;
 use App\Models\Backlog;
 use App\Models\Board;
 use App\Models\Project;
@@ -36,10 +37,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $projects = Project::all();
-        $users = User::all();
-        $boards = Board::all();
-        return view('pages.task.create', compact('projects', 'users', 'boards'));
+
     }
 
     /**
@@ -50,16 +48,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'title' => 'required|min:3|max:30',
-            'description' => 'required',
-            'project_date' => 'required',
-            'category' => 'required',
-            'platform' => 'required',
-            'proposal' => 'required|mimes:pdf,docx|max:2048',
-            'team_id' => 'required',
-            'client_id' => 'required',
-        ]);
+
     }
 
     /**
@@ -366,6 +355,38 @@ class TaskController extends Controller
 
         Alert::success('Success!', 'Task has been succesfully deleted.');
 
+        return back();
+    }
+
+    public function taskReminder(Request $request)
+    {
+        $task = Task::where('id', $request->task_id)->first();
+        $project = Project::where('id', $task->project_id)->first();
+        $sprint = Sprint::where('id', $task->sprint_id)->first();
+        $backlog = Backlog::where('id', $task->backlog_id)->first();
+        $assignee = explode(',', $task->assignee);
+        $users = User::whereIn('id', $assignee)->get();
+
+        $from_mail = Auth::user()->email;
+        $mail_sender = Auth::user()->name;
+
+        $details = [
+            'title' => 'Please Finish This Task Before The Due Date',
+            'url' => 'http://127.0.0.1:8000/project/'.$project->id.'/tasks',
+            'project' => $project->title,
+            'task' => $task->title,
+            'due_date' => date('D, d M Y', strtotime($task->end_date)),
+            'sprint' => $sprint->name,
+            'backlog' => $backlog->name,
+            'from_mail' => $from_mail,
+            'mail_sender' => $mail_sender,
+        ];
+        
+        foreach($users as $user){
+            Mail::to($user->email)->send(new TaskReminderMail($details));
+        }
+
+        Alert::success('Success!', 'Email reminder has been succesfully sent.');
         return back();
     }
 }

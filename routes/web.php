@@ -27,10 +27,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    
+
     Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
-    
-    Route::group(['middleware' => 'role:project-manager'], function() {
+
+    Route::group(['middleware' => 'role:project-manager'], function () {
         Route::resource('/user', 'App\Http\Controllers\UserController');
         Route::resource('/client', 'App\Http\Controllers\ClientController');
         Route::resource('/client-user', 'App\Http\Controllers\ClientUserController');
@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::put('/project/{task}/move-task', 'App\Http\Controllers\TaskController@moveTask')->name('project.task.move');
         Route::put('/project/{task}/status', 'App\Http\Controllers\TaskController@taskStatus')->name('project.task.status');
         Route::delete('/project/{task}/destroy-task', 'App\Http\Controllers\TaskController@destroyTask')->name('project.task.destroy');
+        Route::post('/project/remind-task', 'App\Http\Controllers\TaskController@taskReminder')->name('project.task.reminder');
 
         //Project Board
         Route::get('/project/{id}/create-board', 'App\Http\Controllers\BoardController@createBoard')->name('project.board.create');
@@ -63,7 +64,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/project/{id}/tasks/edit-board/{board}', 'App\Http\Controllers\BoardController@editBoard')->name('project.board.edit');
         Route::put('/project/{id}/tasks/update-board/{board}', 'App\Http\Controllers\BoardController@updateBoard')->name('project.board.update');
         Route::delete('/project/{id}/destroy-board', 'App\Http\Controllers\BoardController@destroyBoard')->name('project.board.destroy');
-    
+
         //Project Sprint
         Route::get('project/{id}/create-sprint', 'App\Http\Controllers\SprintController@createProjectSprint')->name('project.sprint.create');
         Route::post('/project/store-sprint', 'App\Http\Controllers\SprintController@storeProjectSprint')->name('project.sprint.store');
@@ -76,7 +77,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/project/store-backlog', 'App\Http\Controllers\BacklogController@storeProjectBacklog')->name('project.backlog.store');
         Route::get('/project/{id}/backlog/{backlog}/edit', 'App\Http\Controllers\BacklogController@editProjectBacklog')->name('project.backlog.edit');
         Route::put('/project/{id}/backlog/{backlog}/update-backlog', 'App\Http\Controllers\BacklogController@updateProjectBacklog')->name('project.backlog.update');
-    
+
         //Project Sprint Report
         Route::get('/report', 'App\Http\Controllers\ReportController@index')->name('report.index');
         Route::get('/project/{id}/sprint-reports', 'App\Http\Controllers\ReportController@sprintReport')->name('project.report.sprint');
@@ -85,9 +86,17 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         //Project Timesheet
         Route::get('/project/{id}/tasks/{tasks}/record', 'App\Http\Controllers\TimesheetController@createTimesheet')->name('project.timesheet.create');
         Route::post('/project/store-timesheet', 'App\Http\Controllers\TimesheetController@storeTimesheet')->name('project.timesheet.store');
+
+        //Project Meeting
+        Route::get('/meeting', 'App\Http\Controllers\MeetingController@index')->name('meeting.index');
+        Route::get('/project/{id}/meeting', 'App\Http\Controllers\MeetingController@meetingProject')->name('project.meeting');
+        Route::get('project/{id}/create-meeting', 'App\Http\Controllers\MeetingController@createMeeting')->name('project.meeting.create');
+        Route::post('/project/store-meeting', 'App\Http\Controllers\MeetingController@storeMeeting')->name('project.meeting.store');
+        Route::get('/project/{id}/meeting/{meeting}/edit', 'App\Http\Controllers\MeetingController@editMeeting')->name('project.backlog.edit');
+        Route::put('/project/{id}/meeting/{meeting}/update-meeting', 'App\Http\Controllers\MeetingController@updateMeeting')->name('project.backlog.update');
     });
 
-    Route::group(['middleware' => 'role:product-owner'], function() {
+    Route::group(['middleware' => 'role:product-owner'], function () {
         Route::resource('/project', 'App\Http\Controllers\ProjectController');
         Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
         Route::resource('/sprint', 'App\Http\Controllers\SprintController');
@@ -102,16 +111,32 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/project/{id}/finished-tasks', 'App\Http\Controllers\TaskController@taskFinished')->name('project.task.finished');
     });
 
-    Route::group(['middleware' => 'role:team-member'], function() {
+    Route::group(['middleware' => 'role:team-member'], function () {
         Route::resource('/project', 'App\Http\Controllers\ProjectController');
         Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
         Route::resource('/sprint', 'App\Http\Controllers\SprintController');
         Route::resource('/task', 'App\Http\Controllers\TaskController');
 
         Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
+
+        //Project Task
         Route::get('/project/{id}/tasks', 'App\Http\Controllers\TaskController@taskList')->name('project.task');
         Route::get('/project/{id}/table-view', 'App\Http\Controllers\TaskController@tableView')->name('project.task.table');
         Route::get('/project/{id}/finished-tasks', 'App\Http\Controllers\TaskController@taskFinished')->name('project.task.finished');
+        Route::put('/project/{task}/move-task', 'App\Http\Controllers\TaskController@moveTask')->name('project.task.move');
+        Route::put('/project/{task}/status', 'App\Http\Controllers\TaskController@taskStatus')->name('project.task.status');
+
+        //Project Sprint Report
+        Route::get('/report', 'App\Http\Controllers\ReportController@index')->name('report.index');
+        Route::get('/project/{id}/sprint-reports', 'App\Http\Controllers\ReportController@sprintReport')->name('project.report.sprint');
+        Route::get('/project/{id}/timesheet-reports', 'App\Http\Controllers\ReportController@timesheetReport')->name('project.report.timesheet');
+
+        //Project Timesheet
+        Route::get('/project/{id}/tasks/{tasks}/record', 'App\Http\Controllers\TimesheetController@createTimesheet')->name('project.timesheet.create');
+        Route::post('/project/store-timesheet', 'App\Http\Controllers\TimesheetController@storeTimesheet')->name('project.timesheet.store');
+
+        //Project Meeting
+        Route::get('/meeting', 'App\Http\Controllers\MeetingController@index')->name('meeting.index');
     });
 });
 
