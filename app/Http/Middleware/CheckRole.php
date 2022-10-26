@@ -23,7 +23,7 @@ class CheckRole
             return $next($request);
         }
 
-        if ($role == 'project-manager' && $user->hasTeamRole($current_team, 'project-manager')) {
+        if ($role == 'project-manager' && $user->hasTeamRole($current_team, 'project-manager') || $user->ownsTeam($current_team)) {
             return $next($request);
         }
 
@@ -32,10 +32,6 @@ class CheckRole
         }
 
         if ($role == 'product-owner' && $user->hasTeamRole($current_team, 'product-owner')) {
-            return $next($request);
-        }
-
-        if ($role == 'admin' && $user->ownsTeam($current_team)) {
             return $next($request);
         }
         abort(403);

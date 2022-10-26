@@ -42,7 +42,7 @@
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Sprint Iteration</label>
                             <div class="col-sm-12 col-md-7">
-                                <input type="number" class="form-control" name="name" value="{{ $sprint->name }}" min="1" readonly>
+                                <input type="number" class="form-control" name="name" value="{{ $sprint->name }}" min="1">
                                 @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
                                 <small class="form-text text-muted">
                                     Sprint iteration is the number of sprint done in a project. Input above must only be field with number.
@@ -61,7 +61,7 @@
                                 </div>
                                 @error('focus_factor') <span class="text-red-500">{{ $message }}</span>@enderror
                                 <small class="form-text text-muted">
-                                    Focus factor is ...
+                                    Focus factor is team focus level estimation.
                                 </small>
                             </div>
                         </div>

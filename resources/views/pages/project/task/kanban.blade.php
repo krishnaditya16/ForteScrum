@@ -77,10 +77,18 @@
                     @php
                         $due_date = date('Y-m-d', strtotime($task->end_date));
                         $date_diff = $date_now->diffInDays($due_date);
+                        $interval = $date_now->diff($due_date);
+                        $hm_diff = sprintf('%02d hrs : %02d mins', $interval->days * 24 + $interval->h, $interval->i);
                     @endphp
                     @if($task->status == "0")
                         @if($date_now < $due_date) 
-                        <span class="badge badge-info ml-2">{{$date_diff}} days left</span>
+                            @if($date_diff == 0)
+                                <span class="badge badge-warning ml-2">{{$hm_diff}} left</span>
+                            @else
+                                <span class="badge badge-info ml-2">{{$date_diff}} days left</span>
+                            @endif
+                        @elseif($date_diff == 0)
+                        <span class="badge badge-danger ml-2">{{$hm_diff}} late</span>
                         @else
                         <span class="badge badge-danger ml-2">{{$date_diff}} days late</span>
                         @endif
@@ -118,10 +126,12 @@
                                 <img src="{{ asset('storage/'.$user->profile_photo_path) }}" alt="{{ $user->name }}" data-toggle="tooltip" title="{{ $user->name }}">
                             </figure>
                             @endif
-                        @endforeach 
+                        @endforeach
+                        @if(Auth::user()->hasTeamRole(Auth::user()->currentTeam, 'project-manager')) 
                         <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" style="text-decoration: none;color:#6c757d;">
                             <figure class="avatar mr-2 mb-4 mt-2" data-toggle="tooltip" title="Add more user"><i class="fas fa-plus mt-3 ml-3"></i></figure> 
                         </a>
+                        @endif
                         <hr class="mb-4">
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-6 mb-4">

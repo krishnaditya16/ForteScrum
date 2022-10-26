@@ -6,6 +6,7 @@ use App\Mail\TaskMail;
 use App\Mail\TaskReminderMail;
 use App\Models\Backlog;
 use App\Models\Board;
+use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
@@ -116,14 +117,23 @@ class TaskController extends Controller
             ->join('users', 'team_user.user_id', 'users.id')
             ->whereIn('user_id', $project)->where('role', 'product-owner')
             ->get();
-        
-        return view('pages.project.task.kanban', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints', 'date_now'));
+
+        if($data->team_id != Auth::user()->currentTeam->id){
+            abort(403);
+        } else {
+            return view('pages.project.task.kanban', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints', 'date_now'));
+        }  
     }
 
     public function tableView($id) 
     {
         $data = Project::find($id);
-        return view('pages.project.task.table', compact('data'));
+
+        if($data->team_id != Auth::user()->currentTeam->id){
+            abort(403);
+        } else {
+            return view('pages.project.task.table', compact('data'));
+        }  
     }
 
     public function taskFinished($id)
@@ -146,7 +156,11 @@ class TaskController extends Controller
             ->whereIn('user_id', $project)->where('role', 'product-owner')
             ->get();
         
-        return view('pages.project.task.finished', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints'));
+        if($data->team_id != Auth::user()->currentTeam->id){
+            abort(403);
+        } else {
+            return view('pages.project.task.finished', compact('data', 'boards', 'options', 'owner', 'backlogs', 'sprints'));
+        }
     }
 
     public function createTask($id)
@@ -206,6 +220,14 @@ class TaskController extends Controller
             'assignee' => $data['assignee'],
         ]);
 
+        Notification::create([
+            'detail' => $request->title.' has been created!',
+            'type' => 3,
+            'operation' => 0,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
+
         $users = User::whereIn('id', $request->assignee)->get();
         $project = Project::where('id', $request->project_id)->first();
         $sprint = Sprint::where('id', $request->sprint_id)->first();
@@ -232,13 +254,13 @@ class TaskController extends Controller
         return redirect()->route('project.task', $project_id);
     }
 
-    public function moveTask(Request $request, $id) 
+    public function moveTask(Request $request, $id, $task) 
     {
         $request->validate([
             'board_id' => 'required',
         ]);
 
-        $task = Task::find($id);
+        $task = Task::find($task);
         $task->update([
             'board_id' => $request->board_id,
         ]);
@@ -246,21 +268,35 @@ class TaskController extends Controller
         return back();
     }
 
-    public function taskStatus(Request $request, $id) 
+    public function taskStatus(Request $request, $id, $task) 
     {
         $request->validate([
             'status' => 'required',
         ]);
 
-        $task = Task::find($id);
-        $task->update([
+        $data = Task::find($task);
+        $data->update([
             'status' => $request->status,
         ]);
 
         if($request->status == "1"){
+            Notification::create([
+                'detail' => $data->title.' has been marked as done!',
+                'type' => 3,
+                'operation' => 2,
+                'user_id' => Auth::user()->id,
+                'team_id' => Auth::user()->currentTeam->id,
+            ]);
             Alert::success('Success!', 'Task has been marked as done.');
             return back();
         } else {
+            Notification::create([
+                'detail' => $data->title.' has been moved back to in progress kanban!',
+                'type' => 3,
+                'operation' => 3,
+                'user_id' => Auth::user()->id,
+                'team_id' => Auth::user()->currentTeam->id,
+            ]);
             Alert::success('Success!', 'Task has been moved back to in progress kanban.');
             return back();
         }
@@ -343,15 +379,32 @@ class TaskController extends Controller
             'assignee' => $data['assignee'],
         ]);
 
+        Notification::create([
+            'detail' => $request->title.' has been updated!',
+            'type' => 3,
+            'operation' => 1,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
+
         Alert::success('Success!', 'Task has been succesfully updated.');
 
         $project_id = $request->project_id;
         return redirect()->route('project.task', $project_id);
     }
 
-    public function destroyTask($id)
+    public function destroyTask($id, $task)
     {
-        Task::where('id', $id)->delete();
+        $data = Task::find($task);
+        Task::where('id', $data->id)->delete();
+
+        Notification::create([
+            'detail' => $data->title.' has been deleted!',
+            'type' => 3,
+            'operation' => 4,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
 
         Alert::success('Success!', 'Task has been succesfully deleted.');
 

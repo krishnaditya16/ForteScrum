@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Sprint;
 use Carbon\Carbon;
@@ -88,6 +89,14 @@ class SprintController extends Controller
             'total_sp' => ($man_days*$request->focus_factor)/100,
             'focus_factor' => $request['focus_factor'],
             'project_id' => $request['project_id'],
+        ]);
+
+        Notification::create([
+            'detail' => $request->name.' - sprint iteration has been created!',
+            'type' => 1,
+            'operation' => 0,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
         ]);
 
         Alert::success('Success!', 'Data has been succesfully created.');
@@ -258,6 +267,14 @@ class SprintController extends Controller
             'project_id' => $request['project_id'],
         ]);
 
+        Notification::create([
+            'detail' => $request->name.' - sprint iteration has been created!',
+            'type' => 1,
+            'operation' => 0,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
+
         Alert::success('Success!', 'Sprint has been succesfully created.');
 
         return redirect()->route('project.show', $project_id);
@@ -310,20 +327,12 @@ class SprintController extends Controller
         $man_days = $total_member*$date_diff;
 
         $id = $request->sprint_id;
-        $sprint = Sprint::where('id', $id);
+        $sprint = Sprint::where('id', $id)->first();
         $desc = $request->description;
 
-        if($desc == "<p><br></p>"){
+        if($request->name == $sprint->name){
             $sprint->update([
-                'description' => "",
-                'start_date' => $start_date,
-                'end_date' => $end_date,
-                'total_sp' => ($man_days*$request->focus_factor)/100,
-                'focus_factor' => $request['focus_factor'],
-                'project_id' => $request['project_id']
-            ]);
-        } else {
-            $sprint->update([
+                'name' => $sprint->name,
                 'description' => $request['description'],
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -331,7 +340,38 @@ class SprintController extends Controller
                 'focus_factor' => $request['focus_factor'],
                 'project_id' => $request['project_id'],
             ]);
+        } else {
+            if($desc == "<p><br></p>"){
+                $sprint->update([
+                    'name' => $request['name'],
+                    'description' => "",
+                    'start_date' => $start_date,
+                    'end_date' => $end_date,
+                    'total_sp' => ($man_days*$request->focus_factor)/100,
+                    'focus_factor' => $request['focus_factor'],
+                    'project_id' => $request['project_id']
+                ]);
+            } else {
+                $sprint->update([
+                    'name' => $request['name'],
+                    'description' => $request['description'],
+                    'start_date' => $start_date,
+                    'end_date' => $end_date,
+                    'total_sp' => ($man_days*$request->focus_factor)/100,
+                    'focus_factor' => $request['focus_factor'],
+                    'project_id' => $request['project_id'],
+                ]);
+            }
         }
+        
+
+        Notification::create([
+            'detail' => 'Sprint iteration - '.$request->name.', has been updated!',
+            'type' => 1,
+            'operation' => 1,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
 
         Alert::success('Success!', 'Sprint has been succesfully updated.');
 

@@ -66,12 +66,13 @@
             @forelse ($boards as $board)
             <div class="col-12 col-lg-3 kanban-list card card-primary">
                 <div class="kanban-title dropleft"> {{ $board->title }} <span class="badge badge-primary ml-1">{{ count($board->tasks->where('status', 1)) }}</span>
+                    @if(Auth::user()->ownsTeam($team) || Auth::user()->hasTeamRole($team, 'project-manager'))
                     <button class="btn float-right" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <i class="fas fa-ellipsis-v"></i></button>
                     <div class="dropdown-menu dropleft">
                         <a class="dropdown-item" href="/project/{{$data->id}}/tasks/edit-board/{{$board->id}}"><i class="fas fa-edit"></i>&nbsp; Edit Board</a>
                         @if(empty($board->tasks->first()))
-                        <form action="{{ route('project.board.destroy', $board->id) }}" method="POST" id="deleteBoard">
+                        <form action="{{ route('project.board.destroy', ['id'=>$data->id, 'board'=>$board->id]) }}" method="POST" id="deleteBoard">
                             @csrf
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="dropdown-item has-icon btn-outline-danger btn-dropdown-kanban" data-confirm="Are You Sure?|This board will be deleted. Do you want to continue?" data-confirm-yes="document.getElementById('deleteBoard').submit();">
@@ -82,8 +83,9 @@
                         <a class="dropdown-item" style="color:grey" data-toggle="tooltip" data-placement="bottom" title="Action is disabled for this board."><i class="fas fa-trash"></i>&nbsp; Delete Board</a>
                         @endif
                     </div>
+                    @endif
                 </div>
-
+                
                 @forelse($board->tasks->where('status', 1) as $task)
                 
                 <a href="" data-toggle="modal" data-target="#taskModal{{ $task->id }}" style="text-decoration: none;color:#6c757d;">
@@ -114,17 +116,18 @@
                         </div>
                 </a>
                 <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;" id="deleteTask">
+                    <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
-                    <form action="{{ route('project.task.status', $task->id) }}" method="POST" style="display: inline-block;" id="moveTask">
+                    <form action="{{ route('project.task.status', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="moveTask">
                         @csrf
                         @method('PUT')
                         <input type="hidden" value="0" name="status">
+                        <input type="hidden" value="{{ $task->id }}" name="task_id">
                         <a href="#" class="btn btn-outline-primary has-icon" data-confirm="Are You Sure?|This task will be moved back to in progress kanban. Do you want to continue?" data-confirm-yes="document.getElementById('moveTask').submit();">
                             <i class="fas fa-angle-double-right"></i> Move Back
                         </a>

@@ -7,7 +7,7 @@
         <h1>{{ __('Project Approval') }}</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
-            <div class="breadcrumb-item active"><a href="{{ route('client-user.index') }}">Project</a></div>
+            <div class="breadcrumb-item active"><a href="{{ route('project.show', $project->id) }}">Project</a></div>
             <div class="breadcrumb-item">Approval</div>
         </div>
     </x-slot>

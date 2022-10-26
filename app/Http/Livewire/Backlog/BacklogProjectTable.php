@@ -7,6 +7,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Models\Backlog;
+use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class BacklogProjectTable extends DataTableComponent
 {
@@ -79,6 +81,16 @@ class BacklogProjectTable extends DataTableComponent
 
     public function delete()
     {
+        $name = Backlog::where('id', $this->deleteId)->first()->name;
+
+        Notification::create([
+            'detail' => $name.' backlog has been deleted!',
+            'type' => 2,
+            'operation' => 4,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
+
         Backlog::find($this->deleteId)->delete();
         return $this->alert('success', 'Data has been deleted succesfully!', ['timerProgressBar' => true,]);
     }

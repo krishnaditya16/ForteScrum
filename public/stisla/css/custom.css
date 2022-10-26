@@ -76,6 +76,10 @@
     line-height: 1.2;
 }
 
+.beep-empty {
+    position: relative;
+}
+
 @media only screen and (max-width: 480px) {
     .hidden-mobile-auth {
         display: none;
@@ -87,6 +91,18 @@
         max-height: 300px;
         overflow: auto;
     }
+}
+
+.tab-flex {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    height: auto;
+    -ms-overflow-style: none;
+}
+
+.tab-flex::-webkit-scrollbar{
+    display: none;
 }
 
 /*# sourceMappingURL=custom.css.map */

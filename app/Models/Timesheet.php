@@ -10,4 +10,9 @@ class Timesheet extends Model
     use HasFactory;
 
     protected $fillable = ['work_date', 'start_time', 'end_time', 'user_id', 'project_id', 'task_id', 'team_id'];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

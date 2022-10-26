@@ -1,7 +1,3 @@
-@php
-$current_team = Auth::user()->currentTeam;
-@endphp
-
 <h2 class="section-title">Team Reports</h2>
 <p class="section-lead mb-3">
     Select either one of the project data avalaible below to view report.
@@ -11,11 +7,7 @@ $current_team = Auth::user()->currentTeam;
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                @if(Auth::user()->ownsTeam($current_team))
                 <livewire:report.project-report-table />
-                @elseif(Auth::user()->hasTeamRole($current_team, 'product-owner'))
-                <livewire:report.project-report-owner-table />
-                @endif
             </div>
         </div>
     </div>

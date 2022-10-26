@@ -1,5 +1,5 @@
 @php
-$current_team = Auth::user()->currentTeam;
+$team = Auth::user()->currentTeam;
 @endphp
 
 <div class="container-fluid kanban">
@@ -7,12 +7,13 @@ $current_team = Auth::user()->currentTeam;
         @forelse ($boards as $board)
         <div class="col-12 col-lg-3 kanban-list card card-primary">
             <div class="kanban-title dropleft"> {{ $board->title }} <span class="badge badge-primary ml-1">{{ count($board->tasks->where('status', 0)) }}</span>
+                @if(Auth::user()->ownsTeam($team) || Auth::user()->hasTeamRole($team, 'project-manager'))
                 <button class="btn float-right" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <i class="fas fa-ellipsis-v"></i></button>
                 <div class="dropdown-menu dropleft">
                     <a class="dropdown-item" href="/project/{{$data->id}}/tasks/edit-board/{{$board->id}}"><i class="fas fa-edit"></i>&nbsp; Edit Board</a>
                     @if(empty($board->tasks->first()))
-                    <form action="{{ route('project.board.destroy', $board->id) }}" method="POST" id="deleteBoard">
+                    <form action="{{ route('project.board.destroy', ['id'=>$data->id, 'board'=>$board->id]) }}" method="POST" id="deleteBoard">
                             @csrf
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="dropdown-item has-icon btn-outline-danger btn-dropdown-kanban" data-confirm="Are You Sure?|This board will be deleted. Do you want to continue?" data-confirm-yes="document.getElementById('deleteBoard').submit();">
@@ -23,6 +24,7 @@ $current_team = Auth::user()->currentTeam;
                     <a class="dropdown-item" style="color:grey" data-toggle="tooltip" data-placement="bottom" title="Action is disabled for this board."><i class="fas fa-trash"></i>&nbsp; Delete Board</a>
                     @endif
                 </div>
+                @endif
             </div>
             @forelse($board->tasks->where('status', 0) as $task)
                 
@@ -53,9 +55,9 @@ $current_team = Auth::user()->currentTeam;
                             <b>Due Date:</b> {{date('d-m-Y', strtotime($task->end_date));}}<br>
                         </div>
                 </a>
-                @if(Auth::user()->ownsTeam($current_team) || Auth::user()->hasTeamRole($current_team, 'project-manager'))
+                @if(Auth::user()->ownsTeam($team) || Auth::user()->hasTeamRole($team, 'project-manager'))
                 <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;" id="deleteTask">
+                    <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
@@ -65,7 +67,7 @@ $current_team = Auth::user()->currentTeam;
                     <div class="dropdown float-right">
                         <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <form action="{{ route('project.task.status', $task->id) }}" method="post" id="doneTask">
+                            <form action="{{ route('project.task.status', ['id'=>$data->id, 'task'=>$task->id]) }}" method="post" id="doneTask">
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" value="1" name="status">
@@ -84,7 +86,7 @@ $current_team = Auth::user()->currentTeam;
                             <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a>
                             <div class="dropdown-divider"></div>
                             @foreach($options as $option)
-                            <form action="{{ route('project.task.move', $task->id) }}" method="post" id="moveTask">
+                            <form action="{{ route('project.task.move', ['id'=>$data->id, 'task'=>$task->id]) }}" method="post" id="moveTask">
                                 @csrf
                                 @method('PUT')
                                 @if($option->id != $board->id)
@@ -97,9 +99,9 @@ $current_team = Auth::user()->currentTeam;
                     </div>
                 </div>
             </div>
-            @elseif(Auth::user()->hasTeamRole($current_team, 'team-member'))
+            @elseif(Auth::user()->hasTeamRole($team, 'team-member'))
             <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', $task->id) }}" method="POST" style="display: inline-block;" id="deleteTask">
+                    <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
@@ -109,7 +111,7 @@ $current_team = Auth::user()->currentTeam;
                     <div class="dropdown float-right">
                         <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <form action="{{ route('project.task.status', $task->id) }}" method="post" id="doneTask">
+                            <form action="{{ route('project.task.status', ['id'=>$data->id, 'task'=>$task->id]) }}" method="post" id="doneTask">
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" value="1" name="status">
@@ -121,7 +123,7 @@ $current_team = Auth::user()->currentTeam;
                             <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a>
                             <div class="dropdown-divider"></div>
                             @foreach($options as $option)
-                            <form action="{{ route('project.task.move', $task->id) }}" method="post" id="moveTask">
+                            <form action="{{ route('project.task.move', ['id'=>$data->id, 'task'=>$task->id]) }}" method="post" id="moveTask">
                                 @csrf
                                 @method('PUT')
                                 @if($option->id != $board->id)

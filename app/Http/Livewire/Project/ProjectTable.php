@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Project;
 
 use App\Exports\ProjectExport;
+use App\Models\Notification;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Database\Eloquent\Builder;
@@ -128,11 +129,21 @@ class ProjectTable extends DataTableComponent
 
     public function delete()
     {
+        $title = Project::where('id', $this->deleteId)->first()->title;
         $file = Project::where('id', $this->deleteId)->first()->proposal;
         if($oldFile = $file) {
             unlink(public_path('uploads/proposal/') . $oldFile);
         }
         Project::find($this->deleteId)->delete();
+
+        Notification::create([
+            'detail' => $title.' has been deleted!',
+            'type' => 0,
+            'operation' => 4,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
+
         return $this->alert('success', 'Data has been deleted succesfully!', ['timerProgressBar' => true,]);
     }
 }

@@ -63,7 +63,7 @@
                                 </div>
                                 @error('focus_factor') <span class="text-red-500">{{ $message }}</span>@enderror
                                 <small class="form-text text-muted">
-                                    Focus factor is ...
+                                    Focus factor is team focus level estimation.
                                 </small>
                             </div>
                         </div>

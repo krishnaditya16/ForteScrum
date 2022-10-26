@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('category');
-            $table->bigInteger('progress')->default(0);;
+            $table->bigInteger('progress')->default(0);
             $table->string('platform');
             $table->smallInteger('status')->default(0);
             $table->foreignId('team_id')->constrained('teams');

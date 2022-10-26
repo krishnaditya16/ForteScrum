@@ -36,10 +36,29 @@
                             </div>
                         </div>
 
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Client</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control" value="{{ $clients->name }}" readonly>
+                                <input type="hidden" class="form-control" value="{{ $clients->id }}" name="client_id">
+                                @error('client_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control" value="{{ $teams->name }}" readonly>
+                                <input type="hidden" class="form-control" value="{{ $teams->id }}" name="team_id">
+                                @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
                         @if($project->status == "0" || $project->status == "1")
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Progress</label>
                             <div class="col-sm-12 col-md-7">
+                                <input type="hidden" name="progress" value="0">
                                 <input type="text" class="form-control text-red-500" style="background-color:#fdfdff" readonly value="You cannot edit progress of project that still did not get approval/rejected."></input>
                             </div>
                         </div>
@@ -58,6 +77,7 @@
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Status</label>
                             <div class="col-sm-12 col-md-7">
+                                <input type="hidden" name="status" value="0">
                                 <input type="text" class="form-control text-red-500" style="background-color:#fdfdff" readonly value="You cannot edit status of project that still did not get approval/rejected."></input>
                             </div>
                         </div>
@@ -92,28 +112,15 @@
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Client</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Budget</label>
                             <div class="col-sm-12 col-md-7">
-                                <select class="form-control select2" name="client_id">
-                                    <option selected disabled> Select Team </option>
-                                    @foreach ($clients as $client)
-                                    <option value="{{ $client->id }}" @if($project->client_id=="$client->id") selected="selected" @endif>{{ $client->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('client_id') <span class="text-red-500">{{ $message }}</span>@enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
-                            <div class="col-sm-12 col-md-7">
-                                <select class="form-control select2" name="team_id">
-                                    <option selected disabled> Select Team </option>
-                                    @foreach ($teams as $team)
-                                    <option value="{{ $team->id }}" @if($project->team_id=="$team->id") selected="selected" @endif>{{ $team->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">$</div>
+                                    </div>
+                                    <input type="text" class="form-control currency" name="budget" value="'{{ $project->budget }}'">
+                                    @error('budget') <span class="text-red-500">{{ $message }}</span>@enderror
+                                </div>
                             </div>
                         </div>
 
@@ -182,6 +189,7 @@
         </div>
     </div>
 
+    @push('custom-scripts')
     <script>
         document.querySelector('.custom-file-input').addEventListener('change', function(e) {
             var name = document.getElementById("customFileInput").files[0].name;
@@ -189,5 +197,13 @@
             nextSibling.innerText = name
         });
     </script>
+
+    <script>
+        var cleaveC = new Cleave('.currency', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand'
+        });
+    </script>
+    @endpush
 
 </x-app-layout>

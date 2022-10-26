@@ -1,12 +1,21 @@
 <?php
 
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\SprintController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 use App\Http\Livewire\Users;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\BoardController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SprintController;
+use App\Http\Controllers\BacklogController;
+use App\Http\Controllers\MeetingController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\TimesheetController;
+use App\Http\Controllers\ClientUserController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,115 +37,110 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         return view('dashboard');
     })->name('dashboard');
 
+    Route::put('/notif-read', [NotificationController::class, 'read'])->name('notif.read');
+    Route::put('/notif-read-all', [NotificationController::class, 'readAll'])->name('notif.read.all');
+    Route::get('/notification', [NotificationController::class, 'view'])->name('notif.show');
+
     Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
 
+    //Project Resource
+    Route::resource('project', ProjectController::class);
+    Route::get('/project/{id}/download-proposal', [ProjectController::class, 'downloadProposal'])->name('project.proposal');
+
+    //Project Task
+    Route::get('/project/{id}/tasks', [TaskController::class, 'taskList'])->name('project.task');
+    Route::get('/project/{id}/table-view', [TaskController::class, 'tableView'])->name('project.task.table');
+    Route::get('/project/{id}/finished-tasks', [TaskController::class, 'taskFinished'])->name('project.task.finished');
+
+    //Project Report
+    Route::get('/report', [ReportController::class, 'index'])->name('report.index');
+    Route::get('/project/{id}/sprint-reports', [ReportController::class, 'sprintReport'])->name('project.report.sprint');
+    Route::get('/project/{id}/timesheet-reports', [ReportController::class, 'timesheetReport'])->name('project.report.timesheet');
+
+    //Project Meeting
+    Route::get('/meeting', [MeetingController::class, 'index'])->name('meeting.index');
+    Route::get('/project/{id}/meeting', [MeetingController::class, 'meetingProject'])->name('project.meeting');
+
+    //Project Finance
+    Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
+
+
     Route::group(['middleware' => 'role:project-manager'], function () {
-        Route::resource('/user', 'App\Http\Controllers\UserController');
-        Route::resource('/client', 'App\Http\Controllers\ClientController');
-        Route::resource('/client-user', 'App\Http\Controllers\ClientUserController');
-        Route::resource('/project', 'App\Http\Controllers\ProjectController');
-        Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
-        Route::resource('/sprint', 'App\Http\Controllers\SprintController');
-        Route::resource('/task', 'App\Http\Controllers\TaskController');
-        Route::resource('/task/board', 'App\Http\Controllers\BoardController');
+        Route::resource('user', UserController::class);
+        Route::resource('client', ClientController::class);
+        Route::resource('client-user', ClientUserController::class);
+        Route::resource('backlog', BacklogController::class);
+        Route::resource('sprint', SprintController::class);
+        Route::resource('task', TaskController::class);
 
         //Update User Password and Proposal Download
-        Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
-        Route::get('/client-user/{id}/update-password', 'App\Http\Controllers\ClientUserController@changePassword')->name('change.password');
-        Route::put('/client-user/{id}/update-pass', 'App\Http\Controllers\ClientUserController@editPassword')->name('user.password');
-
+        Route::get('project/{id}/download-proposal', [ProjectController::class, 'downloadProposal'])->name('project.proposal');
+        Route::get('client-user/{id}/update-password', [ClientUserController::class, 'changePassword'])->name('change.password');
+        Route::put('client-user/{id}/update-pass',  [ClientUserController::class, 'editPassword'])->name('user.password');
+        
         //Project Task
-        Route::get('/project/{id}/tasks', 'App\Http\Controllers\TaskController@taskList')->name('project.task');
-        Route::get('/project/{id}/table-view', 'App\Http\Controllers\TaskController@tableView')->name('project.task.table');
-        Route::get('/project/{id}/finished-tasks', 'App\Http\Controllers\TaskController@taskFinished')->name('project.task.finished');
-        Route::get('/project/{id}/create-task', 'App\Http\Controllers\TaskController@createTask')->name('project.task.create');
-        Route::get('/project/{id}/tasks/{task}/edit', 'App\Http\Controllers\TaskController@editTask')->name('project.task.edit');
-        Route::post('/project/store-task', 'App\Http\Controllers\TaskController@storeTask')->name('project.task.store');
-        Route::put('/project/{id}/tasks/{task}/update-task', 'App\Http\Controllers\TaskController@updateTask')->name('project.task.update');
-        Route::put('/project/{task}/move-task', 'App\Http\Controllers\TaskController@moveTask')->name('project.task.move');
-        Route::put('/project/{task}/status', 'App\Http\Controllers\TaskController@taskStatus')->name('project.task.status');
-        Route::delete('/project/{task}/destroy-task', 'App\Http\Controllers\TaskController@destroyTask')->name('project.task.destroy');
-        Route::post('/project/remind-task', 'App\Http\Controllers\TaskController@taskReminder')->name('project.task.reminder');
+        Route::get('/project/{id}/create-task', [TaskController::class, 'createTask'])->name('project.task.create');
+        Route::get('/project/{id}/tasks/{task}/edit', [TaskController::class, 'editTask'])->name('project.task.edit');
+        Route::post('/project/store-task', [TaskController::class, 'storeTask'])->name('project.task.store');
+        Route::put('/project/{id}/tasks/{task}/update-task', [TaskController::class, 'updateTask'])->name('project.task.update');
+        Route::put('/project/{id}/tasks/{task}/move-task', [TaskController::class, 'moveTask'])->name('project.task.move');
+        Route::put('/project/{id}/tasks/{task}/status', [TaskController::class, 'taskStatus'])->name('project.task.status');
+        Route::delete('/project/{id}/tasks/{task}/destroy-task', [TaskController::class, 'destroyTask'])->name('project.task.destroy');
+        Route::post('/project/remind-task', [TaskController::class, 'taskReminder'])->name('project.task.reminder');
 
         //Project Board
-        Route::get('/project/{id}/create-board', 'App\Http\Controllers\BoardController@createBoard')->name('project.board.create');
-        Route::post('/project/store-board', 'App\Http\Controllers\BoardController@storeBoard')->name('project.board.store');
-        Route::get('/project/{id}/tasks/edit-board/{board}', 'App\Http\Controllers\BoardController@editBoard')->name('project.board.edit');
-        Route::put('/project/{id}/tasks/update-board/{board}', 'App\Http\Controllers\BoardController@updateBoard')->name('project.board.update');
-        Route::delete('/project/{id}/destroy-board', 'App\Http\Controllers\BoardController@destroyBoard')->name('project.board.destroy');
+        Route::get('/project/{id}/create-board', [BoardController::class, 'createBoard'])->name('project.board.create');
+        Route::post('/project/store-board', [BoardController::class, 'storeBoard'])->name('project.board.store');
+        Route::get('/project/{id}/tasks/edit-board/{board}', [BoardController::class, 'editBoard'])->name('project.board.edit');
+        Route::put('/project/{id}/tasks/update-board/{board}', [BoardController::class, 'updateBoard'])->name('project.board.update');
+        Route::delete('/project/{id}/board/{board}/destroy-board', [BoardController::class, 'destroyBoard'])->name('project.board.destroy');
 
         //Project Sprint
-        Route::get('project/{id}/create-sprint', 'App\Http\Controllers\SprintController@createProjectSprint')->name('project.sprint.create');
-        Route::post('/project/store-sprint', 'App\Http\Controllers\SprintController@storeProjectSprint')->name('project.sprint.store');
-        Route::get('/project/{id}/sprint/{sprint}/edit', 'App\Http\Controllers\SprintController@editProjectSprint')->name('project.sprint.edit');
-        Route::put('/project/{id}/sprint/{sprint}/update-sprint', 'App\Http\Controllers\SprintController@updateProjectSprint')->name('project.sprint.update');
-        Route::put('/project/{id}/sprint/{sprint}/sprint-status', 'App\Http\Controllers\SprintController@sprintStatus')->name('project.sprint.status');
+        Route::get('project/{id}/create-sprint', [SprintController::class, 'createProjectSprint'])->name('project.sprint.create');
+        Route::post('/project/store-sprint', [SprintController::class, 'storeProjectSprint'])->name('project.sprint.store');
+        Route::get('/project/{id}/sprint/{sprint}/edit', [SprintController::class, 'editProjectSprint'])->name('project.sprint.edit');
+        Route::put('/project/{id}/sprint/{sprint}/update-sprint', [SprintController::class, 'updateProjectSprint'])->name('project.sprint.update');
+        Route::put('/project/{id}/sprint/{sprint}/sprint-status', [SprintController::class, 'sprintStatus'])->name('project.sprint.status');
 
         //Project Backlog
-        Route::get('project/{id}/create-backlog', 'App\Http\Controllers\BacklogController@createProjectBacklog')->name('project.backlog.create');
-        Route::post('/project/store-backlog', 'App\Http\Controllers\BacklogController@storeProjectBacklog')->name('project.backlog.store');
-        Route::get('/project/{id}/backlog/{backlog}/edit', 'App\Http\Controllers\BacklogController@editProjectBacklog')->name('project.backlog.edit');
-        Route::put('/project/{id}/backlog/{backlog}/update-backlog', 'App\Http\Controllers\BacklogController@updateProjectBacklog')->name('project.backlog.update');
+        Route::get('project/{id}/create-backlog', [BacklogController::class, 'createProjectBacklog'])->name('project.backlog.create');
+        Route::post('/project/store-backlog', [BacklogController::class, 'storeProjectBacklog'])->name('project.backlog.store');
+        Route::get('/project/{id}/backlog/{backlog}/edit', [BacklogController::class, 'editProjectBacklog'])->name('project.backlog.edit');
+        Route::put('/project/{id}/backlog/{backlog}/update-backlog', [BacklogController::class, 'updateProjectBacklog'])->name('project.backlog.update');
 
-        //Project Sprint Report
-        Route::get('/report', 'App\Http\Controllers\ReportController@index')->name('report.index');
-        Route::get('/project/{id}/sprint-reports', 'App\Http\Controllers\ReportController@sprintReport')->name('project.report.sprint');
-        Route::get('/project/{id}/timesheet-reports', 'App\Http\Controllers\ReportController@timesheetReport')->name('project.report.timesheet');
+        //Project Expenses
+        Route::get('project/{id}/create-expenses', [ExpensesController::class, 'createProjectExpenses'])->name('project.expenses.create');
+        Route::post('/project/store-expenses', [ExpensesController::class, 'storeProjectExpenses'])->name('project.expenses.store');
+        Route::get('/project/{id}/expenses/{expense}/edit', [ExpensesController::class, 'editProjectExpenses'])->name('project.expenses.edit');
+        Route::put('/project/{id}/expenses/{expense}/update-expenses', [ExpensesController::class, 'updateProjectExpenses'])->name('project.expenses.update');
+        Route::get('/project/{id}/expenses/{expense}/edit-status', [ExpensesController::class, 'editStatusExpenses'])->name('project.expenses.status.edit');
+        Route::put('/project/{id}/expenses/{expense}/update-status', [ExpensesController::class, 'updateStatusExpenses'])->name('project.expenses.status.update');
 
         //Project Timesheet
-        Route::get('/project/{id}/tasks/{tasks}/record', 'App\Http\Controllers\TimesheetController@createTimesheet')->name('project.timesheet.create');
-        Route::post('/project/store-timesheet', 'App\Http\Controllers\TimesheetController@storeTimesheet')->name('project.timesheet.store');
+        Route::get('/project/{id}/tasks/{tasks}/record', [TimesheetController::class, 'createTimesheet'])->name('project.timesheet.create');
+        Route::post('/project/store-timesheet', [TimesheetController::class, 'storeTimesheet'])->name('project.timesheet.store');
 
         //Project Meeting
-        Route::get('/meeting', 'App\Http\Controllers\MeetingController@index')->name('meeting.index');
-        Route::get('/project/{id}/meeting', 'App\Http\Controllers\MeetingController@meetingProject')->name('project.meeting');
-        Route::get('project/{id}/create-meeting', 'App\Http\Controllers\MeetingController@createMeeting')->name('project.meeting.create');
-        Route::post('/project/store-meeting', 'App\Http\Controllers\MeetingController@storeMeeting')->name('project.meeting.store');
-        Route::get('/project/{id}/meeting/{meeting}/edit', 'App\Http\Controllers\MeetingController@editMeeting')->name('project.backlog.edit');
-        Route::put('/project/{id}/meeting/{meeting}/update-meeting', 'App\Http\Controllers\MeetingController@updateMeeting')->name('project.backlog.update');
+        Route::get('project/{id}/create-meeting', [MeetingController::class, 'createMeeting'])->name('project.meeting.create');
+        Route::post('/project/store-meeting', [MeetingController::class, 'storeMeeting'])->name('project.meeting.store');
+        Route::get('/project/{id}/meeting/{meeting}/edit', [MeetingController::class, 'editMeeting'])->name('project.backlog.edit');
+        Route::put('/project/{id}/meeting/{meeting}/update-meeting', [MeetingController::class, 'updateMeeting'])->name('project.backlog.update');
     });
 
     Route::group(['middleware' => 'role:product-owner'], function () {
-        Route::resource('/project', 'App\Http\Controllers\ProjectController');
-        Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
-        Route::resource('/sprint', 'App\Http\Controllers\SprintController');
-        Route::resource('/task', 'App\Http\Controllers\TaskController');
-
-        Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
-        Route::get('/project/{id}/status', 'App\Http\Controllers\ProjectController@approve')->name('project.status');
-        Route::put('/project/{id}/approval', 'App\Http\Controllers\ProjectController@approveProject')->name('project.approval');
-
-        Route::get('/project/{id}/tasks', 'App\Http\Controllers\TaskController@taskList')->name('project.task');
-        Route::get('/project/{id}/table-view', 'App\Http\Controllers\TaskController@tableView')->name('project.task.table');
-        Route::get('/project/{id}/finished-tasks', 'App\Http\Controllers\TaskController@taskFinished')->name('project.task.finished');
+        Route::get('/project/{id}/project-status', [ProjectController::class, 'approve'])->name('project.status');
+        Route::put('/project/{id}/project-approval', [ProjectController::class, 'approveProject'])->name('project.approval');
     });
 
     Route::group(['middleware' => 'role:team-member'], function () {
-        Route::resource('/project', 'App\Http\Controllers\ProjectController');
-        Route::resource('/backlog', 'App\Http\Controllers\BacklogController');
-        Route::resource('/sprint', 'App\Http\Controllers\SprintController');
-        Route::resource('/task', 'App\Http\Controllers\TaskController');
-
-        Route::get('/project/{id}/download-proposal', 'App\Http\Controllers\ProjectController@downloadProposal')->name('project.proposal');
-
+        
         //Project Task
-        Route::get('/project/{id}/tasks', 'App\Http\Controllers\TaskController@taskList')->name('project.task');
-        Route::get('/project/{id}/table-view', 'App\Http\Controllers\TaskController@tableView')->name('project.task.table');
-        Route::get('/project/{id}/finished-tasks', 'App\Http\Controllers\TaskController@taskFinished')->name('project.task.finished');
-        Route::put('/project/{task}/move-task', 'App\Http\Controllers\TaskController@moveTask')->name('project.task.move');
-        Route::put('/project/{task}/status', 'App\Http\Controllers\TaskController@taskStatus')->name('project.task.status');
-
-        //Project Sprint Report
-        Route::get('/report', 'App\Http\Controllers\ReportController@index')->name('report.index');
-        Route::get('/project/{id}/sprint-reports', 'App\Http\Controllers\ReportController@sprintReport')->name('project.report.sprint');
-        Route::get('/project/{id}/timesheet-reports', 'App\Http\Controllers\ReportController@timesheetReport')->name('project.report.timesheet');
+        Route::put('/project/{id}/tasks/{task}/move-task', [TaskController::class, 'moveTask'])->name('project.task.move');
+        Route::put('/project/{id}/tasks/{task}/status', [TaskController::class, 'taskStatus'])->name('project.task.status');
 
         //Project Timesheet
-        Route::get('/project/{id}/tasks/{tasks}/record', 'App\Http\Controllers\TimesheetController@createTimesheet')->name('project.timesheet.create');
-        Route::post('/project/store-timesheet', 'App\Http\Controllers\TimesheetController@storeTimesheet')->name('project.timesheet.store');
-
-        //Project Meeting
-        Route::get('/meeting', 'App\Http\Controllers\MeetingController@index')->name('meeting.index');
+        Route::get('/project/{id}/tasks/{tasks}/record', [TimesheetController::class, 'createTimesheet'])->name('project.timesheet.create');
+        Route::post('/project/store-timesheet', [TimesheetController::class, 'storeTimesheet'])->name('project.timesheet.store');
     });
 });
 

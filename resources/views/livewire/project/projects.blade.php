@@ -2,7 +2,6 @@
 $team = Auth::user()->currentTeam;
 @endphp
 
-@if(Auth::user()->ownsTeam($team) || Auth::user()->hasTeamRole($team, 'team-member'))
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <div class="card card-statistic-1">
@@ -65,12 +64,6 @@ $team = Auth::user()->currentTeam;
         </div>
     </div>
 </div>
-@elseif(Auth::user()->hasTeamRole($team, 'product-owner'))
-<h2 class="section-title">Projects List</h2>
-<p class="section-lead mb-3">
-    You can manage projects data here.
-</p>
-@endif
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -84,11 +77,7 @@ $team = Auth::user()->currentTeam;
                 </div>
             </div>
             <div class="card-body">
-                @if(Auth::user()->ownsTeam($team) || Auth::user()->hasTeamRole($team, 'team-member'))
                 <livewire:project.project-table />
-                @elseif(Auth::user()->hasTeamRole($team, 'product-owner'))
-                <livewire:project.project-owner-table />
-                @endif
             </div>
         </div>
     </div>

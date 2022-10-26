@@ -57,7 +57,8 @@
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Proposal</label>
                             <div class="col-sm-12 col-md-7">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="customFileInput" name="proposal" aria-describedby="customFileInput" value="{{ old('proposal') }}">
+                                    <input type="file" class="custom-file-input" id="customFileInput" name="proposal"
+                                        aria-describedby="customFileInput" value="{{ old('proposal') }}">
                                     <label class="custom-file-label" for="customFileInput">Choose file</label>
                                     <small class="form-text text-muted mt-3">
                                         File format are PDF or Word, and file size must be below 2 Mb.
@@ -67,16 +68,31 @@
                             </div>
                         </div>
 
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Budget</label>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">$</div>
+                                    </div>
+                                    <input type="text" class="form-control currency" name="budget">
+                                </div>
+                                @error('budget') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-1">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Details</label>
                             <div class="col-sm-12 col-md-7">
                                 <textarea class="summernote" name="description">{{ old('description') }}</textarea>
-                                @error('description') <div class="mb-3"><span class="text-red-500">{{ $message }}</span></div>@enderror
+                                @error('description') <div class="mb-3"><span class="text-red-500">{{ $message }}</span>
+                                </div>@enderror
                             </div>
                         </div>
 
                         <div class="form-group row mb-4">
-                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start - End Date</label>
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Start - End
+                                Date</label>
                             <div class="col-sm-12 col-md-7">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -84,7 +100,8 @@
                                             <i class="fas fa-calendar"></i>
                                         </div>
                                     </div>
-                                    <input type="text" class="form-control daterange" name="project_date" value="{{ old('project_date') }}">
+                                    <input type="text" class="form-control daterange" name="project_date"
+                                        value="{{ old('project_date') }}">
                                 </div>
                                 @error('project_date') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
@@ -132,6 +149,7 @@
         </div>
     </div>
 
+    @push('custom-scripts')
     <script>
         document.querySelector('.custom-file-input').addEventListener('change', function(e) {
             var name = document.getElementById("customFileInput").files[0].name;
@@ -139,5 +157,13 @@
             nextSibling.innerText = name
         });
     </script>
+
+    <script>
+        var cleaveC = new Cleave('.currency', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand'
+        });
+    </script>
+    @endpush
 
 </x-app-layout>

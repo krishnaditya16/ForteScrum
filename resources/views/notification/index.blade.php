@@ -1,60 +1,28 @@
-<li class="dropdown dropdown-list-toggle pr-3">
-    <a href="#" data-toggle="dropdown" class="nav-link notification-toggle nav-link-lg @if (Auth::user()->name == 'test') beep @else @endif"><i class="far fa-bell"></i></a>
-    <div class="dropdown-menu dropdown-list dropdown-menu-right">
-        <div class="dropdown-header">Notifications
-            <div class="float-right">
-                <a href="#">Mark All As Read</a>
+<x-app-layout>
+    <x-slot name="title">{{ __('Notifications Data') }}</x-slot>
+    <x-slot name="header_content">
+        <h1>{{ __('Notifications Data') }}</h1>
+
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+            <div class="breadcrumb-item">Notification</div>
+        </div>
+    </x-slot>
+
+    <h2 class="section-title">Your Notifications Data</h2>
+    <p class="section-lead mb-3">
+        All notification data from your account are listed here.
+    </p>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <livewire:notification.notification-table/>
+                </div>
             </div>
         </div>
-        <div class="dropdown-list-content dropdown-list-icons">
-            <a href="#" class="dropdown-item dropdown-item-unread">
-                <div class="dropdown-item-icon bg-primary text-white">
-                    <i class="fas fa-folder"></i>
-                </div>
-                <div class="dropdown-item-desc">
-                    Project has been created!
-                    <div class="time text-primary">2 Min Ago</div>
-                </div>
-            </a>
-            <a href="#" class="dropdown-item dropdown-item-unread">
-                <div class="dropdown-item-icon bg-info text-white">
-                    <i class="fas fa-folder-open"></i>
-                </div>
-                <div class="dropdown-item-desc">
-                    Sprint has been created!
-                    <div class="time text-primary">2 Min Ago</div>
-                </div>
-            </a>
-            <a href="#" class="dropdown-item dropdown-item-unread">
-                <div class="dropdown-item-icon bg-info text-white">
-                    <i class="fas fa-flag"></i>
-                </div>
-                <div class="dropdown-item-desc">
-                    Backlog has been created!
-                    <div class="time text-primary">2 Min Ago</div>
-                </div>
-            </a>
-            <a href="#" class="dropdown-item dropdown-item-unread">
-                <div class="dropdown-item-icon bg-info text-white">
-                    <i class="fas fa-code"></i>
-                </div>
-                <div class="dropdown-item-desc">
-                    Task has been created!
-                    <div class="time text-primary">2 Min Ago</div>
-                </div>
-            </a>
-            <a href="#" class="dropdown-item dropdown-item-unread">
-                <div class="dropdown-item-icon bg-success text-white">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="dropdown-item-desc">
-                    Task has been marked as done!
-                    <div class="time text-primary">2 Min Ago</div>
-                </div>
-            </a>
-        </div>
-        <div class="dropdown-footer text-center">
-            <a href="#">View All <i class="fas fa-chevron-right"></i></a>
-        </div>
     </div>
-</li>
+
+</x-app-layout>
+

@@ -1,7 +1,8 @@
 @php
-$current_team = Auth::user()->currentTeam;
+$user = Auth::user();
+$team = $user->currentTeam;
 
-if(Auth::user()->ownsTeam($current_team)) {
+if($user->ownsTeam($team)) {
     $links = [
         [
             "href" => "dashboard",
@@ -37,6 +38,7 @@ if(Auth::user()->ownsTeam($current_team)) {
                     "section_text" => "Report",
                     "section_list" => [
                         ["href" => "report.index", "text" => "Project Report"],
+                        ["href" => "finance.index", "text" => "Project Finance"]
                     ]
                 ],
                 [
@@ -49,9 +51,22 @@ if(Auth::user()->ownsTeam($current_team)) {
             "text" => "Project",
             "is_multi" => true,
         ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Other",
+                    "section_list" => [
+                        ["href" => "profile.show", "text" => "Profile Settings"],
+                        ["href" => "notif.show", "text" => "Notifications"],
+                    ]
+                ]
+            ],
+            "text" => "Other",
+            "is_multi" => true,
+        ],
     ];
     $navigation_links = array_to_object($links);
-} else if(Auth::user()->hasTeamRole($current_team, 'guest')){
+} else if($user->hasTeamRole($team, 'guest')){
     $links = [
         [
             "href" => "dashboard",
@@ -60,16 +75,7 @@ if(Auth::user()->ownsTeam($current_team)) {
         ],
     ];
     $navigation_links = array_to_object($links);
-} else if(Auth::user()->hasTeamRole($current_team, 'project-manager')){
-    $links = [
-        [
-            "href" => "dashboard",
-            "text" => "Dashboard",
-            "is_multi" => false,
-        ],
-    ];
-    $navigation_links = array_to_object($links);
-} else if(Auth::user()->hasTeamRole($current_team, 'product-owner')){
+} else if($user->hasTeamRole($team, 'project-manager')){
     $links = [
         [
             "href" => "dashboard",
@@ -79,21 +85,19 @@ if(Auth::user()->ownsTeam($current_team)) {
         [
             "href" => [
                 [
-                    "section_text" => "Project",
+                    "section_text" => "Other",
                     "section_list" => [
-                        ["href" => "project.index", "text" => "Project List"],
-                        ["href" => "sprint.index", "text" => "Sprint"],
-                        ["href" => "backlog.index", "text" => "Backlog"],
-                        ["href" => "task.index", "text" => "Task"],
+                        ["href" => "profile.show", "text" => "Profile Settings"],
+                        ["href" => "notif.show", "text" => "Notifications"],
                     ]
                 ]
             ],
-            "text" => "Project",
+            "text" => "Other",
             "is_multi" => true,
         ],
     ];
     $navigation_links = array_to_object($links);
-} else if(Auth::user()->hasTeamRole($current_team, 'team-member')){
+} else if($user->hasTeamRole($team, 'product-owner')){
     $links = [
         [
             "href" => "dashboard",
@@ -122,6 +126,65 @@ if(Auth::user()->ownsTeam($current_team)) {
                 ]
             ],
             "text" => "Project",
+            "is_multi" => true,
+        ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Other",
+                    "section_list" => [
+                        ["href" => "profile.show", "text" => "Profile Settings"],
+                        ["href" => "notif.show", "text" => "Notifications"],
+                    ]
+                ]
+            ],
+            "text" => "Other",
+            "is_multi" => true,
+        ],
+    ];
+    $navigation_links = array_to_object($links);
+} else if($user->hasTeamRole($team, 'team-member')){
+    $links = [
+        [
+            "href" => "dashboard",
+            "text" => "Dashboard",
+            "is_multi" => false,
+        ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Project",
+                    "section_list" => [
+                        ["href" => "project.index", "text" => "Project List"],
+                    ]
+                ],
+                [
+                    "section_text" => "Report",
+                    "section_list" => [
+                        ["href" => "report.index", "text" => "Project Report"],
+                    ]
+                ],
+                [
+                    "section_text" => "Meeting",
+                    "section_list" => [
+                        ["href" => "meeting.index", "text" => "Project Meeting"],
+                    ]
+                ]
+            ],
+            "text" => "Project",
+            "is_multi" => true,
+        ],
+        [
+            "href" => [
+                [
+                    "section_text" => "Other",
+                    "section_list" => [
+                        ["href" => "profile.show", "text" => "Profile Settings"],
+                        ["href" => "notif.show", "text" => "Notifications"],
+                    ]
+                ]
+            ],
+            "text" => "Other",
             "is_multi" => true,
         ],
     ];
@@ -165,6 +228,8 @@ if(Auth::user()->ownsTeam($current_team)) {
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-chart-bar"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Meeting')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-calendar"></i> <span>{{ $section->section_text }}</span></a>
+                        @elseif($section->section_text == 'Other')
+                        <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-cog"></i> <span>{{ $section->section_text }}</span></a>
                         @endif
                         <ul class="dropdown-menu">
                             @foreach ($section->section_list as $child)

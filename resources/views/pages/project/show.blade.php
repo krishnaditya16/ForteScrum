@@ -14,7 +14,7 @@
 
     <div class="row"> 
         <div class="col-12">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <ul class="nav nav-tabs tab-flex" id="myTab" role="tablist">
                 @if(Auth::user()->hasTeamPermission($team, 'view:sprint-backlog'))
                 <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Overview</a>
@@ -28,12 +28,18 @@
                 <li class="nav-item">
                     <a class="nav-link" id="backlog-tab" data-toggle="tab" href="#backlog" role="tab" aria-controls="backlog" aria-selected="false">Backlog</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="expenses-tab" data-toggle="tab" href="#expenses" role="tab" aria-controls="expenses" aria-selected="false">Expenses</a>
+                </li>
                 @else
                 <li class="nav-item">
                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Overview</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Detail</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="expenses-tab" data-toggle="tab" href="#expenses" role="tab" aria-controls="expenses" aria-selected="false">Expenses</a>
                 </li>
                 @endif
             </ul>
@@ -55,15 +61,13 @@
                     @include('pages.project.show.backlog') 
                 </div>
 
+                <div class="tab-pane fade" id="expenses" role="tabpanel" aria-labelledby="expenses-tab">
+                    @include('pages.project.show.expenses') 
+                </div>
+
             </div>
         </div>
     </div>
-
-    <script>
-        function warnProgress() {              
-            myWindow=window.open('lead_data.php?leadid=1','myWin','width=400,height=650')
-        }
-    </script>
 
 </x-app-layout>
 

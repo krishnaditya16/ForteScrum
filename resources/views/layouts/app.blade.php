@@ -77,22 +77,26 @@
     @stack('modals')
 
     <!-- General JS Scripts -->
-    <script defer src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/popper.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/tooltip.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/moment.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('vendor/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/popper.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/tooltip.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/moment.min.js') }}"></script>
+    <script src="{{ asset('stisla/js/modules/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- JS Libraies -->
-    <script defer src="{{ asset('stisla/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/modules/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/modules/select2/dist/js/select2.full.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/modules/summernote/summernote-bs4.js') }}"></script>
-    <script defer src="{{ asset('stisla/modules/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script defer src="{{ asset('stisla/modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
-    <script defer src="{{ asset('stisla/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/summernote/summernote-bs4.js') }}"></script>
+    <script src="{{ asset('stisla/modules/cleave-js/cleave.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('stisla/modules/upload-preview/assets/js/jquery.uploadPreview.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+    <script src="{{ asset('stisla/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
+
+    @stack('custom-scripts')
 
     <script src="{{ asset('stisla/js/stisla.js') }}"></script>
     <script src="{{ asset('stisla/js/custom.js') }}"></script>

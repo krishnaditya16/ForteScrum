@@ -147,9 +147,9 @@ class BoardController extends Controller
         return redirect()->route('project.task', $project_id);
     }
 
-    public function destroyBoard($id) 
+    public function destroyBoard($id, $board) 
     {
-        Board::where('id', $id)->delete();
+        Board::where('id', $board)->delete();
 
         Alert::success('Success!', 'Board has been succesfully deleted.');
 

@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Expense;
+use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
+use App\Models\Timesheet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Jetstream\Jetstream;
 
@@ -86,11 +88,15 @@ class ProjectController extends Controller
             unset($file);
         }
 
+        $numbers = explode(',', $request->budget);
+        $budget = (int)join('', $numbers);
+
         Project::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'title' => $request['title'],
             'description' => $request['description'],
+            'budget' => $budget,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'category' => $request['category'],
@@ -99,6 +105,15 @@ class ProjectController extends Controller
             'team_id' => $request['team_id'],
             'client_id' => $request['client_id'],
         ]);
+
+        Notification::create([
+            'detail' => $request->title . ' has been created!',
+            'type' => 0,
+            'operation' => 0,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
+
         Alert::success('Success!', 'Data has been succesfully updated.');
         return redirect('/project');
     }
@@ -124,21 +139,21 @@ class ProjectController extends Controller
         foreach ($team->users as $user) {
             $data[] = $user->id;
         }
-        
-        foreach($users as $user){
-            if($user->hasTeamRole($team, 'product-owner') && !$user->ownsTeam($team)){
+
+        foreach ($users as $user) {
+            if ($user->hasTeamRole($team, 'product-owner') && !$user->ownsTeam($team)) {
                 $po[] = $user;
             }
         }
 
-        foreach($users as $user){
-            if($user->hasTeamRole($team, 'project-manager')){
+        foreach ($users as $user) {
+            if ($user->hasTeamRole($team, 'project-manager')) {
                 $pm[] = $user;
             }
         }
 
-        foreach($users as $user){
-            if($user->hasTeamRole($team, 'team-member') && !$user->ownsTeam($team)){
+        foreach ($users as $user) {
+            if ($user->hasTeamRole($team, 'team-member') && !$user->ownsTeam($team)) {
                 $tm[] = $user;
             }
         }
@@ -157,11 +172,36 @@ class ProjectController extends Controller
         $task = Task::where('project_id', $project->id)->get();
         $team = Team::where('id', $project->team_id)->first();
 
-        if (empty($data) || $current_team->id != $data->team_id) {
+        $times = Timesheet::where('project_id', $project->id)->get();
+        $e = new \DateTime('00:00');
+        $f = clone $e;
+        foreach ($times as $time) {
+            $startTime = Carbon::parse($time->start_time);
+            $endTime = Carbon::parse($time->end_time);
+            $interval = $endTime->diff($startTime);
+            $e->add($interval);
+        }
+        $time_spent = $f->diff($e)->format("%H hrs : %I mins");
+
+        $spending = Expense::where('project_id', $project->id)->where('expenses_status', 1)->sum('ammount')/100;
+
+        if (empty($project) || $current_team->id != $project->team_id) {
             abort(403);
         } else {
             return view('pages.project.show', compact(
-                'project', 'client', 'po', 'pm', 'tm', 'team_owner','date_now', 'due_date', 'date_diff', 'task', 'team'
+                'project',
+                'client',
+                'po',
+                'pm',
+                'tm',
+                'team_owner',
+                'date_now',
+                'due_date',
+                'date_diff',
+                'task',
+                'team',
+                'time_spent',
+                'spending'
             ));
         }
     }
@@ -175,24 +215,33 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $data = Project::find($project->id);
-        $teams = Team::all();
-        $clients = Client::all();
-        $current_team = Auth::user()->currentTeam;
+        $teams = Auth::user()->currentTeam;
+
+        $arr = [];
+        foreach ($teams->users as $user) {
+            $arr[] = $user->id;
+        }
+
+        $clients = DB::table('team_user')
+            ->join('users', 'team_user.user_id', 'users.id')
+            ->join('clients', 'users.client_id', 'clients.id')
+            ->whereIn('team_user.user_id', $arr)->where('role', 'product-owner')
+            ->select('clients.id', 'clients.name')
+            ->first();
 
         $start_date = $project->start_date;
         $end_date = $project->end_date;
         $arr = array($start_date, $end_date);
         $dates = implode(' - ', $arr);
 
-        if (empty($data) || $current_team->id != $data->team_id) {
+        if (empty($data) || $teams->id != $data->team_id) {
             abort(403);
         } else {
-            if(Auth::user()->hasTeamPermission($current_team, 'edit:project')){
+            if (Auth::user()->hasTeamPermission($teams, 'edit:project')) {
                 return view('pages.project.edit', compact('project', 'teams', 'clients', 'dates'));
             } else {
                 abort(403);
             }
-            
         }
     }
 
@@ -240,12 +289,16 @@ class ProjectController extends Controller
             unset($file);
         }
 
+        $numbers = explode(',', $request->budget);
+        $budget = (int)join('', $numbers);
+
         if (empty($file)) {
             $project->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'title' => $request['title'],
                 'description' => $request['description'],
+                'budget' => $budget,
                 'progress' => $request['progress'],
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -262,7 +315,25 @@ class ProjectController extends Controller
                 'email' => $request['email'],
                 'title' => $request['title'],
                 'description' => $request['description'],
+                'budget' => $budget,
                 'progress' => 0,
+                'start_date' => $start_date,
+                'end_date' => $end_date,
+                'category' => $request['category'],
+                'platform' => $request['platform'],
+                'proposal' => $proposalName,
+                'team_id' => $request['team_id'],
+                'client_id' => $request['client_id'],
+            ]);
+        } else if ($request->progress == 0) {
+            $project->update([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'title' => $request['title'],
+                'description' => $request['description'],
+                'budget' => $budget,
+                'progress' => 0,
+                'status' => 0,
                 'start_date' => $start_date,
                 'end_date' => $end_date,
                 'category' => $request['category'],
@@ -277,6 +348,7 @@ class ProjectController extends Controller
                 'email' => $request['email'],
                 'title' => $request['title'],
                 'description' => $request['description'],
+                'budget' => $budget,
                 'progress' => $request['progress'],
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -288,6 +360,14 @@ class ProjectController extends Controller
                 'client_id' => $request['client_id'],
             ]);
         }
+
+        Notification::create([
+            'detail' => $request->title . ' has been updated!',
+            'type' => 0,
+            'operation' => 1,
+            'user_id' => Auth::user()->id,
+            'team_id' => Auth::user()->currentTeam->id,
+        ]);
 
         Alert::success('Success!', 'Data has been succesfully updated.');
 
@@ -304,7 +384,14 @@ class ProjectController extends Controller
     public function approve($id)
     {
         $project = Project::find($id);
-        return view('pages.project.approval', compact('project'));
+        $team = Auth::user()->currentTeam;
+        $user = Auth::user();
+        
+        if($project->team_id != $team->id){
+            abort(403);
+        } else {
+            return view('pages.project.approval', compact('project')); 
+        }
     }
 
     public function approveProject(Request $request, $id)
@@ -313,8 +400,8 @@ class ProjectController extends Controller
             'status' => 'required',
         ]);
 
-        $user = Project::find($id);
-        $user->update([
+        $project = Project::find($id);
+        $project->update([
             'status' => $request->status,
         ]);
 

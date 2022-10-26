@@ -11,7 +11,7 @@
         </div> --}}
     </form>
     <ul class="navbar-nav navbar-right">
-        @include('notification.index')
+        @include('notification.notify')
         <img class="rounded-circle mr-1" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" width="32px">
         <li class="dropdown dropdown-nav-user">
             <a href="#" data-turbolinks="false" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">

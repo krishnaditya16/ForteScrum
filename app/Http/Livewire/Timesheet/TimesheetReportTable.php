@@ -34,7 +34,11 @@ class TimesheetReportTable extends DataTableComponent
                 ->searchable()
                 ->sortable(),
             Column::make("User", "user_id")
-                ->searchable()
+                ->searchable(function ($builder, $term) {
+                    return $builder->orWhereHas('users', function($query) use($term){
+                        $query->where('name', 'LIKE', '%' . $term . '%')->orWhere('email', 'LIKE', '%' . $term . '%');
+                    });
+                })
                 ->format(
                     fn ($value, $row, Column $column) => view('pages.report.table.user')->with(['time' => $row])
                 ),

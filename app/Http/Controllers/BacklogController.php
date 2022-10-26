@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Backlog;
+use App\Models\Notification;
 use App\Models\Project;
 use App\Models\Sprint;
 use Illuminate\Http\Request;
@@ -64,6 +65,14 @@ class BacklogController extends Controller
             'sprint_name' => $sprint_data['name'],
             'sprint_id' => $request['sprint_id'],
             'project_id' => $request['project_id'],
+        ]);
+
+        Notification::create([
+            'detail' => $request['name'].' backlog has been created!',
+            'type' => 2,
+            'operation' => 0,
+            'team_id' => Auth::user()->currentTeam->id,
+            'user_id' => Auth::user()->id,
         ]);
 
         Alert::success('Success!', 'Data has been succesfully created.');
@@ -150,6 +159,14 @@ class BacklogController extends Controller
             ]);
         }
 
+        Notification::create([
+            'detail' => $request['name'].' backlog has been updated!',
+            'type' => 2,
+            'operation' => 1,
+            'team_id' => Auth::user()->currentTeam->id,
+            'user_id' => Auth::user()->id,
+        ]);
+
         Alert::success('Success!', 'Data has been succesfully updated.');
 
         return redirect('/backlog');
@@ -201,6 +218,14 @@ class BacklogController extends Controller
                 'sprint_name' => $sprint_data['name'],
                 'sprint_id' => $request['sprint_id'],
                 'project_id' => $request['project_id'],
+            ]);
+
+            Notification::create([
+                'detail' => $request['name'].' backlog has been created!',
+                'type' => 2,
+                'operation' => 0,
+                'team_id' => Auth::user()->currentTeam->id,
+                'user_id' => Auth::user()->id,
             ]);
 
             Alert::success('Success!', 'Backlog has been succesfully created.');
@@ -268,6 +293,14 @@ class BacklogController extends Controller
                     'project_id' => $request['project_id'],
                 ]);
             }
+
+            Notification::create([
+                'detail' => $request['name'].' backlog has been updated!',
+                'type' => 2,
+                'operation' => 1,
+                'team_id' => Auth::user()->currentTeam->id,
+                'user_id' => Auth::user()->id,
+            ]);
 
             Alert::success('Success!', 'Backlog has been succesfully updated.');
 

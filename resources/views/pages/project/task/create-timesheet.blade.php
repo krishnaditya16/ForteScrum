@@ -73,7 +73,7 @@
                                     </div>
                                     <input type="text" class="form-control datepicker" name="work_date">
                                 </div>
-                                @error('title') <span class="text-red-500">{{ $message }}</span>@enderror
+                                @error('work_date') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
