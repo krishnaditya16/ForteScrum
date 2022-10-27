@@ -77,6 +77,17 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('project/{id}/download-proposal', [ProjectController::class, 'downloadProposal'])->name('project.proposal');
         Route::get('client-user/{id}/update-password', [ClientUserController::class, 'changePassword'])->name('change.password');
         Route::put('client-user/{id}/update-pass',  [ClientUserController::class, 'editPassword'])->name('user.password');
+
+        //Project Finance
+        Route::get('/project/{id}/manage-budget', [FinanceController::class, 'manageBudget'])->name('project.budget.manage');
+        Route::put('/project/{id}/update-budget', [FinanceController::class, 'updateBudget'])->name('project.budget.update');
+        Route::get('/project/{id}/manage-expenses', [FinanceController::class, 'manageExpenses'])->name('project.expenses.manage');
+        Route::get('/project/{id}/manage-invoice', [FinanceController::class, 'manageInvoice'])->name('project.invoice.index');
+        Route::get('/project/{id}/create-invoice', [FinanceController::class, 'createInvoice'])->name('project.invoice.create');
+        Route::post('/project/{id}/store-invoice', [FinanceController::class, 'storeInvoice'])->name('project.invoice.store');
+
+        Route::get('getTask/{id}', [FinanceController::class, 'getTaskData']);
+        Route::get('getTimesheet/{id}', [FinanceController::class, 'getTimesheetData']);
         
         //Project Task
         Route::get('/project/{id}/create-task', [TaskController::class, 'createTask'])->name('project.task.create');

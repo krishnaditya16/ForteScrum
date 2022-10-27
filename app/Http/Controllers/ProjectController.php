@@ -234,7 +234,7 @@ class ProjectController extends Controller
         $arr = array($start_date, $end_date);
         $dates = implode(' - ', $arr);
 
-        if (empty($data) || $teams->id != $data->team_id) {
+        if ($teams->id != $data->team_id) {
             abort(403);
         } else {
             if (Auth::user()->hasTeamPermission($teams, 'edit:project')) {
@@ -260,6 +260,7 @@ class ProjectController extends Controller
             'project_date' => 'required',
             'category' => 'required',
             'platform' => 'required',
+            'budget' => 'required',
             'proposal' => 'mimes:pdf,docx|max:2048',
             'team_id' => 'required',
             'client_id' => 'required',

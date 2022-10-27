@@ -105,4 +105,31 @@
     display: none;
 }
 
+.title-invoice {
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.invoice-status {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.form-invoice {
+    background-color: #fdfdff;
+    border-color: #e4e6fc;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.border-text {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    border-color: #e4e6fc;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
 /*# sourceMappingURL=custom.css.map */

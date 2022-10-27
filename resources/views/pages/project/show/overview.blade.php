@@ -174,7 +174,7 @@
                             <div class="progress" data-height="6" style="height: 6px;" data-toggle="tooltip" title="{{ $percentage }}%">
                                 <div class="progress-bar
                                     @if($percentage > 100)
-                                    `   bg-danger
+                                        bg-danger
                                     @elseif($percentage > 80 && $percentage <= 100)
                                         bg-warning
                                     @else 
@@ -191,7 +191,7 @@
                         <div class="media-cta">
                             @php $current_team = Auth::user()->currentTeam; @endphp
                             @if(Auth::user()->hasTeamRole($current_team, 'project-manager'))
-                            <a href="{{ route('project.edit', $project->id) }}" class="btn btn-icon icon-left btn-outline-primary mt-2" type="button"><i class="fas fa-edit"></i>Manage Budget</a>
+                            <a href="{{ route('project.budget.manage', $project->id) }}" class="btn btn-icon icon-left btn-outline-primary mt-2" type="button"><i class="fas fa-edit"></i>Manage Budget</a>
                             @endif
                         </div>
                     </li>
