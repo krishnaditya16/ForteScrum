@@ -2,7 +2,7 @@
 $user = Auth::user();
 $team = $user->currentTeam;
 
-if($user->ownsTeam($team)) {
+if($user->ownsTeam($team) || $user->hasTeamRole($team, 'project-manager')) {
     $links = [
         [
             "href" => "dashboard",
@@ -16,7 +16,7 @@ if($user->ownsTeam($team)) {
                     "section_list" => [
                         ["href" => "user.index", "text" => "All Users"],
                         ["href" => "client.index", "text" => "Clients Data"],
-                        ["href" => "client-user.index", "text" => "Client Users"],
+                        // ["href" => "client-user.index", "text" => "Client Users"],
                     ]
                 ]
             ],
@@ -66,37 +66,6 @@ if($user->ownsTeam($team)) {
         ],
     ];
     $navigation_links = array_to_object($links);
-} else if($user->hasTeamRole($team, 'guest')){
-    $links = [
-        [
-            "href" => "dashboard",
-            "text" => "Dashboard",
-            "is_multi" => false,
-        ],
-    ];
-    $navigation_links = array_to_object($links);
-} else if($user->hasTeamRole($team, 'project-manager')){
-    $links = [
-        [
-            "href" => "dashboard",
-            "text" => "Dashboard",
-            "is_multi" => false,
-        ],
-        [
-            "href" => [
-                [
-                    "section_text" => "Other",
-                    "section_list" => [
-                        ["href" => "profile.show", "text" => "Profile Settings"],
-                        ["href" => "notif.show", "text" => "Notifications"],
-                    ]
-                ]
-            ],
-            "text" => "Other",
-            "is_multi" => true,
-        ],
-    ];
-    $navigation_links = array_to_object($links);
 } else if($user->hasTeamRole($team, 'product-owner')){
     $links = [
         [
@@ -116,6 +85,7 @@ if($user->ownsTeam($team)) {
                     "section_text" => "Report",
                     "section_list" => [
                         ["href" => "report.index", "text" => "Project Report"],
+                        ["href" => "finance.index", "text" => "Project Finance"],
                     ]
                 ],
                 [
@@ -189,7 +159,16 @@ if($user->ownsTeam($team)) {
         ],
     ];
     $navigation_links = array_to_object($links);
-} 
+} else if($user->hasTeamRole($team, 'guest')){
+    $links = [
+        [
+            "href" => "dashboard",
+            "text" => "Dashboard",
+            "is_multi" => false,
+        ],
+    ];
+    $navigation_links = array_to_object($links);
+}
 @endphp
 
 <div class="main-sidebar">

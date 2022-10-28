@@ -29,15 +29,37 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return DB::transaction(function () use ($input) {
-            return tap(User::create([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'password' => Hash::make($input['password']),
-            ]), function (User $user) {
-                $this->createTeam($user);
+        if($input['role'] == 0){
+            return DB::transaction(function () use ($input) {
+                return tap(User::create([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                    'password' => Hash::make($input['password']),
+                ]), function (User $user) {
+                    $this->createTeamGuest($user);
+                });
             });
-        });
+        } else if($input['role_check'] == 0){
+            return DB::transaction(function () use ($input) {
+                return tap(User::create([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                    'password' => Hash::make($input['password']),
+                ]), function (User $user) {
+                    $this->createTeamGuest($user);
+                });
+            });
+        } else if($input['role_check'] == 1) {
+            return DB::transaction(function () use ($input) {
+                return tap(User::create([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                    'password' => Hash::make($input['password']),
+                ]), function (User $user) {
+                    $this->createTeam($user);
+                });
+            });
+        }
     }
 
     /**
@@ -46,15 +68,16 @@ class CreateNewUser implements CreatesNewUsers
      * @param  \App\Models\User  $user
      * @return void
      */
-    // protected function createTeam(User $user)
-    // {
-    //     $user->ownedTeams()->save(Team::forceCreate([
-    //         'user_id' => $user->id,
-    //         'name' => explode(' ', $user->name, 2)[0]."'s Team",
-    //         'personal_team' => true,
-    //     ]));
-    // }
     protected function createTeam(User $user)
+    {
+        $user->ownedTeams()->save(Team::forceCreate([
+            'user_id' => $user->id,
+            'name' => explode(' ', $user->name, 2)[0]."'s Team",
+            'personal_team' => true,
+        ]));
+    }
+
+    protected function createTeamGuest(User $user)
     {
         $team = Team::first();
         $user->teams()->attach($team, array('role' => 'guest'));

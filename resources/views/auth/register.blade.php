@@ -58,6 +58,17 @@
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                         </div>
 
+                        <input type="hidden" name="role" value="0">
+
+                        <div class="form-group">
+                            <div class="control-label">Register as Project Manager</div>
+                            <label class="custom-switch mt-2">
+                                <input type="checkbox" name="role_check" class="custom-switch-input btn-role" id="btn-role" value="0">
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description" id="role-answer">No</span>
+                            </label>
+                        </div>
+
                         @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
                         <div class="mt-4">
                             <x-jet-label for="terms">

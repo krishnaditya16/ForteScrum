@@ -34,7 +34,17 @@
                                 @error('title') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
-
+                        
+                        @if(empty($clients))
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Client</label>
+                            <div class="col-sm-12 col-md-7">
+                                <span class="badge badge-danger mt-1">Warning: There's no client yet for this team!</span>
+                                <input type="hidden" class="form-control" name="client_id">
+                                @error('client_id') <br><span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                        @else
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Client</label>
                             <div class="col-sm-12 col-md-7">
@@ -43,6 +53,7 @@
                                 @error('client_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
                         </div>
+                        @endif
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>

@@ -29,8 +29,24 @@ class ClientController extends Controller
      */
     public function create()
     {
-        $data = User::where('current_team_id', Auth::user()->currentTeam->id)->get();
-        return view('pages.client.create', compact('data'));
+        // $data = User::where('current_team_id', Auth::user()->currentTeam->id)->get();
+        $team = Auth::user()->currentTeam;
+        $data = $team->users;
+
+        $user_id = [];
+        foreach ($team->users as $user) {
+            if($user->hasTeamRole($team, 'product-owner')){
+                $user_id[] = $user->id;
+            }
+        }
+        $client = Client::whereIn('user_id', $user_id)->first();
+
+        if(empty($client)){
+            return view('pages.client.create', compact('data'));
+        } else {
+            Alert::warning('Warning!', 'A client is already registered for this team!');
+            return back();
+        };
     }
 
     /**

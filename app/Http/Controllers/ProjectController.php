@@ -64,11 +64,14 @@ class ProjectController extends Controller
             'title' => 'required|min:3|max:30',
             'description' => 'required',
             'project_date' => 'required',
+            'budget' => 'required',
             'category' => 'required',
             'platform' => 'required',
             'proposal' => 'required|mimes:pdf,docx|max:2048',
             'team_id' =>  'required',
             'client_id' => 'required'
+        ],[
+            'client_id.required' => 'The client field is required! Please register a client first for this team.'
         ]);
 
         $dates = explode(' - ', $request->project_date);

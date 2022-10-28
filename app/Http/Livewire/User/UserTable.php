@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Exports\UserExport;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 
@@ -48,11 +50,26 @@ class UserTable extends DataTableComponent
             BooleanColumn::make('2FA', 'two_factor_secret')
                 ->sortable()
                 ->collapseOnTablet(),
-            Column::make('Current Team', 'current_team_id')
+            // Column::make('Current Team', 'current_team_id')
+            //     ->format(
+            //         fn ($value, $row, Column $column) => view('pages.user.table.current_team')->withValue($value)
+            //     ),
+            Column::make('Role', 'id')
                 ->format(
                     fn ($value, $row, Column $column) => view('pages.user.table.current_team')->withValue($value)
                 ),
         ];
+    }
+
+    public function builder(): Builder
+    {
+        $team = Auth::user()->currentTeam;
+        $data = [];
+        foreach ($team->allUsers() as $user) {
+            $data[] = $user->id;
+        }
+
+        return User::whereIn('id', $data);
     }
 
     public function bulkActions(): array

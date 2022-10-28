@@ -5,10 +5,12 @@ namespace App\Http\Livewire\Client;
 use App\Exports\ClientUserExport;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use App\Models\Client;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -26,39 +28,55 @@ class ClientUserTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Actions")
-                ->label(fn ($row, Column $column) => view('pages.client.table.user-actions')->with(['user' => $row])),
+            Column::make("Actions", "users.id")
+                ->format(
+                    fn ($value, $row, Column $column) => view('pages.client.table.user-actions')->withValue($value)
+                ),
+            // Column::make("Actions", "users.id")
+            //     ->label(fn ($row, Column $column) => view('pages.client.table.user-actions')->with(['user' => $row])),
             Column::make("Id", "users.id")
                 ->collapseOnTablet()
                 ->sortable(),
-            Column::make("Name", "users.name")
-                ->collapseOnTablet()
-                ->searchable()
-                ->sortable(),
+            // Column::make("Name", "users.name")
+            //     ->collapseOnTablet()
+            //     ->searchable()
+            //     ->sortable(),
+            // Column::make("Email", "users.email")
+            //     ->collapseOnTablet()
+            //     ->searchable()
+            //     ->sortable(),
+            Column::make("User", "users.id as user_id")
+                ->searchable(function ($builder, $term) {
+                    return $builder->orWhereHas('users', function($query) use($term){
+                        $query->where('name', 'LIKE', '%' . $term . '%')->orWhere('email', 'LIKE', '%' . $term . '%');
+                    });
+                })
+                ->format(
+                    fn ($value, $row, Column $column) => view('pages.client.table.client-users')->with(['client' => $row])
+                ),
             Column::make("Client", "name")
                 ->collapseOnTablet()
                 ->searchable()
                 ->sortable(),
-            Column::make("Email", "users.email")
-                ->collapseOnTablet()
-                ->searchable()
-                ->sortable(),
-            Column::make("Phone", "phone_number")
-                ->collapseOnTablet()
-                ->searchable()
-                ->sortable(),
+            BooleanColumn::make('Verified', 'users.email_verified_at')
+                ->sortable()
+                ->collapseOnTablet(),
+            BooleanColumn::make('2FA', 'users.two_factor_secret')
+                ->sortable()
+                ->collapseOnTablet(),
         ];
     }
 
     public function builder(): Builder
     {
-        return Client::query()
-            ->join('users', 'clients.user_id', '=', 'users.id')
-            ->join('teams', 'users.current_team_id', '=', 'teams.id')
-            ->join('team_user', 'teams.id', '=', 'team_user.team_id') 
-            ->where('team_user.role', '=', 'product-owner')
-            ->select('users.id', 'users.name', 'users.email', 'users.current_team_id', 'team_user.role')
-            ->distinct();
+        $team = Auth::user()->currentTeam;
+        $data = [];
+        foreach ($team->users as $user) {
+            if($user->hasTeamRole($team, 'product-owner')){
+                $data[] = $user->id;
+            }
+        }
+        return Client::whereIn('user_id', $data);
     }
 
     public function bulkActions(): array

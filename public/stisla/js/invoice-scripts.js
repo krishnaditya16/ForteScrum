@@ -1,8 +1,8 @@
 "use strict";
 
-$('input').on('change, keyup', function() {
+$(".num-input").on('change, keyup', function() {
     var currentInput = $(this).val();
-    var fixedInput = currentInput.replace(/[A-Za-z!@#$%^&*()]/g, '');
+    var fixedInput = currentInput.replace(/[^\d.]/g, '');
     $(this).val(fixedInput);
 });
 
@@ -32,10 +32,12 @@ function number_format (number, decimals, dec_point, thousands_sep) {
 
 function calcTask() 
 {
-    const rate_task = document.getElementsByName('rate_task');
-    const qty_task = document.getElementsByName('qty_task');
+    const rate_task = document.getElementsByName('rate_task[]');
+    const qty_task = document.getElementsByName('qty_task[]');
     const arr1 = [...rate_task].map(input => parseFloat(input.value));
     const arr2 = [...qty_task].map(input => parseFloat(input.value));
+
+    const ele = $(".check-task");
 
     var total = [];
     var row =$(".total-task") 
@@ -43,12 +45,19 @@ function calcTask()
 
     for(let i=0;i<arr1.length;i++){
         total[i] = parseFloat(arr1[i]) * parseFloat(arr2[i]);
-        if(isNaN(total[i])){
+
+        if (ele[i].type == 'checkbox' && ele[i].checked == true){
+            if(isNaN(total[i])){
+                row[i].value = 0;
+                sum += 0;
+            } else {
+                row[i].value = total[i];
+                sum += total[i];
+            }
+            
+        } else if(ele[i].type == 'checkbox' && ele[i].checked == false) {
             row[i].value = 0;
-        } else {
-            row[i].value = total[i];
         }
-        sum += total[i];
     };
     if(isNaN(sum)){
         document.getElementById("subtotal_task").value = 0;
@@ -61,29 +70,71 @@ function calcTask()
 
 function calcTS() 
 {
-    const rate_ts = document.getElementsByName('rate_ts');
-    const qty_ts = document.getElementsByName('qty_ts');
+    const rate_ts = document.getElementsByName('rate_ts[]');
+    const qty_ts = document.getElementsByName('quantity_ts');
     const arr1 = [...rate_ts].map(input => input.value);
     const arr2 = [...qty_ts].map(input => parseFloat(input.value));
 
+    const qts = document.getElementsByName('qts');
+    const arr3 = [...qts].map(input => input.value);
+
+    const ele = $(".check-ts");
+
     var total = [];
-    var row =$(".total-ts") 
+    var row =$(".total-ts");
     let sum = 0;
 
     for(let i=0;i<arr1.length;i++){
+
         total[i] = parseFloat(arr1[i]) * parseFloat(arr2[i]);
-        if(isNaN(total[i])){
+
+        if (ele[i].type == 'checkbox' && ele[i].checked == true){
+            if(isNaN(total[i])){
+                row[i].value = 0;
+                sum += 0;
+            } else {
+                row[i].value = total[i];
+                sum += total[i];
+            }
+            $('.qty_ts').eq(i).val(arr3[i]);
+            
+        } else if(ele[i].type == 'checkbox' && ele[i].checked == false) {
             row[i].value = 0;
-        } else {
-            row[i].value = total[i];
+            $('.qty_ts').eq(i).val('');
         }
-        sum += total[i];
     };
 
     if(isNaN(sum)){
         document.getElementById("subtotal_ts").value = 0;
     } else {
         document.getElementById("subtotal_ts").value = sum;
+    }
+
+    totalAll();
+}
+
+function calcExp() 
+{
+    const exp_ammount = document.getElementsByName('expenses[]');
+    const arr = [...exp_ammount].map(input => parseFloat(input.value));
+
+    const ele = $(".check-exp");
+    let sum = 0;
+
+    for(let i=0;i<arr.length;i++){
+        if (ele[i].type == 'checkbox' && ele[i].checked == true){
+            sum += arr[i];
+            $('.exp-ammount').eq(i).val(arr[i]);
+        } else if(ele[i].type == 'checkbox' && ele[i].checked == false) {
+            arr[i] = 0;
+            $('.exp-ammount').eq(i).val('');
+        }
+    };
+
+    if(isNaN(sum)){
+        document.getElementById("subtotal_expenses").value = 0;
+    } else {
+        document.getElementById("subtotal_expenses").value = sum;
     }
 
     totalAll();
@@ -98,15 +149,30 @@ function totalAll()
     var tax = parseFloat(document.getElementById("tax").value)
     var discount = parseFloat(document.getElementById("discount").value)
 
-    var total = 0;
+    var total = (st_task + st_ts + st_exp);
+    var discount_ammount = total * (discount/100);
+    var tax_ammount = total * (tax/100);
 
     if(isNaN(tax)){
-        total = (st_task + st_ts + st_exp) - discount;
+        total = total - discount_ammount;
     } else if(isNaN(discount)) {
-        total = (st_task + st_ts + st_exp) - tax;
+        total = total - tax_ammount;
     } else {
-        total = (st_task + st_ts + st_exp) - tax - discount;
+        total = total - tax_ammount - discount_ammount;
     }   
+
+    if(isNaN(tax)){
+        document.getElementById("tax_detail").value = 0;
+    } else {
+        document.getElementById("tax_detail").value = tax_ammount;
+    }
+
+    if(isNaN(discount)){
+        document.getElementById("discount_detail").value = 0;
+    } else {
+        document.getElementById("discount_detail").value = discount_ammount;
+    }
+    
 
     if(total < 0){
         document.getElementById("total_all").value = 0;
@@ -114,3 +180,5 @@ function totalAll()
         document.getElementById("total_all").value = total;
     }
 }
+
+

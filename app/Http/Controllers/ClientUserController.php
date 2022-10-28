@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -29,8 +30,23 @@ class ClientUserController extends Controller
      */
     public function create()
     {
-        $data = Team::all();
-        return view('pages.client.user-create', compact('data'));
+        $team = Auth::user()->currentTeam;
+        $data = Team::where('id', $team->id)->get();
+
+        $user_id = [];
+        foreach ($team->users as $user) {
+            if($user->hasTeamRole($team, 'product-owner')){
+                $user_id[] = $user->id;
+            }
+        }
+        $client = Client::whereIn('user_id', $user_id)->first();
+
+        if(empty($client)){
+            return view('pages.client.user-create', compact('data'));
+        } else {
+            Alert::warning('Warning!', 'A client is already registered for this team!');
+            return back();
+        };
     }
 
     /**

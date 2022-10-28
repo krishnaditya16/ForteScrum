@@ -59,18 +59,36 @@ $(document).ready(function () {
     });
 });
 
-$.uploadPreview({
-    input_field: "#image-upload", // Default: .image-upload
-    preview_box: "#image-preview", // Default: .image-preview
-    label_field: "#image-label", // Default: .image-label
-    label_default: "Choose File", // Default: Choose File
-    label_selected: "Change File", // Default: Change File
-    no_label: false, // Default: false
-    success_callback: null, // Default: null
-});
-
 $(document).ready(function () {
     $(".btn-receipt").click(function () {
         $("#receipt_toggle").toggle();
     });
 });
+
+$(document).ready(function () {
+    $(".btn-role").click(function () {
+        var text = document.getElementById("role-answer");
+        var role = document.getElementById('btn-role');
+        if(text.innerHTML=="No") {
+            text.innerHTML="Yes";
+            role.value = 1;
+        } else {
+            text.innerHTML="No";
+            role.value = 0;
+        }
+        console.log(role);
+    });
+});
+
+$("#paymentMethod").change(function () {
+    if ($(this).val() == "0") {
+        $("#transactionID").show();
+        $("#transaction_id").attr("required", "");
+        $("#transaction_id").attr("data-error", "This field is required.");
+    } else {
+        $("#transactionID").hide();
+        $("#transaction_id").removeAttr("required");
+        $("#transaction_id").removeAttr("data-error");
+    }
+});
+$("#paymentMethod").trigger("change");

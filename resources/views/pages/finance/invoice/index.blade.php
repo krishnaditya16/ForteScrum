@@ -24,11 +24,15 @@
             <div class="card">
                 <div class="card-header">
                     <h4>{{ $project->title }} - Invoice</h4>
+                    @if(Auth::user()->ownsTeam($team) || Auth::user()->hasTeamRole($team, 'project-manager')) 
                     <div class="card-header-action">
                         <a href="{{ route('project.invoice.create', $project->id) }}" class="btn btn-icon icon-left btn-outline-dark"><i class="fas fa-plus"></i> Add Data</a>
                     </div>
+                    @endif
                 </div>
-                @livewire('expense.expense-project', ['project' => $project])
+                <div class="card-body">
+                    @livewire('finance.invoice-project-table', ['project' => $project->id])
+                </div>
             </div>
         </div>
     </div>

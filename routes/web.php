@@ -64,6 +64,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     //Project Finance
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
 
+    //Project Invoice
+    Route::get('/project/{id}/manage-invoice', [FinanceController::class, 'manageInvoice'])->name('project.invoice.index');
+    Route::get('/project/{id}/invoice/{invoice}', [FinanceController::class, 'showInvoice'])->name('project.invoice.show');
+    Route::get('/project/{id}/invoice/{invoice}/payment-file', [FinanceController::class, 'downloadPayment'])->name('project.payment.download');
+
 
     Route::group(['middleware' => 'role:project-manager'], function () {
         Route::resource('user', UserController::class);
@@ -82,13 +87,19 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/project/{id}/manage-budget', [FinanceController::class, 'manageBudget'])->name('project.budget.manage');
         Route::put('/project/{id}/update-budget', [FinanceController::class, 'updateBudget'])->name('project.budget.update');
         Route::get('/project/{id}/manage-expenses', [FinanceController::class, 'manageExpenses'])->name('project.expenses.manage');
-        Route::get('/project/{id}/manage-invoice', [FinanceController::class, 'manageInvoice'])->name('project.invoice.index');
+
+        //Project Invoice
         Route::get('/project/{id}/create-invoice', [FinanceController::class, 'createInvoice'])->name('project.invoice.create');
         Route::post('/project/{id}/store-invoice', [FinanceController::class, 'storeInvoice'])->name('project.invoice.store');
-
-        Route::get('getTask/{id}', [FinanceController::class, 'getTaskData']);
-        Route::get('getTimesheet/{id}', [FinanceController::class, 'getTimesheetData']);
+        Route::get('/project/{id}/invoice/{invoice}/edit', [FinanceController::class, 'editInvoice'])->name('project.invoice.edit');
+        Route::put('/project/{id}/update-invoice', [FinanceController::class, 'updateInvoice'])->name('project.invoice.update');
+        Route::get('/project/{id}/invoice/{invoice}/confirm', [FinanceController::class, 'confirmInvoicePayment'])->name('project.invoice.confirm');
+        Route::put('/project/{id}/invoice/{invoice}/payment-confirm', [FinanceController::class, 'updateInvoicePayment'])->name('project.invoice.confirm.update');
         
+
+        // Route::get('getTask/{id}', [FinanceController::class, 'getTaskData']);
+        // Route::get('getTimesheet/{id}', [FinanceController::class, 'getTimesheetData']);
+
         //Project Task
         Route::get('/project/{id}/create-task', [TaskController::class, 'createTask'])->name('project.task.create');
         Route::get('/project/{id}/tasks/{task}/edit', [TaskController::class, 'editTask'])->name('project.task.edit');
@@ -141,10 +152,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::group(['middleware' => 'role:product-owner'], function () {
         Route::get('/project/{id}/project-status', [ProjectController::class, 'approve'])->name('project.status');
         Route::put('/project/{id}/project-approval', [ProjectController::class, 'approveProject'])->name('project.approval');
+
+        //Project Invoice
+        Route::get('/project/{id}/invoice/{invoice}/payment', [FinanceController::class, 'createPaymentInvoice'])->name('project.invoice.payment');
+        Route::put('/project/{id}/invoice/{invoice}/process-payment', [FinanceController::class, 'storePaymentInvoice'])->name('project.invoice.payment.store');
+        Route::get('/project/{id}/invoice/{invoice}/edit-payment', [FinanceController::class, 'editPaymentInvoice'])->name('project.invoice.payment.edit');
+        Route::put('/project/{id}/invoice/{invoice}/update-payment', [FinanceController::class, 'updatePaymentInvoice'])->name('project.invoice.payment.update');
     });
 
     Route::group(['middleware' => 'role:team-member'], function () {
-        
+
         //Project Task
         Route::put('/project/{id}/tasks/{task}/move-task', [TaskController::class, 'moveTask'])->name('project.task.move');
         Route::put('/project/{id}/tasks/{task}/status', [TaskController::class, 'taskStatus'])->name('project.task.status');

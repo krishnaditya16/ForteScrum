@@ -11,6 +11,8 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class ClientTable extends DataTableComponent
@@ -59,6 +61,17 @@ class ClientTable extends DataTableComponent
                     fn ($value, $row, Column $column) => view('pages.client.table.status')->withValue($value)
                 ),
         ];
+    }
+
+    public function builder(): Builder
+    {
+        $team = Auth::user()->currentTeam;
+        $data = [];
+        foreach ($team->users as $user) {
+            $data[] = $user->id;
+        }
+
+        return Client::whereIn('user_id', $data);
     }
 
     public function bulkActions(): array
