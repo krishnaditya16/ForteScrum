@@ -15,6 +15,7 @@ use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\ClientUserController;
 use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 
 /*
@@ -28,9 +29,11 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('landing.index');
+// })->name('home');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::get('/dashboard', function () {
@@ -95,7 +98,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::put('/project/{id}/update-invoice', [FinanceController::class, 'updateInvoice'])->name('project.invoice.update');
         Route::get('/project/{id}/invoice/{invoice}/confirm', [FinanceController::class, 'confirmInvoicePayment'])->name('project.invoice.confirm');
         Route::put('/project/{id}/invoice/{invoice}/payment-confirm', [FinanceController::class, 'updateInvoicePayment'])->name('project.invoice.confirm.update');
-        
+        Route::get('/project/{id}/invoice/{invoice}/send', [FinanceController::class, 'sendInvoiceMail'])->name('project.invoice.send');
 
         // Route::get('getTask/{id}', [FinanceController::class, 'getTaskData']);
         // Route::get('getTimesheet/{id}', [FinanceController::class, 'getTimesheetData']);

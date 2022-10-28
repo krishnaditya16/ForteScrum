@@ -56,7 +56,7 @@ class UserTable extends DataTableComponent
             //     ),
             Column::make('Role', 'id')
                 ->format(
-                    fn ($value, $row, Column $column) => view('pages.user.table.current_team')->withValue($value)
+                    fn ($value, $row, Column $column) => view('pages.user.table.role')->withValue($value)
                 ),
         ];
     }

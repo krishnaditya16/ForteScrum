@@ -8,7 +8,7 @@
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
             <div class="breadcrumb-item active"><a href="{{ route('project.invoice.index', $project->id) }}">Invoice</a></div>
-            <div class="breadcrumb-item">View Invoice #INV-{{ $invoice->id }}</div>
+            <div class="breadcrumb-item">#INV-{{ $invoice->id }}</div>
         </div>
     </x-slot>
 
@@ -31,7 +31,7 @@
                                         <p class="text-muted">#INV-{{ $invoice->id }}</p>
                                     </div>
                                     <div class="col-6 text-right">
-                                        @if(Carbon\Carbon::today()->gt($invoice->deadline))
+                                        @if(Carbon\Carbon::today()->gt($invoice->deadline) && $invoice->inv_status == 0 || $invoice->inv_status == 1)
                                         <p class="text-danger invoice-status">OVERDUE</p>
                                         @elseif($invoice->inv_status == 4)
                                         <p class="text-danger invoice-status">REJECTED</p>

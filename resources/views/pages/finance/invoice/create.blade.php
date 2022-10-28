@@ -355,6 +355,7 @@
 
                     </div>
                     <hr>
+
                     <div class="text-md-right">
                         <button type="submit" class="btn btn-primary btn-icon icon-left">
                             <i class="fas fa-file-alt"></i>

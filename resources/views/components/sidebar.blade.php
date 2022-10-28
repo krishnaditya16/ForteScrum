@@ -35,7 +35,7 @@ if($user->ownsTeam($team) || $user->hasTeamRole($team, 'project-manager')) {
                     ]
                 ],
                 [
-                    "section_text" => "Report",
+                    "section_text" => "Report & Finance",
                     "section_list" => [
                         ["href" => "report.index", "text" => "Project Report"],
                         ["href" => "finance.index", "text" => "Project Finance"]
@@ -82,7 +82,7 @@ if($user->ownsTeam($team) || $user->hasTeamRole($team, 'project-manager')) {
                     ]
                 ],
                 [
-                    "section_text" => "Report",
+                    "section_text" => "Report & Finance",
                     "section_list" => [
                         ["href" => "report.index", "text" => "Project Report"],
                         ["href" => "finance.index", "text" => "Project Finance"],
@@ -129,7 +129,7 @@ if($user->ownsTeam($team) || $user->hasTeamRole($team, 'project-manager')) {
                     ]
                 ],
                 [
-                    "section_text" => "Report",
+                    "section_text" => "Report & Finance",
                     "section_list" => [
                         ["href" => "report.index", "text" => "Project Report"],
                     ]
@@ -203,7 +203,7 @@ if($user->ownsTeam($team) || $user->hasTeamRole($team, 'project-manager')) {
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Project')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-folder"></i> <span>{{ $section->section_text }}</span></a>
-                        @elseif($section->section_text == 'Report')
+                        @elseif($section->section_text == 'Report & Finance')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-chart-bar"></i> <span>{{ $section->section_text }}</span></a>
                         @elseif($section->section_text == 'Meeting')
                         <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-calendar"></i> <span>{{ $section->section_text }}</span></a>

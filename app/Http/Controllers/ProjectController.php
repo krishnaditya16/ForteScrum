@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Expense;
-use App\Models\Notification;
-use App\Models\Project;
+use Carbon\Carbon;
 use App\Models\Task;
 use App\Models\Team;
+use App\Models\Client;
+use App\Models\Expense;
+use App\Models\Project;
+use App\Mail\ProjectMail;
 use App\Models\Timesheet;
-use Carbon\Carbon;
+use App\Models\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProjectController extends Controller
 {
@@ -94,7 +96,7 @@ class ProjectController extends Controller
         $numbers = explode(',', $request->budget);
         $budget = (int)join('', $numbers);
 
-        Project::create([
+        $project = Project::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'title' => $request['title'],
@@ -108,6 +110,26 @@ class ProjectController extends Controller
             'team_id' => $request['team_id'],
             'client_id' => $request['client_id'],
         ]);
+
+        $details = [
+            'title' => 'New Project Has Been Assigned to You',
+            'url' => 'http://127.0.0.1:8000/project/'.$project->id,
+            'project' => $request->title,
+            'client' => $request->title,
+            'start_date' => $start_date,
+            'due_date' => $end_date,
+            'budget' => $request->budget,
+            'category' => $request->category,
+            'platform' => $request->platform,
+            'from_mail' => $request->from_mail,
+            'mail_sender' => $request->mail_sender,
+        ];
+
+        $users = Auth::user()->currentTeam->allUsers();
+        
+        foreach($users as $user){
+            Mail::to($user->email)->send(new ProjectMail($details));
+        }
 
         Notification::create([
             'detail' => $request->title . ' has been created!',

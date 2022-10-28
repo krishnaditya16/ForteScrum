@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,8 +24,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $data = Team::all();
-        return view('pages.user.create', compact('data'));
+        // $data = Team::all();
+        $team = Auth::user()->currentTeam;
+        return view('pages.user.create', compact('team'));
     }
 
     /**
@@ -39,14 +41,10 @@ class UserController extends Controller
             'name' => 'required|min:3|max:30',
             'email' => 'required|email|unique:users',
             'password' => 'confirmed|min:8',
+            'team_id' => 'required',
+        ],[
+            'team_id.required' => 'The team field is required',
         ]);
-
-        // User::create([
-        //     'name' => $request['name'],
-        //     'password' => Hash::make($request['password']),
-        //     'email' => $request['email'],
-        //     'current_team_id' => $request['current_team_id'],
-        // ]);
 
         DB::transaction(function () use ($request) {
             return tap(User::create([
@@ -54,8 +52,8 @@ class UserController extends Controller
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
             ]), function (User $user) use ($request) {
-                $selected_team = $request['current_team_id'];
-                $team = Team::where('id', $selected_team)->first();
+                $team_id = $request->team_id;
+                $team = Team::where('id', $team_id)->first();
                 $user->teams()->attach($team, array('role' => 'guest'));
                 $user->switchTeam($team);
             });
@@ -74,8 +72,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $data = Team::all();
-        return view('pages.user.edit', compact('user', 'data'));
+        $team = Team::where('id', $user->current_team_id)->first();
+        return view('pages.user.edit', compact('user', 'team'));
     }
 
     /**
@@ -90,10 +88,12 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:30',
             'email' => 'email',
-            'current_team_id' => 'required'
         ]);
          
-        $user->update($request->all());
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
 
         Alert::success('Success!', 'Data has been succesfully updated.');
 

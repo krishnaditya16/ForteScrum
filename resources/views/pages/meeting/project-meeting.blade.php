@@ -9,7 +9,7 @@
 
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
-            <div class="breadcrumb-item active"><a href="{{ route('project.show', $project->id) }}">#{{$project->id}}</a></div>
+            <div class="breadcrumb-item active"><a href="{{ route('project.show', $project->id) }}">Project - #{{$project->id}}</a></div>
             <div class="breadcrumb-item">Meeting</div>
         </div>
     </x-slot>

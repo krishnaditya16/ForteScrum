@@ -34,7 +34,7 @@ class ClientUserTable extends DataTableComponent
                 ),
             // Column::make("Actions", "users.id")
             //     ->label(fn ($row, Column $column) => view('pages.client.table.user-actions')->with(['user' => $row])),
-            Column::make("Id", "users.id")
+            Column::make("User ID", "users.id")
                 ->collapseOnTablet()
                 ->sortable(),
             // Column::make("Name", "users.name")

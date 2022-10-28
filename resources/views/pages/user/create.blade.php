@@ -27,6 +27,16 @@
 
                     <form action="{{ route('user.store') }}" method="post">
                         @csrf
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control" value="{{ $team->name }}" readonly>
+                                <input type="hidden" name="team_id" value="{{ $team->id }}">
+                                @error('team_id') <span class="text-red-500">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Name</label>
                             <div class="col-sm-12 col-md-7">
@@ -59,7 +69,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-4">
+                        {{-- <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="current_team_id">
@@ -70,7 +80,7 @@
                                 </select>
                                 @error('current_team_id') <span class="text-red-500">{{ $message }}</span>@enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>

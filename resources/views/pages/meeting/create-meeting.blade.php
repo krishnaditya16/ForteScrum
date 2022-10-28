@@ -144,10 +144,4 @@
             </div>
         </div>
     </div>
-
-    @foreach($karyawans as $karyawan)
-    <div id="show{{ $$karyawan->id }}" class="myDiv">
-        <img src="/images/user1.jpg" alt="Manager"/><span>{{ $karyawan->name }}</span>
-    </div>
-    @endforeach
 </x-app-layout>

@@ -28,6 +28,14 @@
                     <form action="{{ route('user.update', $user->id) }}" method="post">
                         @csrf
                         @method('PUT')
+
+                        <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
+                            <div class="col-sm-12 col-md-7">
+                                <input type="text" class="form-control" value="{{ $team->name }}" readonly>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Name</label>
                             <div class="col-sm-12 col-md-7">
@@ -44,7 +52,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-4">
+                        {{-- <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Team</label>
                             <div class="col-sm-12 col-md-7">
                                 <select class="form-control select2" name="current_team_id">
@@ -59,7 +67,7 @@
 
                         @foreach ($data as $team)
                         <input type="hidden" name="team_id" value="{{ $team->id }}">
-                        @endforeach
+                        @endforeach --}}
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3"></label>

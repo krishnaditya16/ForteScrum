@@ -52,7 +52,7 @@ class MeetingTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return Meeting::where('project_id', $this->project);
+        return Meeting::where('project_id', $this->project)->orderBy('meeting_date', 'DESC');
     }
 
     public function bulkActions(): array

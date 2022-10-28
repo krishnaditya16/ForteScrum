@@ -70,10 +70,14 @@
         @endif
 
         <div class="dropdown-divider"></div>
-        <form method="POST" action="{{ route('logout') }}">
+        <form method="POST" action="{{ route('logout') }}" id="logout">
             @csrf
 
-            <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger" onclick="event.preventDefault();this.closest('form').submit();">
+            {{-- <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger" onclick="event.preventDefault();this.closest('form').submit();">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a> --}}
+
+            <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger" data-confirm="Are You Sure?|You will be logged out from the system. Do you want to continue?" data-confirm-yes="document.getElementById('logout').submit();">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </form>

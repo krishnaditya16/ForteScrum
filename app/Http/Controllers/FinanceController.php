@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoiceMail;
 use App\Models\Client;
 use App\Models\Expense;
 use App\Models\Invoice;
@@ -12,6 +13,7 @@ use App\Models\Timesheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -117,15 +119,15 @@ class FinanceController extends Controller
             'issued' => 'required',
             'deadline' => 'required',
             'total_all' => 'required',
-            'task_id[]' => 'required',
-            'time_id[]' => 'required',
-            'exp_id[]' => 'required',
-            'total_task[]' => 'required',
-            'total_ts[]' => 'required',
-            'rate_task[]' => 'required',
-            'qty_task[]' => 'required',
-            'rate_ts[]' => 'required',
-            'qty_ts[]' => 'required',
+            // 'task_id[]' => 'required',
+            // 'time_id[]' => 'required',
+            // 'exp_id[]' => 'required',
+            // 'total_task[]' => 'required',
+            // 'total_ts[]' => 'required',
+            // 'rate_task[]' => 'required',
+            // 'qty_task[]' => 'required',
+            // 'rate_ts[]' => 'required',
+            // 'qty_ts[]' => 'required',
             'subtotal_task' => 'required',
             'subtotal_ts' => 'required',
             'subtotal_exp' => 'required',
@@ -159,7 +161,7 @@ class FinanceController extends Controller
         $expenses_id = implode(',', $request->exp_id);
         $expenses_ammount = implode(',', $request->exp_ammount);
 
-        Invoice::create([
+        $invoice = Invoice::create([
             'company_name' => $request->company_name,
             'company_address' => $request->company_address,
             'issued' => $request->issued,
@@ -190,6 +192,36 @@ class FinanceController extends Controller
         
         $project_id = $request->project_id;
         return redirect()->route('project.invoice.index', $project_id);
+    }
+
+    public function sendInvoiceMail($id, Invoice $invoice)
+    {
+        $project = Project::where('id', $id)->first();
+        $client = Client::where('id', $invoice->client_id)->first();
+        $from_mail = Auth::user()->email;
+        $mail_sender = Auth::user()->name;
+
+        $details = [
+            'title' => 'New Invoice Has Been Assigned to Your Company',
+            'url' => 'http://127.0.0.1:8000/project/'.$id.'/invoice'.'/'.$invoice->id,
+            'invoice' => $invoice->id,
+            'project' => $project->title,
+            'client' => $client->name,
+            'issued_date' => $invoice->issued,
+            'total' => $invoice->total_all,
+            'due_date' => $invoice->deadline,
+            'from_mail' => $from_mail,
+            'mail_sender' => $mail_sender,
+        ];
+
+        $invoice->update([
+            'inv_status' => 1,
+        ]);
+
+        Mail::to($client->email)->send(new InvoiceMail($details));
+
+        Alert::success('Success!', 'Invoice mail has been succesfully sent.');
+        return back();
     }
 
     public function editInvoice($id, Invoice $invoice)
