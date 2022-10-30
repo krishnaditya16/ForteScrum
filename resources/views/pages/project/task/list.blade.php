@@ -60,7 +60,7 @@ $team = Auth::user()->currentTeam;
                     <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
+                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This task will be deleted and this action can not be undone. Do you want to continue?~" data-confirm-yes="document.getElementById('deleteTask').submit();">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
@@ -104,7 +104,7 @@ $team = Auth::user()->currentTeam;
                     <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
+                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This task will be deleted and this action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>

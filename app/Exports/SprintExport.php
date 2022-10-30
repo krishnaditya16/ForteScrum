@@ -23,7 +23,7 @@ class SprintExport implements FromCollection, WithHeadings, ShouldAutoSize, With
 
     public function collection()
     {
-        return Sprint::whereIn('id', $this->sprints)->select('id', 'name', 'description', 'project_id', 'story_point', 'created_at', 'updated_at')->get();
+        return Sprint::whereIn('id', $this->sprints)->select('id', 'name', 'description', 'project_id', 'total_sp', 'focus_factor', 'start_date', 'end_date', 'created_at', 'updated_at')->get();
     }
 
     public function headings(): array
@@ -34,6 +34,9 @@ class SprintExport implements FromCollection, WithHeadings, ShouldAutoSize, With
             'Description',
             'Project ID',
             'Total Story Point',
+            'Focus Factor',
+            'Start Date',
+            'End Date',
             'Created at',
             'Updated at',
         ];

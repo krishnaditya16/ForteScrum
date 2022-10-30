@@ -9,23 +9,23 @@ $sprint = DB::table('sprints')->where('id', $value)->first();
     <div class="dropdown-menu">
         <a href="/project/{{$this->project}}/sprint/{{$value}}/edit" class="dropdown-item has-icon"><i class="far fa-edit"></i> Edit</a>
         @if($sprint->status == "0")
-        <form action="/project/{{$this->project}}/sprint/{{$value}}/sprint-status" method="post">
+        <form action="{{ route('project.sprint.status', ['id' => $this->project, 'sprint' => $value]) }}" method="post" id="sprintClose">
             @csrf
             @method('PUT')
             <input type="hidden" value="{{ $value }}" name="sprint_id">
             <input type="hidden" value="1" name="status">
-            <a href="javascript:void(0)" class="dropdown-item has-icon link-dropdown-kanban"  onclick="return confirm('Are you sure you want to close this sprint?')">
+            <a href="#" class="dropdown-item has-icon" data-confirm="Are You Sure?|This sprint will be closed. Do you want to continue?" data-confirm-yes="document.getElementById('sprintClose').submit();">
                 <i class="fas fa-door-closed"></i> 
                 Close Sprint
             </a>
         </form>
         @else
-        <form action="/project/{{$this->project}}/sprint/{{$value}}/sprint-status" method="post">
+        <form action="/project/{{$this->project}}/sprint/{{$value}}/sprint-status" method="post" id="sprintOpen">
             @csrf
             @method('PUT')
             <input type="hidden" value="{{ $value }}" name="sprint_id">
             <input type="hidden" value="0" name="status">
-            <a href="javascript:void(0)" class="dropdown-item has-icon link-dropdown-kanban"  onclick="return confirm('Are you sure you want to open this sprint?')">
+            <a href="#" class="dropdown-item has-icon" data-confirm="Are You Sure?|This sprint will be opened. Do you want to continue?" data-confirm-yes="document.getElementById('sprintOpen').submit();">
                 <i class="fas fa-door-open"></i> 
                 Open Sprint
             </a>

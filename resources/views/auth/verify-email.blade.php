@@ -1,6 +1,6 @@
 @extends('auth.base')
 
-@section('title', 'Forgot Password')
+@section('title', 'Verify Email')
 
 @section('content')
 <div id="app">
@@ -9,7 +9,7 @@
             <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
                 <div class="p-4 m-3">
                     <div class="logo-mobile">
-                        <img src="{{ asset('auth/img/stisla-fill.svg') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
+                        <img src="{{ asset('auth/img/logo_circle.png') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
                     </div>
                     <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">PM App</span></h4>
                     <p class="text-muted">Before continuing, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.</p>
@@ -33,10 +33,10 @@
 
                             <div class="mt-5">
                                 <div class="row">
-                                    <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-3 mt-2">
                                         <a href="{{ route('profile.show') }}" class="btn btn-outline-primary">{{ __('Edit Profile') }}</a>
                                     </div>
-                                    <div class="col-12 col-md-9">
+                                    <div class="col-12 col-md-9 mt-2">
                                         <form method="POST" action="{{ route('logout') }}" class="inline">
                                             @csrf
                                             <button type="submit" class="btn btn-outline-primary">
@@ -49,7 +49,7 @@
                             
                         </div>
                     
-                    <div class="pt-5 pb-2"></div>
+                    <div class="pt-5 pb-2 mt-5"></div>
 
                     <div class="mt-5 pt-5 text-center"> <hr> </div>
 

@@ -178,7 +178,7 @@ if($user->ownsTeam($team) || $user->hasTeamRole($team, 'project-manager')) {
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ route('dashboard') }}">
-                FS<!-- <img class="d-inline-block" width="32px" height="30.61px" src="" alt=""> -->
+                <img class="d-inline-block" width="32px" height="30.61px" src="{{ asset('auth/img/logo_circle.png') }}" alt="">
             </a>
         </div>
         @foreach ($navigation_links as $link)

@@ -14,7 +14,7 @@
         </div>
     </x-slot>
 
-    <h2 class="section-title">Edit Expenses </h2>
+    <h2 class="section-title">Edit Expenses Status</h2>
     <p class="section-lead mb-3">
         On this page you can edit existing expenses/spending data.
     </p>
@@ -23,7 +23,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>Add New Expenses</h4>
+                    <h4>Edit Expenses Status Form</h4>
                 </div>
                 <div class="card-body">
 

@@ -2,7 +2,7 @@
     <x-slot name="title">{{ __('Update Password') }}</x-slot>
     <x-slot name="header_content">
         <div class="section-header-back">
-            <a href="{{ route('client-user.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+            <a href="{{ route('client.index') }}" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
         </div>
         <h1>{{ __('Update Password') }}</h1>
         <div class="section-header-breadcrumb">

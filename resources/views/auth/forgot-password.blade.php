@@ -9,9 +9,9 @@
             <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
                 <div class="p-4 m-3">
                     <div class="logo-mobile">
-                        <img src="{{ asset('auth/img/stisla-fill.svg') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
+                        <img src="{{ asset('auth/img/logo_circle.png') }}" alt="logo" width="80" class="shadow-light rounded-circle mb-5 mt-2">
                     </div>
-                    <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">PM App</span></h4>
+                    <h4 class="text-dark font-weight-normal">Welcome to <span class="font-weight-bold">{{ config('app.name', 'Laravel') }}</span></h4>
                     <p class="text-muted">Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.</p>
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf

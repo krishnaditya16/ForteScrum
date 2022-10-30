@@ -72,6 +72,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/project/{id}/invoice/{invoice}', [FinanceController::class, 'showInvoice'])->name('project.invoice.show');
     Route::get('/project/{id}/invoice/{invoice}/payment-file', [FinanceController::class, 'downloadPayment'])->name('project.payment.download');
 
+    //Project Expenses
+    Route::get('project/{id}/create-expenses', [ExpensesController::class, 'createProjectExpenses'])->name('project.expenses.create');
+    Route::post('/project/store-expenses', [ExpensesController::class, 'storeProjectExpenses'])->name('project.expenses.store');
+    Route::get('/project/{id}/expenses/{expense}/edit', [ExpensesController::class, 'editProjectExpenses'])->name('project.expenses.edit');
+    Route::put('/project/{id}/expenses/{expense}/update-expenses', [ExpensesController::class, 'updateProjectExpenses'])->name('project.expenses.update');
+
+    //Project Timesheet
+    Route::get('/project/{id}/tasks/{tasks}/record', [TimesheetController::class, 'createTimesheet'])->name('project.timesheet.create');
+    Route::post('/project/store-timesheet', [TimesheetController::class, 'storeTimesheet'])->name('project.timesheet.store');
 
     Route::group(['middleware' => 'role:project-manager'], function () {
         Route::resource('user', UserController::class);
@@ -134,16 +143,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::put('/project/{id}/backlog/{backlog}/update-backlog', [BacklogController::class, 'updateProjectBacklog'])->name('project.backlog.update');
 
         //Project Expenses
-        Route::get('project/{id}/create-expenses', [ExpensesController::class, 'createProjectExpenses'])->name('project.expenses.create');
-        Route::post('/project/store-expenses', [ExpensesController::class, 'storeProjectExpenses'])->name('project.expenses.store');
-        Route::get('/project/{id}/expenses/{expense}/edit', [ExpensesController::class, 'editProjectExpenses'])->name('project.expenses.edit');
-        Route::put('/project/{id}/expenses/{expense}/update-expenses', [ExpensesController::class, 'updateProjectExpenses'])->name('project.expenses.update');
         Route::get('/project/{id}/expenses/{expense}/edit-status', [ExpensesController::class, 'editStatusExpenses'])->name('project.expenses.status.edit');
         Route::put('/project/{id}/expenses/{expense}/update-status', [ExpensesController::class, 'updateStatusExpenses'])->name('project.expenses.status.update');
-
-        //Project Timesheet
-        Route::get('/project/{id}/tasks/{tasks}/record', [TimesheetController::class, 'createTimesheet'])->name('project.timesheet.create');
-        Route::post('/project/store-timesheet', [TimesheetController::class, 'storeTimesheet'])->name('project.timesheet.store');
 
         //Project Meeting
         Route::get('project/{id}/create-meeting', [MeetingController::class, 'createMeeting'])->name('project.meeting.create');
