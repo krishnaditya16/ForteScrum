@@ -7,6 +7,13 @@
 
 "use strict";
 
+$(window).on("load", function () {
+    $("#preloader-active").delay(450).fadeOut("slow");
+    $("body").delay(450).css({
+        overflow: "visible",
+    });
+});
+
 $(document).ready(function () {
     $(document).on("click", ".link-dropdown-kanban", function () {
         var form = $(this).closest("form");
@@ -68,12 +75,12 @@ $(document).ready(function () {
 $(document).ready(function () {
     $(".btn-role").click(function () {
         var text = document.getElementById("role-answer");
-        var role = document.getElementById('btn-role');
-        if(text.innerHTML=="No") {
-            text.innerHTML="Yes";
+        var role = document.getElementById("btn-role");
+        if (text.innerHTML == "No") {
+            text.innerHTML = "Yes";
             role.value = 1;
         } else {
-            text.innerHTML="No";
+            text.innerHTML = "No";
             role.value = 0;
         }
         console.log(role);

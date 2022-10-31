@@ -5,7 +5,7 @@
 @section('content')
 <div id="app">
     <section class="section">
-        <div class="d-flex flex-wrap align-items-stretch">
+        <div class="d-flex flex-wrap align-items-stretch" style="height: 100%">
             <div class="col-lg-4 col-md-6 col-12 order-lg-1 min-vh-100 order-2 bg-white">
                 <div class="p-4 m-3">
                     <div class="logo-mobile">

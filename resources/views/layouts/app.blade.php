@@ -9,11 +9,14 @@
     <title>{{ $title }} - {{ config('app.name', 'Laravel') }}</title>
 
     @isset($meta)
-        {{ $meta }}
+    {{ $meta }}
     @endisset
 
     <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Nunito:wght@400;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ asset('landing/img/favicon.png') }}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans&family=Nunito:wght@400;600;700&family=Open+Sans&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/css/style.css') }}">
@@ -30,6 +33,11 @@
     <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('stisla/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}">
 
+    <!-- PWA  -->
+    <meta name="theme-color" content="#6777ef" />
+    <link rel="apple-touch-icon" href="{{ asset('logo.PNG') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
+
     <style>
         [x-cloak] {
             display: none !important;
@@ -44,6 +52,20 @@
 </head>
 
 <body class="antialiased">
+
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex justify-content-center align-items-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="{{asset('landing/img/logo.png') }}" alt="Preloader Image" style="margin:25px">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader Start -->
+
     <div id="app">
         <div class="main-wrapper">
             @include('components.navbar')
@@ -54,9 +76,9 @@
                 <section class="section">
                     <div class="section-header">
                         @isset($header_content)
-                            {{ $header_content }}
+                        {{ $header_content }}
                         @else
-                            {{ __('Halaman') }}
+                        {{ __('Halaman') }}
                         @endisset
                     </div>
 
@@ -99,7 +121,7 @@
     <script src="{{ asset('stisla/js/scripts.js') }}"></script>
 
     <!-- Livewire Sweetaler2 -->
-    <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script> 
+    <script src="{{ asset('vendor/livewire-alert/livewire-alert.js') }}"></script>
     <x-livewire-alert::scripts />
     <x-livewire-alert::flash />
     @include('sweetalert::alert')
@@ -107,10 +129,20 @@
     <script src="{{ mix('js/app.js') }}" defer></script>
 
     @isset($script)
-        {{ $script }}
+    {{ $script }}
     @endisset
 
     @livewireScripts
+
+    <!-- PWA  -->
+    <script src="{{ asset('/sw.js') }}"></script>
+    <script>
+        if (!navigator.serviceWorker.controller) {
+          navigator.serviceWorker.register("/sw.js").then(function (reg) {
+              console.log("Service worker has been registered for scope: " + reg.scope);
+          });
+      }
+    </script>
 </body>
 
 </html>
