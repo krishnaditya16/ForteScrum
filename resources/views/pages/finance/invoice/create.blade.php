@@ -125,7 +125,7 @@
                                             <td class="text-center pt-2">
                                                 <div class="custom-checkbox custom-control">
                                                     <input type="checkbox" class="form-check-input check-task inv-border" 
-                                                    name="task_id[]" value="{{ $task->id }}" onchange="calcTask()">
+                                                    name="task_id[]" onchange="calcTask()">
                                                 </div>
                                             </td>
                                             <td>{{ $loop->iteration }}</td>

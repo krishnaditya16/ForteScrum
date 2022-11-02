@@ -58,7 +58,7 @@
                             <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                         </div>
 
-                        <input type="hidden" name="role" value="0">
+                        <input type="hidden" name="role" value="0" id="role-hdn">
 
                         <div class="form-group">
                             <div class="control-label">Register as Project Manager</div>

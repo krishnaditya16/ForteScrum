@@ -99,15 +99,15 @@ $team = Auth::user()->currentTeam;
                     </div>
                 </div>
             </div>
-            @elseif(Auth::user()->hasTeamRole($team, 'team-member'))
+            @elseif(Auth::user()->hasTeamRole($team, 'team-member') || Auth::user()->hasTeamRole($team, 'product-owner'))
             <div class="card-footer bg-whitesmoke">
-                    <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
+                    {{-- <form action="{{ route('project.task.destroy', ['id'=>$data->id, 'task'=>$task->id]) }}" method="POST" style="display: inline-block;" id="deleteTask">
                         @csrf
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-outline-danger has-icon" data-confirm="Are You Sure?|This task will be deleted and this action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('deleteTask').submit();">
-                            <i class="fas fa-trash"></i> Delete
+                        <button type="submit" class="btn btn-outline-secondary has-icon">
+                            <i class="fas fa-trash"></i> Disabled
                         </button>
-                    </form>
+                    </form> --}}
                     <div class="dropdown float-right">
                         <a href="#" data-toggle="dropdown" class="btn btn-outline-dark dropdown-toggle">Options</a>
                         <div class="dropdown-menu dropdown-menu-right">
@@ -120,7 +120,7 @@ $team = Auth::user()->currentTeam;
                                 </a>
                             </form>
                             <a href="/project/{{$data->id}}/tasks/{{$task->id}}/record" class="dropdown-item has-icon"><i class="fas fa-user-clock"></i> Record Timesheet</a>
-                            <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a>
+                            {{-- <a href="/project/{{$data->id}}/tasks/{{$task->id}}/edit" class="dropdown-item has-icon"><i class="fas fa-edit"></i> Edit Task</a> --}}
                             <div class="dropdown-divider"></div>
                             @foreach($options as $option)
                             <form action="{{ route('project.task.move', ['id'=>$data->id, 'task'=>$task->id]) }}" method="post" id="moveTask">

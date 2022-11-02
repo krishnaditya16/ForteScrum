@@ -10,6 +10,8 @@
     <div class="badge badge-danger">Rejected</div>
 @endif
 
-@if(Carbon\Carbon::today()->gt($row->deadline) && $row->inv_status == "0" || $row->inv_status == "1")
+@if(Carbon\Carbon::today()->gt($row->deadline) && $row->inv_status == "0")
+    <div class="badge badge-danger">Overdue</div>
+@elseif(Carbon\Carbon::today()->gt($row->deadline) && $row->inv_status == "1")
     <div class="badge badge-danger">Overdue</div>
 @endif

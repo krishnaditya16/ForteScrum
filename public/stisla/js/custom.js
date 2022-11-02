@@ -76,14 +76,18 @@ $(document).ready(function () {
     $(".btn-role").click(function () {
         var text = document.getElementById("role-answer");
         var role = document.getElementById("btn-role");
+        var role2 = document.getElementById("role-hdn");
         if (text.innerHTML == "No") {
             text.innerHTML = "Yes";
             role.value = 1;
+            role2.value = 1;
         } else {
             text.innerHTML = "No";
             role.value = 0;
+            role2.value = 1;
         }
         console.log(role);
+        console.log(role2);
     });
 });
 

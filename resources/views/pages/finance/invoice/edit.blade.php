@@ -128,16 +128,9 @@
                                         <tr>
                                             <td class="text-center pt-2">
                                                 <div class="custom-checkbox custom-control">
-                                                    @if(count($task_id) == 1)
-                                                        <input type="checkbox" class="form-check-input check-task inv-border" 
-                                                        name="task_id[]" value="{{ $task->id }}" onchange="calcTask()"
-                                                        {{ $task->id == $invoice->task_id ? 'checked' : '' }} >
-                                                        
-                                                    @else
-                                                        <input type="checkbox" class="form-check-input check-task inv-border" 
-                                                        name="task_id[]" value="{{ $task->id }}" onchange="calcTask()"
-                                                        {{ $task->id == $task_id[$key] ? 'checked' : '' }} >
-                                                    @endif
+                                                    <input type="checkbox" class="form-check-input check-task inv-border" 
+                                                    name="task_id[]" value="{{ $task->id }}" onchange="calcTask()"
+                                                    {{ in_array($task->id, $task_id) ? 'checked' : '' }} >
                                                 </div>
                                             </td>
                                             <td>{{ $loop->iteration }}</td>
@@ -202,7 +195,10 @@
                                         <tr>
                                             <td class="text-center pt-2">
                                                 <div class="custom-checkbox custom-control">
-                                                    @if(count($time_id) == 1)
+                                                    <input type="checkbox" class="form-check-input check-ts inv-border" 
+                                                    name="time_id[]" value="{{ $timesheet->id }}" onchange="calcTS()"
+                                                    {{ in_array($timesheet->id, $time_id) ? 'checked' : '' }} >
+                                                    {{-- @if(count($time_id) == 1)
                                                         <input type="checkbox" class="form-check-input check-ts inv-border" 
                                                         name="time_id[]" value="{{ $timesheet->id }}" onchange="calcTS()"
                                                         {{ $timesheet->id == $invoice->timesheet_id ? 'checked' : '' }} >
@@ -210,7 +206,7 @@
                                                         <input type="checkbox" class="form-check-input check-ts inv-border" 
                                                         name="time_id[]" value="{{ $timesheet->id }}" onchange="calcTS()"
                                                         {{ $timesheet->id == $time_id[$key] ? 'checked' : '' }} >
-                                                    @endif
+                                                    @endif --}}
                                                 </div>
                                             </td>
                                             <td>{{ $loop->iteration }}</td>
@@ -283,7 +279,10 @@
                                             <tr>
                                                 <td class="text-center pt-2">
                                                     <div class="custom-checkbox custom-control">
-                                                        @if(count($time_id) == 1)
+                                                        <input type="checkbox" class="form-check-input check-exp inv-border" 
+                                                        name="exp_id[]" value="{{ $expense->id }}" onchange="calcExp()"
+                                                        {{ in_array($expense->id, $exp_id) ? 'checked' : '' }} >
+                                                        {{-- @if(count($time_id) == 1)
                                                             <input type="checkbox" class="form-check-input check-exp inv-border" 
                                                             name="exp_id[]" value="{{ $expense->id }}" onchange="calcExp()"
                                                             {{ $expense->id == $invoice->expenses_id ? 'checked' : '' }} >
@@ -291,7 +290,7 @@
                                                             <input type="checkbox" class="form-check-input check-exp inv-border" 
                                                             name="exp_id[]" value="{{ $expense->id }}" onchange="calcExp()"
                                                             {{ $expense->id == $exp_id[$key] ? 'checked' : '' }}>
-                                                        @endif
+                                                        @endif --}}
                                                     </div>
                                                 </td>
                                                 <td class="text-center">{{ $loop->iteration }}</td>

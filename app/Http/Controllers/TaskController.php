@@ -112,6 +112,9 @@ class TaskController extends Controller
             ->whereIn('user_id', $data)->where('role', 'team-member')
             ->get();
 
+        if(Auth::user()->current_team_id != $projects->team_id){
+            abort(403);
+        }
         return view('pages.project.task.create-task', compact('projects', 'users', 'boards', 'sprints', 'backlogs'));
     }
 

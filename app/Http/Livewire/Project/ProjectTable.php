@@ -56,7 +56,7 @@ class ProjectTable extends DataTableComponent
                 ->collapseOnTablet()
                 ->searchable()
                 ->format(
-                    fn ($value, $row, Column $column) => view('pages.project.table.status')->withValue($value)
+                    fn ($value, $row, Column $column) => view('pages.project.table.status')->with(['row' => $row])
                 ),
         ];
     }

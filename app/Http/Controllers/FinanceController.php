@@ -161,7 +161,7 @@ class FinanceController extends Controller
         $expenses_id = implode(',', $request->exp_id);
         $expenses_ammount = implode(',', $request->exp_ammount);
 
-        $invoice = Invoice::create([
+        Invoice::create([
             'company_name' => $request->company_name,
             'company_address' => $request->company_address,
             'issued' => $request->issued,
